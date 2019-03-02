@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title>
+      <div class="text">
+      {{userName}}
+    </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar
+  (ionChange)="onSearchInput($event)"
+  debounce="500"
+  ></ion-searchbar>
+  <ion-list *ngFor="let user of userNameListFilter; let i = index">
+        <ion-item *ngIf="user.id !== userId">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+            <ion-avatar>
+              <img [src]="user.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="10">
+            <div class="userNameText">
+              <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-checkbox *ngIf="user.canAdd" slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
+    </ion-item>
+
+
+
+  </ion-list>
+  <div class="logoutButton">
+    <ion-button shape="round" color="primary" (click)="logout()">
+      <ion-icon name="log-out"></ion-icon> Logout
+    </ion-button>
+  </div>
+
+  <ion-list *ngFor="let user of users; let i = index">
+      <ion-item *ngIf="user.id !== userId">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+          <ion-avatar>
+            <img [src]="user.avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="10">
+          <div class="userNameText">
+            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-checkbox slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
+  </ion-item>
+  </ion-list>
+
+  <div class="logoutButton">
+    <ion-button shape="round" color="primary" (click)="testerFriendsData()">
+      <ion-icon name="log-out"></ion-icon> tester Friends
+    </ion-button>
+  </div>
+
+  
+
+  <div class="logoutButton">
+    <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
+    </ion-button>
+  </div>
+
+
+
+
+  <ion-item *ngFor="let user of usersFriends; let i = index">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+          <ion-avatar>
+            <img [src]="user.avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="10">
+          <div class="userNameText">
+            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-checkbox slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
+  </ion-item>
+
+</ion-content>

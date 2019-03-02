@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>channelCreation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-grid>
+      <ion-row>
+
+        <ion-col size="12">
+          <div class="userNameText">
+            <ion-label>Channel Name : </ion-label>
+            <ion-input type="text" [(ngModel)]="nameChannel"></ion-input>
+            
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-item>
+
+  <ion-list *ngFor="let user of users; let i = index">
+    <ion-item *ngIf="user.id !== userId">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+            <ion-avatar>
+              <img [src]="user.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="10">
+            <div class="userNameText">
+              <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-checkbox slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
+    </ion-item>
+
+  </ion-list>
+      <div class="userNameText">
+        <ion-button (click)="crerNewChannel()">creer Channel</ion-button>
+      </div>
+
+</ion-content>

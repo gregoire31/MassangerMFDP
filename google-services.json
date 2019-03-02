@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "246152259874",
+    "firebase_url": "https://fir-mobile-a75c3.firebaseio.com",
+    "project_id": "fir-mobile-a75c3",
+    "storage_bucket": "fir-mobile-a75c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246152259874:android:db50b8ad8cee8fa4",
+        "android_client_info": {
+          "package_name": "com.ingesup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246152259874-8cn4rtforpqitrg114lr1g56pq656hqu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHk2YanrMMmzuqVljsRtHvHn6qeVLtRw0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
