@@ -73,6 +73,7 @@ export class UserService {
       color: 'danger'
     });
     toast.present();
+    
   }
 
   async presentToastWithOptionsWithMessage(message: string, color: string) {
