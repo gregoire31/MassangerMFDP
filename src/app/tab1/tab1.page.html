@@ -2,20 +2,51 @@
   <ion-toolbar color="medium">
     <ion-title>
       <div class="text">
-      {{userName}}
-    </div>
+        {{userName}}
+      </div>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-searchbar
-  (ionChange)="onSearchInput($event)"
-  debounce="500"
-  ></ion-searchbar>
+  <ion-searchbar (ionChange)="onSearchInput($event)" debounce="500"></ion-searchbar>
+
+
   <ion-list *ngFor="let user of userNameListFilter; let i = index">
-        <ion-item *ngIf="user.id !== userId">
+    <ion-item *ngIf="user.id !== userId && user.isDoingAdded">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+            <ion-avatar>
+              <img [src]="user.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="5">
+            <div class="userNameText">
+              <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+            </div>
+          </ion-col>
+          <ion-col size="5">
+            <div class="userNameText">
+              <div class="logoutButton">
+                <ion-button shape="round" color="primary"  (click)="acceptFriend(user.id)"> Ajouter
+                </ion-button>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+      
+    </ion-item>
+  </ion-list>
+
+
+  
+  <ion-list *ngFor="let user of userNameListFilter; let i = index">
+    <ion-item *ngIf="user.id !== userId && !user.isDoingAdded">
       <ion-grid>
         <ion-row>
           <ion-col size="2">
@@ -31,23 +62,25 @@
         </ion-row>
       </ion-grid>
       <ion-icon name="add-circle" (click)="addfriend(user.id)" *ngIf="user.canBeAdded"></ion-icon>
+
+      <div class="logoutButton">
+        <ion-button *ngIf="user.isDoingAdded" shape="round" color="primary"  (click)="acceptFriend(user.id)"> Ajouter
+        </ion-button>
+      </div>
+      
     </ion-item>
 
 
 
   </ion-list>
-      <div class="logoutButton">
-        <ion-button shape="round" color="primary" (click)="testerFriendsData()">
-          <ion-icon name="log-out"></ion-icon> tester Friends
-        </ion-button>
-      </div>
-    
-      
-    
-      <div class="logoutButton">
-        <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
-        </ion-button>
-      </div>
+
+
+
+
+  <div class="logoutButton">
+    <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
+    </ion-button>
+  </div>
 
 
   <!-- <ion-list *ngFor="let user of users; let i = index">
@@ -73,6 +106,37 @@
 
 
 
+  <!-- <ion-item *ngFor="let user of usersFriendPending; let i = index">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+          <ion-avatar>
+            <img [src]="user.avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="5">
+          <div class="userNameText">
+            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="5">
+          <div class="userNameText">
+            <div class="logoutButton">
+              <ion-button shape="round" color="success" (click)="acceptFriend(user.id)">
+                <ion-icon name="log-out"></ion-icon> ACCEPTER
+              </ion-button>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item> -->
+
+  <div class="logoutButton">
+    <ion-button shape="round" color="primary" (click)="testerFriendsData()">
+      <ion-icon name="log-out"></ion-icon> tester Friends
+    </ion-button>
+  </div>
 
   <ion-item *ngFor="let user of usersFriends; let i = index">
     <ion-grid>
@@ -84,7 +148,7 @@
         </ion-col>
         <ion-col size="10">
           <div class="userNameText">
-            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+            <ion-label (click)="addfriend(user.id)">{{user.displayName}}</ion-label>
           </div>
         </ion-col>
       </ion-row>
@@ -92,9 +156,9 @@
   </ion-item>
 
   <div class="logoutButton">
-      <ion-button shape="round" color="primary" (click)="logout()">
-        <ion-icon name="log-out"></ion-icon> Logout
-      </ion-button>
-    </div>
+    <ion-button shape="round" color="primary" (click)="logout()">
+      <ion-icon name="log-out"></ion-icon> Logout
+    </ion-button>
+  </div>
 
 </ion-content>

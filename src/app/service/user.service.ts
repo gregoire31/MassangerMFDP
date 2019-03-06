@@ -172,21 +172,32 @@ export class UserService {
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
   }
 
+
+
   addFriendsToUsers(idCurrentUser : string, idUserAAjouter : any){
+    let isFriend = {
+      isFriend : "pending"
+    }
+
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend) 
+    //return this.friendListe(idCurrentUser)                        // renvoie la liste des amis d'un user passer en paramètre
+
+  }
+
+  acceptFriend(idCurrentUser : string, idUserAAjouter : string){      
     let isFriend = {
       isFriend : true
     }
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend) // 
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend) // 
+    return this.friendListe(idCurrentUser)
+  }
 
-      this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
-      this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idUserAAjouter).set(isFriend)
+  deniedFriend(idCurrentUser : string, idUserAAjouter : string){
 
-    //console.log(this.friendListe(idCurrentUser))
-    //return this.friendListe(idCurrentUser)
   }
 
   addChannelToUser(id: string, idChannel: string, nom : string) {
-    // //return firebase.database().ref(id).push(channel)
-    // console.log(this.usersCollection.doc(id).collection('channel'))
     console.log(id)
     let isNotAdmin =  {
       nom : nom,
@@ -198,7 +209,7 @@ export class UserService {
   addUserToChannel(idChannel: string, idUser: string, nameChannel : string) {
     let isNotAdmin =  {
       nom : nameChannel,
-      isAdmin: false
+      isAdmin: "pending"
     }
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isNotAdmin)
   }
@@ -215,6 +226,7 @@ export class UserService {
       })
     );
   }
+
 
   changeAdminModeUser(idChannel:string, idUser : string){
     
@@ -274,15 +286,6 @@ export class UserService {
       );
     }
   
-  
-  
-  //updateChannelUser(){
-  //  this.usersCollection.doc(id).collection('channel').doc(myBookId).set({
-  //    password: this.password,
-  //    name: this.name,
-  //    rollno: this.rollno
-  //  })
-  //}
 
   addUser(todo: UserList) {
     return this.usersCollection.add(todo);
@@ -327,19 +330,6 @@ export class UserService {
     )
   }
 
-
-  //get currentUser() {
-  //  return this._auth.authState
-  //    .pipe(switchMap(auth => auth ? this.getUserById(auth.uid) : of(null)));
-  //}
-  //
-  //getUserById(userId: string) {
-  //  return this.doc(`users/${userId}`);
-  //}
-
-
-
-
   
 
   signup(emailRegister, passwordRegister, nomRegister) {
@@ -357,12 +347,6 @@ export class UserService {
             displayName: nomRegister,
             photoURL: photoURL,
           })
-          //console.log(newUser.user.uid)
-          //console.log(newUser.user.displayName)
-          //console.log(newUser.user.photoURL)
-          //self.uid = newUser.user.uid
-          //self.displayName = newUser.user.displayName
-          //self.avatar = newUser.user.photoURL
         })
 
       .then(function () {
