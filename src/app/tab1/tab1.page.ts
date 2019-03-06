@@ -22,6 +22,7 @@ export class Tab1Page {
   event: string
   usersFriendPending: any[] = []
   idPendingFriends :any[]=[]
+  wantAddFriend :any[]=[]
 
   constructor(private userService: UserService) {
 
@@ -48,13 +49,19 @@ export class Tab1Page {
               this.idFriends.push(friend.id);
             }
             else{
-              this.idPendingFriends.push(friend.id)
+              if(friend.isFriend === "pending"){
+                this.idPendingFriends.push(friend.id)
+              }
+              else{
+                this.wantAddFriend.push(friend.id)
+              }
             }
+            
           })
           self.usersFriends = []
           friends.map(friend => {
             if (friend.isFriend === true) {
-              self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc ...
+              self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
                 console.log(data)
                 self.usersFriends.push({ ...data })
               })
@@ -64,7 +71,7 @@ export class Tab1Page {
         })
       }).then(() => {
         console.log(this.idFriends)
-        this.userService.getUserList().subscribe((users) => {
+        this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
           this.userNameListFilter = users
           self.users = users
 
@@ -106,7 +113,7 @@ export class Tab1Page {
   }
 
   getItems() {
-    console.log("Salut tout le monde")
+    console.log(this.userNameListFilter)
   }
 
   onSearchInput($event) {
@@ -128,24 +135,77 @@ export class Tab1Page {
   acceptFriend(id: string) {
     this.usersFriendPending = []
     this.userService.acceptFriend(this.userId, id)
-    this.userService.friendListe(this.userId).subscribe(newFriendsPending => {
-      if (newFriendsPending !== undefined) {
-        this.userService.getUserId(newFriendsPending.id).subscribe(data => {
-          console.log(data)
-          this.usersFriendPending.push({ ...data })
-        })
-      }
-      console.log(newFriendsPending)
+
+    this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
+      this.userNameListFilter = users
+
+      this.userNameListFilter.map(friend => {
+        console.log(friend)
+        if (this.idFriends.indexOf(friend.id) > -1) {
+          friend.canBeAdded = false
+          friend.isDoingAdded = false
+          console.log(friend.displayName + " est amis")
+        }
+        else {
+          if(this.idPendingFriends.indexOf(friend.id) > -1){
+            friend.canBeAdded = false
+            friend.isDoingAdded = true
+          }
+          else{
+            friend.canBeAdded = true
+            friend.isDoingAdded = false
+          }
+        }
+      })
+
+
     })
+
+
+    //this.userService.friendListe(this.userId).subscribe(newFriendsPending => {
+    //  if (newFriendsPending !== undefined) {
+    //    this.userService.getUserId(newFriendsPending.id).subscribe(data => {
+    //      console.log(data)
+    //      this.usersFriendPending.push({ ...data })
+    //    })
+    //  }
+    //  console.log(newFriendsPending)
+    //})
   }
 
 
 
   addfriend(idUserAAjouter: string) {
-    console.log(idUserAAjouter)
+    //console.log(idUserAAjouter)
+    console.log(this.userNameListFilter)
+    let self = this
     //let verification = false
     this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-    
+    console.log("toto")
+    this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
+      this.userNameListFilter = users
+
+      this.userNameListFilter.map(friend => {
+        console.log(friend)
+        if (this.idFriends.indexOf(friend.id) > -1) {
+          friend.canBeAdded = false
+          friend.isDoingAdded = false
+          console.log(friend.displayName + " est amis")
+        }
+        else {
+          if(this.idPendingFriends.indexOf(friend.id) > -1){
+            friend.canBeAdded = false
+            friend.isDoingAdded = true
+          }
+          else{
+            friend.canBeAdded = true
+            friend.isDoingAdded = false
+          }
+        }
+      })
+
+
+    })
 
      //this.userService.friendListe(idUserAAjouter).subscribe(listeAmis => {   // renvoie la liste des amis d'un user passer en paramètre
      //  listeAmis.map(ami => {

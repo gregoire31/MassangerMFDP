@@ -178,10 +178,13 @@ export class UserService {
     let isFriend = {
       isFriend : "pending"
     }
+    let isFriendwantAdd = {
+      isFriend : "wantAdd"
+    }
 
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend) 
-    //return this.friendListe(idCurrentUser)                        // renvoie la liste des amis d'un user passer en paramètre
-
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd) 
+    console.log("complete")
   }
 
   acceptFriend(idCurrentUser : string, idUserAAjouter : string){      
