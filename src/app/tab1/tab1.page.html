@@ -30,19 +30,27 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-checkbox *ngIf="user.canAdd" slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
+      <ion-icon name="add-circle" (click)="addfriend(user.id)" *ngIf="user.canBeAdded"></ion-icon>
     </ion-item>
 
 
 
   </ion-list>
-  <div class="logoutButton">
-    <ion-button shape="round" color="primary" (click)="logout()">
-      <ion-icon name="log-out"></ion-icon> Logout
-    </ion-button>
-  </div>
+      <div class="logoutButton">
+        <ion-button shape="round" color="primary" (click)="testerFriendsData()">
+          <ion-icon name="log-out"></ion-icon> tester Friends
+        </ion-button>
+      </div>
+    
+      
+    
+      <div class="logoutButton">
+        <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
+        </ion-button>
+      </div>
 
-  <ion-list *ngFor="let user of users; let i = index">
+
+  <!-- <ion-list *ngFor="let user of users; let i = index">
       <ion-item *ngIf="user.id !== userId">
     <ion-grid>
       <ion-row>
@@ -60,20 +68,8 @@
     </ion-grid>
     <ion-checkbox slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
   </ion-item>
-  </ion-list>
+  </ion-list> -->
 
-  <div class="logoutButton">
-    <ion-button shape="round" color="primary" (click)="testerFriendsData()">
-      <ion-icon name="log-out"></ion-icon> tester Friends
-    </ion-button>
-  </div>
-
-  
-
-  <div class="logoutButton">
-    <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
-    </ion-button>
-  </div>
 
 
 
@@ -93,7 +89,12 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-checkbox slot="end" [(ngModel)]="user.isChecked" ></ion-checkbox>
   </ion-item>
+
+  <div class="logoutButton">
+      <ion-button shape="round" color="primary" (click)="logout()">
+        <ion-icon name="log-out"></ion-icon> Logout
+      </ion-button>
+    </div>
 
 </ion-content>

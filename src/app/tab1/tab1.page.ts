@@ -16,13 +16,11 @@ export class Tab1Page {
   donneeSearchbar : string=""
   userNameListFilter : any[]
   idFriends : any[]=[]
+  userNameListFilterCheckbox : any[]=[]
+  newFriends : any[]=[]
+  event : string
 
   constructor(private userService : UserService) {
-    let self = this
-
-
-      
-    
 
    }
 
@@ -39,16 +37,16 @@ export class Tab1Page {
         this.userName = user.displayName
       })
     }).then(()=>{
-      //self.usersFriends = []
+      console.log("pousse")
       this.userService.friendListe(this.userId).subscribe((friends)=>{
         friends.map(friend => {
           this.idFriends.push(friend.id);
         })
-
-        //console.log(friends)
-        //this.usersFriends = friends
+        self.usersFriends = []
         friends.map(friend => {
+          console.log("pousse")
           self.userService.getUserId(friend.id).subscribe(data => {
+            console.log(data)
             self.usersFriends.push({... data})
           })
         })
@@ -57,44 +55,55 @@ export class Tab1Page {
     }).then(()=>{
       console.log(this.idFriends)
       this.userService.getUserList().subscribe( (users) =>{
-        
+        this.userNameListFilter = users
         self.users = users
-        self.userNameListFilter = users
-        users.map(user => {
-          console.log(user.id)
 
-              //if(this.idFriends.indexOf(user.id) > -1 === true){
-              //  console.log(true)
-              //}
-              //if(this.idFriends.indexOf(user.id) > -1 === false){
-              //  user.canAdd = true
-              //}
-          
+        this.userNameListFilter.map(friend => {
+          if(this.idFriends.indexOf(friend.id) > -1){
+            friend.canBeAdded = false
+            console.log(friend.displayName + " est amis")
+          }
+          else{
+            friend.canBeAdded = true
+          }
         })
+
+
+        //self.userNameListFilter = users
+        //users.map(user => {
+        //  console.log(user.id)          
+        //})
     })
-  })
-  }
+  })}
 
   getItems(){
     console.log("Salut tout le monde")
   }
 
   onSearchInput($event){
-    let valueInput = $event.detail.value
-    console.log(valueInput)
-
-    const search = valueInput;
-  
-    if (!search) return this.users;
-
-    //this.userNameListFilter.push({... this.users.filter(c => c.displayName.toLowerCase().indexOf(valueInput) > -1)})
-    this.userNameListFilter = this.users.filter(c => c.displayName.toLowerCase().indexOf(valueInput) > -1)
+    if($event !== undefined){
+      this.event = $event
+      this.userNameListFilter = []
+      let valueInput = $event.detail.value
+      this.userNameListFilter = this.users.filter(c => c.displayName.toLowerCase().indexOf(valueInput) > -1)
+    }
+    
+    //this.userNameListFilter.map(friend => {
+    //  if(this.idFriends.indexOf(friend.id) > -1){
+    //    friend.canBeAdded = false
+    //    console.log(friend.displayName + " est amis")
+    //  }
+    //  else{
+    //    friend.canBeAdded = true
+    //  }
+    //})
+    //console.log(this.userNameListFilter)
+    
   }
 
 
 
   testerFriendsData(){
-    console.log(this.usersFriends)
   }
 
   addUserToChannel(id : string) {
@@ -102,13 +111,23 @@ export class Tab1Page {
     console.log(id)
   }
 
-  addfriend(){
-    this.users.map(user => {
-      if(user.isChecked === true){
-        this.userService.addFriendsToUsers(this.userId,user.id)
-      }
-    })
+  addfriend(idUserAAjouter : string){
+    console.log(idUserAAjouter)
+    this.userService.addFriendsToUsers(this.userId,idUserAAjouter)
+    //let self = this
+    //let idAAjouter : any[]=[]
+    //this.users.map(user => {
+//
+    //    if(user.isChecked){
+    //      idAAjouter.push(user.id)
+    //    }
+//
+    //})
+    //this.userService.addFriendsToUsers(this.userId,idAAjouter)
+    //this.onSearchInput(this.event)
+    
   }
+
 
   logout(){
     this.userService.logout()

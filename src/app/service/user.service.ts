@@ -172,14 +172,17 @@ export class UserService {
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
   }
 
-  addFriendsToUsers(idCurrentUser : string, idUserAAjouter : string){
+  addFriendsToUsers(idCurrentUser : string, idUserAAjouter : any){
     let isFriend = {
       isFriend : true
     }
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
-  }
 
+      this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
+      this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idUserAAjouter).set(isFriend)
+
+    //console.log(this.friendListe(idCurrentUser))
+    //return this.friendListe(idCurrentUser)
+  }
 
   addChannelToUser(id: string, idChannel: string, nom : string) {
     // //return firebase.database().ref(id).push(channel)
@@ -334,11 +337,7 @@ export class UserService {
   //  return this.doc(`users/${userId}`);
   //}
 
-  returnCurrentUser() {
-    this._auth.user.subscribe(user => {        // Permet d'initialiser la variable user pour savoir si qqn est connecté ou pas sur la session
-      return user
-    })
-  }
+
 
 
   
