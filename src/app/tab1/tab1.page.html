@@ -30,7 +30,7 @@
           <ion-col size="5">
             <div class="userNameText">
               <div class="logoutButton">
-                <ion-button shape="round" color="primary"  (click)="acceptFriend(user.id)"> Ajouter
+                <ion-button shape="round" color="primary"  (click)="acceptFriend(user)"> Ajouter
                 </ion-button>
               </div>
             </div>
@@ -61,12 +61,8 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-icon name="add-circle" (click)="addfriend(user.id)" *ngIf="user.canBeAdded"></ion-icon>
-
-      <div class="logoutButton">
-        <ion-button *ngIf="user.isDoingAdded" shape="round" color="primary"  (click)="acceptFriend(user.id)"> Ajouter
-        </ion-button>
-      </div>
+      <ion-icon name="add-circle" (click)="addfriend(user)" *ngIf="user.canBeAdded"></ion-icon>
+      <ion-icon name="remove-circle" (click)="removeFriend(user)" *ngIf="user.wantAdd"></ion-icon>
       
     </ion-item>
 
@@ -77,10 +73,10 @@
 
 
 
-  <div class="logoutButton">
+  <!-- <div class="logoutButton">
     <ion-button shape="round" color="primary" (click)="addfriend()"> Ajouter
     </ion-button>
-  </div>
+  </div> -->
 
 
   <!-- <ion-list *ngFor="let user of users; let i = index">

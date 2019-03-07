@@ -52,7 +52,7 @@ export class Tab1Page {
               if(friend.isFriend === "pending"){
                 this.idPendingFriends.push(friend.id)
               }
-              else{
+              if(friend.isFriend === "wantAdd"){
                 this.wantAddFriend.push(friend.id)
               }
             }
@@ -75,21 +75,31 @@ export class Tab1Page {
           this.userNameListFilter = users
           self.users = users
 
-          this.userNameListFilter.map(friend => {
+          this.userNameListFilter.map(friend => {                            // Compare amis BDD avec la liste des users ! 
             console.log(friend)
             if (this.idFriends.indexOf(friend.id) > -1) {
               friend.canBeAdded = false
               friend.isDoingAdded = false
+              friend.wantAdd = false
               console.log(friend.displayName + " est amis")
             }
             else {
               if(this.idPendingFriends.indexOf(friend.id) > -1){
                 friend.canBeAdded = false
                 friend.isDoingAdded = true
+                friend.wantAdd = false
               }
               else{
-                friend.canBeAdded = true
-                friend.isDoingAdded = false
+                if(this.wantAddFriend.indexOf(friend.id) > -1){
+                  friend.canBeAdded = false
+                  friend.isDoingAdded = false
+                  friend.wantAdd = true
+                }
+                else{
+                  friend.canBeAdded = true
+                  friend.isDoingAdded = false
+                  friend.wantAdd = false
+                }
               }
             }
           })
@@ -132,34 +142,38 @@ export class Tab1Page {
     console.log(id)
   }
 
-  acceptFriend(id: string) {
+  acceptFriend(user: any) {
+    let id = user.id
     this.usersFriendPending = []
     this.userService.acceptFriend(this.userId, id)
+    user.canBeAdded = false
+    user.isDoingAdded = false
+    user.wantAdd = false
 
-    this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
-      this.userNameListFilter = users
-
-      this.userNameListFilter.map(friend => {
-        console.log(friend)
-        if (this.idFriends.indexOf(friend.id) > -1) {
-          friend.canBeAdded = false
-          friend.isDoingAdded = false
-          console.log(friend.displayName + " est amis")
-        }
-        else {
-          if(this.idPendingFriends.indexOf(friend.id) > -1){
-            friend.canBeAdded = false
-            friend.isDoingAdded = true
-          }
-          else{
-            friend.canBeAdded = true
-            friend.isDoingAdded = false
-          }
-        }
-      })
-
-
-    })
+    //this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
+    //  this.userNameListFilter = users
+//
+    //  this.userNameListFilter.map(friend => {
+    //    console.log(friend)
+    //    if (this.idFriends.indexOf(friend.id) > -1) {
+    //      friend.canBeAdded = false
+    //      friend.isDoingAdded = false
+    //      console.log(friend.displayName + " est amis")
+    //    }
+    //    else {
+    //      if(this.idPendingFriends.indexOf(friend.id) > -1){
+    //        friend.canBeAdded = false
+    //        friend.isDoingAdded = true
+    //      }
+    //      else{
+    //        friend.canBeAdded = true
+    //        friend.isDoingAdded = false
+    //      }
+    //    }
+    //  })
+//
+//
+    //})
 
 
     //this.userService.friendListe(this.userId).subscribe(newFriendsPending => {
@@ -175,37 +189,40 @@ export class Tab1Page {
 
 
 
-  addfriend(idUserAAjouter: string) {
+  addfriend(user: any) {
+    let idUserAAjouter = user.id
+    user.canBeAdded = false
+    user.wantAdd = true
     //console.log(idUserAAjouter)
-    console.log(this.userNameListFilter)
-    let self = this
-    //let verification = false
-    this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-    console.log("toto")
-    this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
-      this.userNameListFilter = users
-
-      this.userNameListFilter.map(friend => {
-        console.log(friend)
-        if (this.idFriends.indexOf(friend.id) > -1) {
-          friend.canBeAdded = false
-          friend.isDoingAdded = false
-          console.log(friend.displayName + " est amis")
-        }
-        else {
-          if(this.idPendingFriends.indexOf(friend.id) > -1){
-            friend.canBeAdded = false
-            friend.isDoingAdded = true
-          }
-          else{
-            friend.canBeAdded = true
-            friend.isDoingAdded = false
-          }
-        }
-      })
-
-
-    })
+    // console.log(this.userNameListFilter)
+    // let self = this
+    let verification = false
+     this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
+    // console.log("toto")
+    // this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
+      // this.userNameListFilter = users
+// 
+      // this.userNameListFilter.map(friend => {
+        // console.log(friend)
+        // if (this.idFriends.indexOf(friend.id) > -1) {
+          // friend.canBeAdded = false
+          // friend.isDoingAdded = false
+          // console.log(friend.displayName + " est amis")
+        // }
+        // else {
+          // if(this.idPendingFriends.indexOf(friend.id) > -1){
+            // friend.canBeAdded = false
+            // friend.isDoingAdded = true
+          // }
+          // else{
+            // friend.canBeAdded = true
+            // friend.isDoingAdded = false
+          // }
+        // }
+      // })
+// 
+// 
+    // })
 
      //this.userService.friendListe(idUserAAjouter).subscribe(listeAmis => {   // renvoie la liste des amis d'un user passer en paramètre
      //  listeAmis.map(ami => {
@@ -239,6 +256,12 @@ export class Tab1Page {
     //  })
     //);
     //friendList.subscribe(verif => verif ? this.userService.addFriendsToUsers(this.userId, idUserAAjouter) : null);  
+  }
+
+  removeFriend(user: any) {
+
+    user.canBeAdded = true
+    user.wantAdd = false
   }
 
 
