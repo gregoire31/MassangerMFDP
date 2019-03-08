@@ -240,6 +240,15 @@ export class UserService {
     );
   }
 
+  deleteChannel(idChannel : string){
+    this.listeAllUsersOfChannels(idChannel).subscribe(users => {
+      users.map(user => {
+        this.usersCollection.doc(user.id).collection("channels").doc(idChannel).delete()
+      })
+    })
+    this.channelCollection.doc(idChannel).delete()
+  }
+
 
   changeAdminModeUser(idChannel:string, idUser : string){
     

@@ -34,6 +34,7 @@ export class GestionUsersChannelPage implements OnInit {
         }
       })
       this.userService.listeAllUsersOfChannels(this.channelId).subscribe(users => {
+        this.usersFriends = []
         console.log(users)
         users.map(user => {
           this.userService.getUserId(user.id).subscribe( data => {
@@ -54,9 +55,11 @@ export class GestionUsersChannelPage implements OnInit {
   }
 
   removeuserChannel(user: any) {
-
-    this.userService.removeUserFromChannel(user.id, this.channelId)
-    //console.log(this.userNameListFilter)
+    this.userService.removeUserFromChannel(user.data.id, this.channelId)
+  }
+  deleteChannel(){
+    this.userService.deleteChannel(this.channelId)
+    this.userService.navigateTo(`app/tabs/tab2`);
   }
 
   navigateByUrlTxt(){
