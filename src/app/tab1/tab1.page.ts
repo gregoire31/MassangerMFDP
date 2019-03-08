@@ -45,7 +45,7 @@ export class Tab1Page {
           console.log(friends)
           console.log("TEST msg")
           friends.map(friend => {
-            if(friend.isFriend === true){
+            if(friend.isFriend === "true"){
               this.idFriends.push(friend.id);
             }
             else{
@@ -60,7 +60,7 @@ export class Tab1Page {
           })
           self.usersFriends = []
           friends.map(friend => {
-            if (friend.isFriend === true) {
+            if (friend.isFriend === "true") {
               self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
                 console.log(data)
                 self.usersFriends.push({ ...data })
@@ -126,7 +126,7 @@ export class Tab1Page {
     console.log(this.userNameListFilter)
   }
 
-  onSearchInput($event) {
+  onSearchInput($event) { 
     if ($event !== undefined) {
       this.event = $event
       this.userNameListFilter = []
@@ -261,7 +261,11 @@ export class Tab1Page {
   removeFriend(user: any) {
 
     user.canBeAdded = true
+    user.isDoingAdded = false
     user.wantAdd = false
+
+    this.userService.deniedFriend(this.userId, user.id)
+    console.log(this.userNameListFilter)
   }
 
 

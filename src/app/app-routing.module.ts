@@ -26,7 +26,8 @@ const routes: Routes = [
     path: 'app',
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canActivate: [AuthGuard]
-  },
+  },  { path: 'gestion-users-channel', loadChildren: './gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule' },
+
   //{ path: 'channel-creation', loadChildren: './channel-creation/channel-creation.module#ChannelCreationPageModule' }
 
 

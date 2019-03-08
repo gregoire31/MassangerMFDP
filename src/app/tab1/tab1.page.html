@@ -30,8 +30,8 @@
           <ion-col size="5">
             <div class="userNameText">
               <div class="logoutButton">
-                <ion-button shape="round" color="primary"  (click)="acceptFriend(user)"> Ajouter
-                </ion-button>
+                <ion-button shape="round" color="primary" (click)="acceptFriend(user)"> Accepter</ion-button>
+                <ion-button shape="round" color="primary" (click)="removeFriend(user)"> Refuser</ion-button>
               </div>
             </div>
           </ion-col>
@@ -149,6 +149,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+    <ion-icon name="remove-circle" (click)="removeFriend(user)"></ion-icon>
   </ion-item>
 
   <div class="logoutButton">

@@ -58,6 +58,16 @@ const routes: Routes = [
         ]
       },
 
+      {
+        path: 'textMessage/:channelId/gestionChannel',
+        children: [
+          {
+            path: '',
+            loadChildren: '../gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule'
+          }
+        ]
+      },
+
 
       {
         path: '',

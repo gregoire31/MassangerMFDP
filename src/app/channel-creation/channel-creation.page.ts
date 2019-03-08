@@ -15,6 +15,7 @@ export class ChannelCreationPage implements OnInit {
   userDisplayName : string
   nameChannel : string
   users : any
+  userFriends : any[]=[]
   constructor(public activatedRoute: ActivatedRoute, private userService : UserService) {
   }
 
@@ -26,13 +27,7 @@ export class ChannelCreationPage implements OnInit {
 
   ngOnInit() {
     let self = this
-    this.userService.getUserList().subscribe( (users) =>{
-      console.log(users)
-      self.users = users
-      users.map(user => {
-        console.log(user)
-      })
-    })
+
     //this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
     //console.log(this.channelId)
     this.userService.getCurrentUser().then(function(user)  {
@@ -43,6 +38,28 @@ export class ChannelCreationPage implements OnInit {
         this.userDisplayName = user.displayName
       })
       //console.log(userId)
+    }).then(() => {
+
+      this.userService.friendListe(this.userId).subscribe( (users) =>{
+        users.map(user => {
+          this.userService.getUserId(user.id).subscribe(user => {
+            this.userFriends.push(user)
+          })
+        })
+        //self.users = users
+        //users.map(user => {
+        //  console.log(user)
+        //})
+      })
+
+
+      //this.userService.getUserList().subscribe( (users) =>{
+      //  console.log(users)
+      //  self.users = users
+      //  users.map(user => {
+      //    console.log(user)
+      //  })
+      //})
     })
   }
 
@@ -53,8 +70,11 @@ export class ChannelCreationPage implements OnInit {
       //let channelIdString = stringify(channelId)
       //console.log(channelIdString)
       let channelIdString = String(channelId)
-      this.users.map(user => {
+      this.userFriends.map(user => {
+        console.log(user)
+        
         if(user.isChecked === true){
+          console.log(user)
           this.userService.addUserToChannel(channelIdString,user.id,this.nameChannel)
           this.userService.addChannelToUser(user.id,channelIdString,this.nameChannel)
         }

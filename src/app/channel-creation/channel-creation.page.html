@@ -20,8 +20,9 @@
     </ion-grid>
 
   </ion-item>
+  
 
-  <ion-list *ngFor="let user of users; let i = index">
+  <ion-list *ngFor="let user of userFriends; let i = index">
     <ion-item *ngIf="user.id !== userId">
       <ion-grid>
         <ion-row>
@@ -32,7 +33,7 @@
           </ion-col>
           <ion-col size="10">
             <div class="userNameText">
-              <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+              <ion-label >{{user.displayName}}</ion-label>
             </div>
           </ion-col>
         </ion-row>

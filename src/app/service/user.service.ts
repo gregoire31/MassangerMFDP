@@ -20,8 +20,15 @@ interface Message {
   id : string,
   idUser : string,
   message : string,
-  avatar : string
+  avatar : string,
+  time : string,
+  date : {
+    seconds : number
+  }
 }
+
+export interface friendUserType { isFriend: string }
+export interface isAdminType { isAdmin: boolean }
 
 
 @Injectable({
@@ -131,6 +138,8 @@ export class UserService {
     return this.usersCollection.doc(id).update(todo);
   }
 
+
+
   updateUserDetail(id: string, displayName: string, avatar: string) {
     console.log("Enregistré")
     this.navigateTo('app')
@@ -189,15 +198,16 @@ export class UserService {
 
   acceptFriend(idCurrentUser : string, idUserAAjouter : string){      
     let isFriend = {
-      isFriend : true
+      isFriend : "true"
     }
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend) // 
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend) // 
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)  
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)  
     return this.friendListe(idCurrentUser)
   }
 
   deniedFriend(idCurrentUser : string, idUserAAjouter : string){
-
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()  
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
   }
 
   addChannelToUser(id: string, idChannel: string, nom : string) {
@@ -212,7 +222,7 @@ export class UserService {
   addUserToChannel(idChannel: string, idUser: string, nameChannel : string) {
     let isNotAdmin =  {
       nom : nameChannel,
-      isAdmin: "pending"
+      isAdmin: false
     }
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isNotAdmin)
   }
@@ -222,7 +232,7 @@ export class UserService {
     return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data();
+          const data = a.payload.doc.data() as friendUserType;
           const id = a.payload.doc.id;
           return { id, ...data };
         });
@@ -274,14 +284,24 @@ export class UserService {
   }
 
   listeAllUsersOfChannels (idChannel : string){
-    return this.channelCollection.doc(idChannel).collection("users")
+    return this.channelCollection.doc(idChannel).collection("users").snapshotChanges().pipe(
+    map(actions => {
+      return actions.map(a => {
+        const data = a.payload.doc.data() as isAdminType;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      });
+    })
+    )
   }
 
   listeAllMessageOfAChannel(idChannel : string, numberResult : number) {
+    console.log("service in")
       return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').limit(numberResult)).snapshotChanges().pipe(
         map(actions => {
+          console.log(actions)
           return actions.map(a => {
-            const data = a.payload.doc.data();
+            const data = a.payload.doc.data() as Message;
             const id = a.payload.doc.id;
             return { id, ...data };
           });
@@ -304,6 +324,18 @@ export class UserService {
 
   removeUser(id) {
     return this.usersCollection.doc(id).delete();
+  }
+  removeUserFromChannel(idUser : string, idChannel : string){
+    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
+    this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
+  }
+
+  getRoleofUser(id : string, idChannel : string){
+    return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
+      map(actions => {
+        return actions.payload.data() as isAdminType
+      })
+    )
   }
 
   getCurrentUser() {

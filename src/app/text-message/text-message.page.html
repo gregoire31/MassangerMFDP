@@ -2,38 +2,53 @@
   <ion-toolbar>
     <!-- <ion-title>{{channel.name}}</ion-title> -->
     <ion-title>{{channel.name}}</ion-title>
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="navigateByUrlTxt()">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
+
+
 </ion-header>
 
-<ion-content padding>
+<ion-content padding scrollDownOnLoad="true">
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-        <ion-infinite-scroll-content
-          loadingSpinner="bubbles"
-          loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
+
 
   <ion-list>
     <ion-item *ngFor="let message of messages;">
 
-        <ion-grid>
-            <ion-row>
-              <ion-col size="2">
-                <ion-avatar>
-                  <img [src]="message.avatar">
-                </ion-avatar>
-              </ion-col>
-              <ion-col size="10">
-                <div class="userNameText">
-                  <ion-label (click)="addUserToChannel(user.id)">{{message.message}}</ion-label>
-                </div>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-          </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+            <ion-avatar>
+              <img [src]="message.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="5">
+            <div class="userNameText">
+              <ion-label>{{message.message}}</ion-label>
+            </div>
+          </ion-col>
+          <ion-col size="5">
+            <div class="userNameText">
+              <ion-label>{{message.time}}</ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
   </ion-list>
 
+  
+
+
+  <!-- <ion-infinite-scroll (ionInfinite)="loadData($event)" loadingSpinner="bubbles" loadingText="Loading Messages...">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+ -->
 
 
   <ion-list>
@@ -52,4 +67,8 @@
       </ion-grid>
     </ion-item>
   </ion-list>
+
+
+
+
 </ion-content>

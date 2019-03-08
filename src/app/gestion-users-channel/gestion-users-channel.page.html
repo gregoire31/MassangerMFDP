@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+
+      <button ion-button icon-only (click)="navigateByUrlTxt()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+
+    </ion-buttons>
+    <ion-title>gestionUsersChannel</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let user of usersFriends; let i = index">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="2">
+            <ion-avatar>
+              <img [src]="user.data.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="10">
+            <div class="userNameText">
+              <ion-label (click)="addfriend(user.data.id)">{{user.data.displayName}}</ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-icon name="remove-circle" *ngIf="user.isRemovable" (click)="removeuserChannel(user)"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+
+
+  <button ion-button icon-only (click)="testos()">Tester
+    </button>
+
+    <ion-button *ngIf="userIdAdmin" (click)="deleteChannel()">SupprimerChannel
+      </ion-button>
+</ion-content>
