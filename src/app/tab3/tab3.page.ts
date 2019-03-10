@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../service/user.service';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @Component({
   selector: 'app-tab3',
@@ -14,9 +15,9 @@ export class Tab3Page {
   userId : string
   //userName = "toto"
   displayName: string
+  myPhoto : any = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
 
-  constructor(private userService : UserService) {
-    let self = this
+  constructor(private userService : UserService, private camera: Camera) {
 
    }
 
@@ -44,6 +45,20 @@ export class Tab3Page {
 
   logout(){
     this.userService.logout()
+  }
+
+  getImage(){
+    const options:CameraOptions = {
+      quality : 70,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      saveToPhotoAlbum : false
+
+    }
+
+    this.camera.getPicture(options).then((imageData)=> {
+      this.myPhoto ='data:image/jpeg;base640,'+ imageData
+    })
   }
 
 

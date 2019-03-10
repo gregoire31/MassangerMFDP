@@ -414,30 +414,30 @@ export class UserService {
 
   
 
-  signup(emailRegister, passwordRegister, nomRegister) {
-    let self = this
-    let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
-    this._auth
-      .auth
-      .createUserWithEmailAndPassword(emailRegister, passwordRegister)
-      .then(
-        (newUser) => {
-          self.addUserDetails(newUser.user.uid, nomRegister, photoURL)
-          this.presentToastWithOptionsWithMessage(nomRegister, "tertiary")
-          console.log(newUser)
-          newUser.user.updateProfile({
-            displayName: nomRegister,
-            photoURL: photoURL,
-          })
-        })
-
-      .then(function () {
-        self.navigateTo('app')
-      })
-      .catch(err => {
-        this.presentToastWithOptionsWithMessage(err.message, "warning")
-      });
-  }
+  //signup(emailRegister, passwordRegister, nomRegister) {
+  //  let self = this
+  //  let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+  //  this._auth
+  //    .auth
+  //    .createUserWithEmailAndPassword(emailRegister, passwordRegister)
+  //    .then(
+  //      (newUser) => {
+  //        self.addUserDetails(newUser.user.uid, nomRegister, photoURL)
+  //        this.presentToastWithOptionsWithMessage(nomRegister, "tertiary")
+  //        console.log(newUser)
+  //        newUser.user.updateProfile({
+  //          displayName: nomRegister,
+  //          photoURL: photoURL,
+  //        })
+  //      })
+//
+  //    .then(function () {
+  //      self.navigateTo('app')
+  //    })
+  //    .catch(err => {
+  //      this.presentToastWithOptionsWithMessage(err.message, "warning")
+  //    });
+  //}
 
   navigateTo(url: string) {
     this.router.navigateByUrl(url);

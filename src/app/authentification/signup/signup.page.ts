@@ -41,6 +41,7 @@ export class SignupPage implements OnInit {
       this.windowRef.confirmationResult = result;
     }).catch(error => console.log(error))
   }
+  
 
   verifyLoginCode(){
     let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
@@ -62,29 +63,5 @@ export class SignupPage implements OnInit {
     .catch(error => console.log(error, "incorrect code entered"));
   }
 
-  //signup(emailRegister, passwordRegister, nomRegister) {
-  //  let self = this
-  //  let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
-  //  this._auth
-  //    .auth
-  //    .createUserWithEmailAndPassword(emailRegister, passwordRegister)
-  //    .then(
-  //      (newUser) => {
-  //        self.addUserDetails(newUser.user.uid, nomRegister, photoURL)
-  //        this.presentToastWithOptionsWithMessage(nomRegister, "tertiary")
-  //        console.log(newUser)
-  //        newUser.user.updateProfile({
-  //          displayName: nomRegister,
-  //          photoURL: photoURL,
-  //        })
-  //      })
-//
-  //    .then(function () {
-  //      self.navigateTo('app')
-  //    })
-  //    .catch(err => {
-  //      this.presentToastWithOptionsWithMessage(err.message, "warning")
-  //    });
-  //}
 
 }
