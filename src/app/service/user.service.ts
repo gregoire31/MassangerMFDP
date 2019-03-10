@@ -17,6 +17,7 @@ export interface UserList {
 }
 
 interface Message {
+  dateNumber : string,
   id : string,
   idUser : string,
   message : string,
@@ -24,7 +25,8 @@ interface Message {
   time : string,
   date : {
     seconds : number
-  }
+  },
+  
 }
 
 export interface friendUserType { isFriend: string }
@@ -71,6 +73,11 @@ export class UserService {
     });
 
   }
+
+  get windowRef(){
+    return window
+  }
+  
   async presentToastWithOptions() {
     const toast = await this.toastController.create({
       message: 'Email ou Mot de passe incorect',
@@ -282,7 +289,7 @@ export class UserService {
   }
 
   addMessageToChannel(idChannel : string, idUser : string, message :string, date:Date, avatar : string){
-    console.log("ID CHANNEL : " + idChannel + "ID User : " + idUser + "message : " + message + "date : " + date + "avatar : "+ avatar)
+    //console.log("ID CHANNEL : " + idChannel + "ID User : " + idUser + "message : " + message + "date : " + date + "avatar : "+ avatar)
     let messageAEntrer =  {
       idUser : idUser,
       message : message,
@@ -304,13 +311,44 @@ export class UserService {
     )
   }
 
-  listeAllMessageOfAChannel(idChannel : string, numberResult : number) {
+  convertSecond(datedernierMessage: number, dateActuel: number) {
+    let secondeEntreLesDeux = dateActuel / 1000 - datedernierMessage
+
+
+    if (secondeEntreLesDeux < 60) {
+      if (secondeEntreLesDeux < 1) {
+        return "A l'instant"
+      } else {
+
+        return `${Math.floor(secondeEntreLesDeux)} secondes`
+      }
+    }
+    if (secondeEntreLesDeux < 3600) {
+
+      return `${Math.floor(secondeEntreLesDeux / 60)} minutes`
+    }
+    if (secondeEntreLesDeux < 86400) {
+      return `${Math.floor(secondeEntreLesDeux / 3600)} heures`
+    }
+    else {
+      //console.log(secondeEntreLesDeux)
+      return `${Math.floor(secondeEntreLesDeux / 86400)} jours`
+    }
+  }
+
+
+  listeAllMessageOfAChannel(idChannel : string, numberResultStart : number, numberResultFinal) {
+    let date = new Date().getTime()
+    console.log(date)
+
     console.log("service in")
-      return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').limit(numberResult)).snapshotChanges().pipe(
+      return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').startAt(0)).snapshotChanges().pipe(
         map(actions => {
-          console.log(actions)
+          //console.log(actions)
           return actions.map(a => {
             const data = a.payload.doc.data() as Message;
+            console.log(data)
+            data.dateNumber = this.convertSecond(data.date.seconds,date)
             const id = a.payload.doc.id;
             return { id, ...data };
           });

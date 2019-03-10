@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../service/user.service';
+import * as firebase from 'firebase'
 
 @Component({
   selector: 'app-signup',
@@ -11,15 +12,79 @@ export class SignupPage implements OnInit {
   emailRegister : string
   passwordRegister : string 
   nomRegister : string
+  windowRef : any
+  phoneNumber : string;
+  verificationCode : string;
+  user : any
 
   constructor(private userService : UserService) { }
 
   ngOnInit() {
+    let self = this
+    this.windowRef = this.userService.windowRef
+    setTimeout(function(){ 
+      self.windowRef.recapchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
+      self.windowRef.recapchaVerifier.render()
+     }, 1);
     
   }
 
-  signup() {
-    this.userService.signup(this.emailRegister,this.passwordRegister,this.nomRegister)
+  //signup() {
+  //  this.userService.signup(this.emailRegister,this.passwordRegister,this.nomRegister)
+  //}
+
+  sendLoginCode() {
+    const appVerifier = this.windowRef.recapchaVerifier;
+    const num = `+33${this.phoneNumber}`
+    firebase.auth().signInWithPhoneNumber(num,appVerifier)
+    .then(result => {
+      this.windowRef.confirmationResult = result;
+    }).catch(error => console.log(error))
   }
+
+  verifyLoginCode(){
+    let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+    this.windowRef.confirmationResult
+    .confirm(this.verificationCode)
+    .then(result => {
+      this.user = result.user;
+      return result
+    }).then(user => {
+      console.log(user)
+      this.userService.addUserDetails(user.user.uid,this.nomRegister,photoURL)
+      user.user.updateProfile({
+        displayName: this.nomRegister,
+        photoURL: photoURL,
+      })
+    }).then(()=>{
+      this.userService.navigateTo('app')
+    })
+    .catch(error => console.log(error, "incorrect code entered"));
+  }
+
+  //signup(emailRegister, passwordRegister, nomRegister) {
+  //  let self = this
+  //  let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+  //  this._auth
+  //    .auth
+  //    .createUserWithEmailAndPassword(emailRegister, passwordRegister)
+  //    .then(
+  //      (newUser) => {
+  //        self.addUserDetails(newUser.user.uid, nomRegister, photoURL)
+  //        this.presentToastWithOptionsWithMessage(nomRegister, "tertiary")
+  //        console.log(newUser)
+  //        newUser.user.updateProfile({
+  //          displayName: nomRegister,
+  //          photoURL: photoURL,
+  //        })
+  //      })
+//
+  //    .then(function () {
+  //      self.navigateTo('app')
+  //    })
+  //    .catch(err => {
+  //      this.presentToastWithOptionsWithMessage(err.message, "warning")
+  //    });
+  //}
 
 }

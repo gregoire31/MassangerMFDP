@@ -48,20 +48,8 @@ export class TextMessagePage implements OnInit {
       self.userId = user.uid
     })
 
-     this.userService.listeAllMessageOfAChannel(this.channelId, this.numberResult).subscribe((messages) => {
-       console.log("test on init")
-       let date = new Date()
-
-       this.time = (date.getTime())
-
-       this.messages = []
-
-       messages.map(message => {
-
-         message.time = this.convertSecond(message.date.seconds, this.time)
-
-         this.messages.push(message)
-       })
+     this.userService.listeAllMessageOfAChannel(this.channelId, 1,10).subscribe((messages) => {
+      this.messages = messages
 
      })
     
@@ -135,30 +123,6 @@ export class TextMessagePage implements OnInit {
   
 
 
-  convertSecond(datedernierMessage: number, dateActuel: number) {
-    let secondeEntreLesDeux = dateActuel / 1000 - datedernierMessage
-
-
-    if (secondeEntreLesDeux < 60) {
-      if (secondeEntreLesDeux < 1) {
-        return "A l'instant"
-      } else {
-        //console.log(secondeEntreLesDeux)
-        return `${Math.floor(secondeEntreLesDeux)} secondes`
-      }
-    }
-    if (secondeEntreLesDeux < 3600) {
-      let minute: number
-      return `${Math.floor(secondeEntreLesDeux / 60)} minutes`
-    }
-    if (secondeEntreLesDeux < 86400) {
-      return `${Math.floor(secondeEntreLesDeux / 3600)} heures`
-    }
-    else {
-      //console.log(secondeEntreLesDeux)
-      return `${Math.floor(secondeEntreLesDeux / 86400)} jours`
-    }
-  }
 
 
 
