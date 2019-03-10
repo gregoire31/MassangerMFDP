@@ -39,7 +39,7 @@ export class Tab3Page {
   }
 
   save(){
-    this.userService.updateUserDetail(this.userId,this.displayName,this.avatar)
+    this.userService.updateUserDetail(this.userId,this.displayName,this.myPhoto)
   }
 
 
@@ -57,7 +57,26 @@ export class Tab3Page {
     }
 
     this.camera.getPicture(options).then((imageData)=> {
-      this.myPhoto ='data:image/jpeg;base640,'+ imageData
+      this.myPhoto ='data:image/jpeg;base64,'+ imageData
+    })
+  }
+
+
+  takeImage(){
+    const options:CameraOptions = {
+      quality : 70,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType : this.camera.MediaType.PICTURE,
+      correctOrientation : true
+      //saveToPhotoAlbum : false
+
+    }
+
+    this.camera.getPicture(options).then((imageData)=> {
+      this.myPhoto ='data:image/jpeg;base64,'+ imageData
+    }, (err) => {
+
     })
   }
 
