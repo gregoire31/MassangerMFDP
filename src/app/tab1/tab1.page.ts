@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { map, mergeMap, finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { Platform } from 'ionic-angular';
+
 
 @Component({
   selector: 'app-tab1',
@@ -24,7 +27,7 @@ export class Tab1Page {
   idPendingFriends :any[]=[]
   wantAddFriend :any[]=[]
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform) {
 
   }
 
@@ -186,6 +189,17 @@ export class Tab1Page {
     //  console.log(newFriendsPending)
     //})
   }
+  callNotification(){
+    this.localNotifications.schedule({
+      id: 1,
+      title: 'Messenger Ionic',
+      text: "You've added a friend",
+      sound: this.plt.is('android')? 'file://sound.mp3': 'file://beep.caf',
+      vibrate: true
+      //data: { secret: key }
+    });
+  }
+
 
 
 
@@ -198,6 +212,7 @@ export class Tab1Page {
     // let self = this
     let verification = false
      this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
+     this.callNotification()
     // console.log("toto")
     // this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
       // this.userNameListFilter = users
