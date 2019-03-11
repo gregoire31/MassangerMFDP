@@ -44,8 +44,9 @@ export class GestionUsersChannelPage implements OnInit {
             else{
               isRemovable = false
             }
-            if(this.userId !== data.id){
-              this.usersFriends.push({data,isRemovable})
+            if(this.userId !== data.payload.data().id){
+              let dato = data.payload.data()
+              this.usersFriends.push({dato,isRemovable})
             }
           })
         })

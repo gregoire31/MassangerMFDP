@@ -7,26 +7,30 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { map } from 'rxjs/operators';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { Platform } from 'ionic-angular';
 
 
 export interface UserList {
   id: string;
   displayName: string;
   avatar: string;
-  channel: any[]
+  channel: any[];
+  isOnline: boolean
 }
 
+
+
 interface Message {
-  dateNumber : string,
-  id : string,
-  idUser : string,
-  message : string,
-  avatar : string,
-  time : string,
-  date : {
-    seconds : number
+  dateNumber: string,
+  id: string,
+  idUser: string,
+  message: string,
+  avatar: string,
+  time: string,
+  date: {
+    seconds: number
   },
-  
+
 }
 
 export interface friendUserType { isFriend: string }
@@ -48,13 +52,14 @@ export class UserService {
   avatar: string
 
   constructor(
-    public toastController: ToastController, 
-    private _auth: AngularFireAuth, 
-    private router: Router, 
+    public toastController: ToastController,
+    private _auth: AngularFireAuth,
+    private router: Router,
     db: AngularFirestore,
     public activatedRoute: ActivatedRoute,
-    private localNotifications: LocalNotifications
-    ) {
+    private localNotifications: LocalNotifications,
+    private platform: Platform
+  ) {
 
     this.usersCollection = db.collection<UserList>('users');
     this.channelCollection = db.collection<any>('channel')
@@ -74,10 +79,60 @@ export class UserService {
 
   }
 
-  get windowRef(){
+  get windowRef() {
     return window
   }
-  
+
+  callNotificationEnter() {
+    this.getCurrentUser().then(user => {
+      if (user) {
+        this.userOnLine(user.uid)
+      }
+    });
+  }
+
+
+  callNotificationLeave() {
+    this.getCurrentUser().then(user => {
+      if (user) {
+        this.userOffLine(user.uid)
+      }
+
+    })
+
+  }
+
+  //statusConnection(idUser: string) {
+  //  this.usersCollection.doc(idUser).snapshotChanges().subscribe(user => {
+  //    let userSend = user.payload.data() as UserList
+  //    return userSend.isOnline
+  //  })
+  //}
+
+  userOnLine(idUser: string) {
+    this.usersCollection.doc(idUser).update({
+      "isOnline": true
+    })
+  }
+
+  //userLeaveApp(idUser: string) {
+  //  this.usersCollection.doc(idUser).update({
+  //    "isOnline": "pending"
+  //  })
+  //  setTimeout(function () {
+  //    if(this.statusConnection(idUser) === "pending"){
+  //      this.usersCollection.doc(idUser).update({
+  //        "isOnline": "false"
+  //      })
+  //    }
+  //  }, 10000);
+  //}
+  userOffLine(idUser: string) {
+    this.usersCollection.doc(idUser).update({
+      "isOnline": false
+    })
+  }
+
   async presentToastWithOptions() {
     const toast = await this.toastController.create({
       message: 'Email ou Mot de passe incorect',
@@ -87,7 +142,7 @@ export class UserService {
       color: 'danger'
     });
     toast.present();
-    
+
   }
 
   async presentToastWithOptionsWithMessage(message: string, color: string) {
@@ -113,6 +168,8 @@ export class UserService {
     );
   }
 
+
+
   createChannel(id: string, nom: string) {
 
     let self = this
@@ -124,7 +181,7 @@ export class UserService {
       return docRef
     }).then(function (docRef) {
 
-      let isAdmin =  {
+      let isAdmin = {
         nom: nom,
         isAdmin: true
       }
@@ -133,12 +190,12 @@ export class UserService {
       console.log(docRef)
       return docRef.id
     }).catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
+      console.error("Error adding document: ", error);
+    });
   }
 
   getUserId(id) {
-    return this.usersCollection.doc<UserList>(id).valueChanges();
+    return this.usersCollection.doc<UserList>(id).snapshotChanges();
   }
 
   updateUser(todo: UserList, id: string) {
@@ -159,6 +216,7 @@ export class UserService {
   }
 
   pushNotification() {
+
     this.localNotifications.schedule({
       id: this.userId,
       title: 'New user',
@@ -177,12 +235,12 @@ export class UserService {
   //  })
   //}
 
-  addChannelToAdminUser(id: string, idChannel: string, nom : string) {
+  addChannelToAdminUser(id: string, idChannel: string, nom: string) {
     // //return firebase.database().ref(id).push(channel)
     // console.log(this.usersCollection.doc(id).collection('channel'))
     console.log(id)
-    let isNotAdmin =  {
-      nom : nom,
+    let isNotAdmin = {
+      nom: nom,
       isAdmin: true
     }
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
@@ -190,52 +248,52 @@ export class UserService {
 
 
 
-  addFriendsToUsers(idCurrentUser : string, idUserAAjouter : any){
+  addFriendsToUsers(idCurrentUser: string, idUserAAjouter: any) {
     let isFriend = {
-      isFriend : "pending"
+      isFriend: "pending"
     }
     let isFriendwantAdd = {
-      isFriend : "wantAdd"
+      isFriend: "wantAdd"
     }
 
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd) 
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
     console.log("complete")
   }
 
-  acceptFriend(idCurrentUser : string, idUserAAjouter : string){      
+  acceptFriend(idCurrentUser: string, idUserAAjouter: string) {
     let isFriend = {
-      isFriend : "true"
+      isFriend: "true"
     }
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)  
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)  
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
     return this.friendListe(idCurrentUser)
   }
 
-  deniedFriend(idCurrentUser : string, idUserAAjouter : string){
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()  
+  deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
   }
 
-  addChannelToUser(id: string, idChannel: string, nom : string) {
+  addChannelToUser(id: string, idChannel: string, nom: string) {
     console.log(id)
-    let isNotAdmin =  {
-      nom : nom,
+    let isNotAdmin = {
+      nom: nom,
       isAdmin: false
     }
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
   }
 
-  addUserToChannel(idChannel: string, idUser: string, nameChannel : string) {
-    let isNotAdmin =  {
-      nom : nameChannel,
+  addUserToChannel(idChannel: string, idUser: string, nameChannel: string) {
+    let isNotAdmin = {
+      nom: nameChannel,
       isAdmin: false
     }
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isNotAdmin)
   }
-  
 
-  friendListe(id : string){
+
+  friendListe(id: string) {
     return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -247,7 +305,7 @@ export class UserService {
     );
   }
 
-  deleteChannel(idChannel : string){
+  deleteChannel(idChannel: string) {
     this.listeAllUsersOfChannels(idChannel).subscribe(users => {
       users.map(user => {
         this.usersCollection.doc(user.id).collection("channels").doc(idChannel).delete()
@@ -257,16 +315,16 @@ export class UserService {
   }
 
 
-  changeAdminModeUser(idChannel:string, idUser : string){
-    
-    let isAdmin =  {
+  changeAdminModeUser(idChannel: string, idUser: string) {
+
+    let isAdmin = {
       isAdmin: true
     }
 
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isAdmin)
   }
 
-  returnListChannelOfCurrentUser(id:string){
+  returnListChannelOfCurrentUser(id: string) {
     //return this.channelCollection.snapshotChanges().pipe(
     //  map(actions => {
     //    console.log(actions)
@@ -284,30 +342,30 @@ export class UserService {
     );
   }
 
-  returnDetailsChannel(id : string){
+  returnDetailsChannel(id: string) {
     return this.channelCollection.doc(id).valueChanges()
   }
 
-  addMessageToChannel(idChannel : string, idUser : string, message :string, date:Date, avatar : string){
+  addMessageToChannel(idChannel: string, idUser: string, message: string, date: Date, avatar: string) {
     //console.log("ID CHANNEL : " + idChannel + "ID User : " + idUser + "message : " + message + "date : " + date + "avatar : "+ avatar)
-    let messageAEntrer =  {
-      idUser : idUser,
-      message : message,
-      date : date,
-      avatar : avatar
+    let messageAEntrer = {
+      idUser: idUser,
+      message: message,
+      date: date,
+      avatar: avatar
     }
     return this.channelCollection.doc(idChannel).collection("messages").add(messageAEntrer)
   }
 
-  listeAllUsersOfChannels (idChannel : string){
+  listeAllUsersOfChannels(idChannel: string) {
     return this.channelCollection.doc(idChannel).collection("users").snapshotChanges().pipe(
-    map(actions => {
-      return actions.map(a => {
-        const data = a.payload.doc.data() as isAdminType;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      });
-    })
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as isAdminType;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
     )
   }
 
@@ -337,25 +395,25 @@ export class UserService {
   }
 
 
-  listeAllMessageOfAChannel(idChannel : string, numberResultStart : number, numberResultFinal) {
+  listeAllMessageOfAChannel(idChannel: string, numberResultStart: number, numberResultFinal) {
     let date = new Date().getTime()
     console.log(date)
 
     console.log("service in")
-      return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').startAt(0)).snapshotChanges().pipe(
-        map(actions => {
-          //console.log(actions)
-          return actions.map(a => {
-            const data = a.payload.doc.data() as Message;
-            console.log(data)
-            data.dateNumber = this.convertSecond(data.date.seconds,date)
-            const id = a.payload.doc.id;
-            return { id, ...data };
-          });
-        })
-      );
-    }
-  
+    return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').startAt(0)).snapshotChanges().pipe(
+      map(actions => {
+        //console.log(actions)
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Message;
+          console.log(data)
+          data.dateNumber = this.convertSecond(data.date.seconds, date)
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
 
   addUser(todo: UserList) {
     return this.usersCollection.add(todo);
@@ -372,12 +430,12 @@ export class UserService {
   removeUser(id) {
     return this.usersCollection.doc(id).delete();
   }
-  removeUserFromChannel(idUser : string, idChannel : string){
+  removeUserFromChannel(idUser: string, idChannel: string) {
     this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
   }
 
-  getRoleofUser(id : string, idChannel : string){
+  getRoleofUser(id: string, idChannel: string) {
     return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
       map(actions => {
         return actions.payload.data() as isAdminType
@@ -387,13 +445,14 @@ export class UserService {
 
   getCurrentUser() {
     return new Promise<any>((resolve, reject) => {
-      firebase.auth().onAuthStateChanged(function (user) {
-        //if (user) {
-        resolve(user);
-        //} else {
-        //  reject('No user logged inside !!');
-        //}
-      })
+      resolve(firebase.auth().currentUser)
+      //firebase.auth().onAuthStateChanged(function (user) {
+      //  //if (user) {
+      //  resolve(user);
+      //  //} else {
+      //  //  reject('No user logged inside !!');
+      //  //}
+      //})
     })
   }
   returnUser(): Observable<any> {
@@ -412,7 +471,7 @@ export class UserService {
     )
   }
 
-  
+
 
   //signup(emailRegister, passwordRegister, nomRegister) {
   //  let self = this
@@ -430,7 +489,7 @@ export class UserService {
   //          photoURL: photoURL,
   //        })
   //      })
-//
+  //
   //    .then(function () {
   //      self.navigateTo('app')
   //    })
@@ -443,7 +502,7 @@ export class UserService {
     this.router.navigateByUrl(url);
   }
 
-  navigateWithoutUrl(url : any){
+  navigateWithoutUrl(url: any) {
     this.router.navigate(url)
   }
 
@@ -453,8 +512,9 @@ export class UserService {
       .auth
       .signInWithEmailAndPassword(email, password)
       .then(value => {
-        console.log(value);
-        console.log(value.user.displayName)
+        //console.log(value);
+        //console.log(value.user.displayName)
+        this.userOnLine(value.user.uid)
         this.navigateTo('app')
       })
       .catch(err => {
@@ -463,7 +523,22 @@ export class UserService {
   }
 
   logout() {
-    return this._auth.auth.signOut();
+    let self = this
+    this.getCurrentUser().then(user => {
+      console.log(user)
+      this.userOffLine(user.uid)
+    }).then(()=> {
+      setTimeout(function () {
+        return self._auth.auth.signOut();
+      
+    }, 100);
+      
+      
+    })
+
   }
+    
+   
+  
 
 }

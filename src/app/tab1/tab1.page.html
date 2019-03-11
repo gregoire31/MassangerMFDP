@@ -20,6 +20,7 @@
           <ion-col size="2">
             <ion-avatar>
               <img [src]="user.avatar">
+              <ion-badge id="notifications-badge" color="danger">5</ion-badge>
             </ion-avatar>
           </ion-col>
           <ion-col size="5">
@@ -51,6 +52,8 @@
         <ion-row>
           <ion-col size="2">
             <ion-avatar>
+                <ion-badge *ngIf="user.isOnline" id="notifications-badge" color="success">0</ion-badge>
+                <ion-badge *ngIf="!user.isOnline" id="notifications-badge" color="danger">0</ion-badge>
               <img [src]="user.avatar">
             </ion-avatar>
           </ion-col>
@@ -139,6 +142,8 @@
       <ion-row>
         <ion-col size="2">
           <ion-avatar>
+              <ion-badge *ngIf="user.isOnline" id="notifications-badge" color="success">0</ion-badge>
+              <ion-badge *ngIf="!user.isOnline" id="notifications-badge" color="danger">0</ion-badge>
             <img [src]="user.avatar">
           </ion-avatar>
         </ion-col>

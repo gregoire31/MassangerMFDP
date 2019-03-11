@@ -13,6 +13,7 @@ import { AngularFirestore, FirestoreSettingsToken } from 'angularfire2/firestore
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment'
 import { AuthGuard } from '../guards/auth.guard'
+import { Platform } from 'ionic-angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +31,8 @@ import { AuthGuard } from '../guards/auth.guard'
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: FirestoreSettingsToken, useValue: { }},
     AngularFirestore,
-    AuthGuard
+    AuthGuard,
+    Platform
   ],
   bootstrap: [AppComponent]
 })

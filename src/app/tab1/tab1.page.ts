@@ -23,9 +23,9 @@ export class Tab1Page {
   idFriends: any[] = []
   newFriends: any[] = []
   event: string
-  usersFriendPending: any[] = []
   idPendingFriends :any[]=[]
   wantAddFriend :any[]=[]
+  idFriendsStocke:any[]=[]
 
   constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform) {
 
@@ -41,12 +41,13 @@ export class Tab1Page {
         //console.log(this.userId)
         this.userService.getUserId(this.userId).subscribe(user => {
           //console.log(user)
-          this.userName = user.displayName
+          this.userName = user.payload.data().displayName
         })
       }).then(() => {
         this.userService.friendListe(this.userId).subscribe((friends) => {  // renvoie tableau is friend true or false
-          console.log(friends)
-          console.log("TEST msg")
+          //console.log(friends)
+          //console.log(friends)
+          //console.log("TEST msg")
           friends.map(friend => {
             if(friend.isFriend === "true"){
               this.idFriends.push(friend.id);
@@ -65,26 +66,34 @@ export class Tab1Page {
           friends.map(friend => {
             if (friend.isFriend === "true") {
               self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
-                console.log(data)
-                self.usersFriends.push({ ...data })
+                if(self.idFriendsStocke.indexOf(data.payload.data().id) > -1){   // Si l'élément entrant est déja présent dans le tablea
+                  let indexARemplacer = (self.idFriendsStocke.indexOf(data.payload.data().id))    // On remplace l'élément car celui ci est mis à jour (ONline / Offline)
+                  self.usersFriends[indexARemplacer] = data.payload.data()
+                }
+                else{ 
+                  this.idFriendsStocke.push(data.payload.data().id)
+                  self.usersFriends.push({ ...data.payload.data() })
+                }
+
+                
               })
             }
           })
 
         })
       }).then(() => {
-        console.log(this.idFriends)
+        //console.log(this.idFriends)
         this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
           this.userNameListFilter = users
           self.users = users
 
           this.userNameListFilter.map(friend => {                            // Compare amis BDD avec la liste des users ! 
-            console.log(friend)
+            //console.log(friend)
             if (this.idFriends.indexOf(friend.id) > -1) {
               friend.canBeAdded = false
               friend.isDoingAdded = false
               friend.wantAdd = false
-              console.log(friend.displayName + " est amis")
+              //console.log(friend.displayName + " est amis")
             }
             else {
               if(this.idPendingFriends.indexOf(friend.id) > -1){
@@ -113,15 +122,6 @@ export class Tab1Page {
           //  console.log(user.id)          
           //})
         })
-      }).then(() => {
-        this.userService.friendListe(this.userId).subscribe((friendsPending) => {
-          friendsPending.map(friendPending => {
-            this.userService.getUserId(friendPending.id).subscribe(data => {
-              this.usersFriendPending.push({ ...data })
-            })
-          })
-
-        })
       })
   }
 
@@ -147,7 +147,6 @@ export class Tab1Page {
 
   acceptFriend(user: any) {
     let id = user.id
-    this.usersFriendPending = []
     this.userService.acceptFriend(this.userId, id)
     user.canBeAdded = false
     user.isDoingAdded = false

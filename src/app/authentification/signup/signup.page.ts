@@ -57,7 +57,9 @@ export class SignupPage implements OnInit {
         displayName: this.nomRegister,
         photoURL: photoURL,
       })
+      this.userService.userOnLine(user.user.uid)
     }).then(()=>{
+      
       this.userService.navigateTo('app')
     })
     .catch(error => console.log(error, "incorrect code entered"));
