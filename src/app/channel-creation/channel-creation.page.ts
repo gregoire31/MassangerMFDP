@@ -35,7 +35,7 @@ export class ChannelCreationPage implements OnInit {
       return user.uid
     }).then((userId)=>{
       this.userService.getUserId(userId).subscribe((user)=> {
-        this.userDisplayName = user.displayName
+        this.userDisplayName = user.payload.data().displayName
       })
       //console.log(userId)
     }).then(() => {

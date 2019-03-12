@@ -36,9 +36,9 @@ export class Tab2Page {
       self.userId = user.uid
     }).then(() => {
       this.userService.getUserId(this.userId).subscribe(user => {
-        console.log(user.displayName)
-        this.avatar = user.avatar
-        this.displayName = user.displayName
+        console.log(user.payload.data().displayName)
+        this.avatar = user.payload.data().avatar
+        this.displayName = user.payload.data().displayName
         self.users = user
       })
     }

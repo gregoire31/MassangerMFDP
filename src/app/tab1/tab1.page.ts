@@ -62,7 +62,6 @@ export class Tab1Page {
             }
             
           })
-          self.usersFriends = []
           friends.map(friend => {
             if (friend.isFriend === "true") {
               self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
@@ -74,7 +73,6 @@ export class Tab1Page {
                   this.idFriendsStocke.push(data.payload.data().id)
                   self.usersFriends.push({ ...data.payload.data() })
                 }
-
                 
               })
             }
@@ -116,11 +114,6 @@ export class Tab1Page {
             }
           })
 
-
-          //self.userNameListFilter = users
-          //users.map(user => {
-          //  console.log(user.id)          
-          //})
         })
       })
   }

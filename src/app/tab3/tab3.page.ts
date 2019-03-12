@@ -29,9 +29,9 @@ export class Tab3Page {
       self.userId = user.uid
     }).then(() => {
       this.userService.getUserId(this.userId).subscribe(user => {
-        console.log(user.displayName)
-        this.avatar = user.avatar
-        this.displayName = user.displayName
+        let userData = user.payload.data()
+        this.avatar = userData.avatar
+        this.displayName = userData.displayName
         self.users = user
       })
     }
