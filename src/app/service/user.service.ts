@@ -6,8 +6,6 @@ import { ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { map } from 'rxjs/operators';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-import { Platform } from 'ionic-angular';
 
 
 export interface UserList {
@@ -41,41 +39,20 @@ export interface isAdminType { isAdmin: boolean }
   providedIn: 'root'
 })
 export class UserService {
-  userId: any
   user: Observable<any[]>
   private usersCollection: AngularFirestoreCollection<UserList>;
-  private users: Observable<UserList[]>;
   private channelCollection: AngularFirestoreCollection<any>;
-  private channels: Observable<any[]>;
-  uid: string
-  displayName: string
-  avatar: string
 
   constructor(
     public toastController: ToastController,
     private _auth: AngularFireAuth,
     private router: Router,
     db: AngularFirestore,
-    public activatedRoute: ActivatedRoute,
-    private localNotifications: LocalNotifications,
-    private platform: Platform
+    public activatedRoute: ActivatedRoute
   ) {
 
     this.usersCollection = db.collection<UserList>('users');
     this.channelCollection = db.collection<any>('channel')
-    //this.users = this.usersCollection.snapshotChanges().pipe(
-    //  map(actions => {
-    //    return actions.map(a => {
-    //      const data = a.payload.doc.data();
-    //      const id = a.payload.doc.id;
-    //      return { id, ...data };
-    //    });
-    //  })
-    //);
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) { this.userId = user.uid }
-    });
 
   }
 
@@ -83,19 +60,19 @@ export class UserService {
     return window
   }
 
-  callNotificationEnter() {
+  setUserStatusOnLine() {
     this.getCurrentUser().then(user => {
       if (user) {
-        this.userOnLine(user.uid)
+        this.setUserOnLine(user.uid)
       }
     });
   }
 
 
-  callNotificationLeave() {
+  setUserStatusOffLine() {
     this.getCurrentUser().then(user => {
       if (user) {
-        this.userOffLine(user.uid)
+        this.setUserOffLine(user.uid)
       }
 
     })
@@ -109,7 +86,7 @@ export class UserService {
   //  })
   //}
 
-  userOnLine(idUser: string) {
+  setUserOnLine(idUser: string) {
     this.usersCollection.doc(idUser).update({
       "isOnline": true
     })
@@ -127,7 +104,7 @@ export class UserService {
   //    }
   //  }, 10000);
   //}
-  userOffLine(idUser: string) {
+  setUserOffLine(idUser: string) {
     this.usersCollection.doc(idUser).update({
       "isOnline": false
     })
@@ -194,14 +171,9 @@ export class UserService {
     });
   }
 
-  getUserId(id) {
+  getUserById(id) {
     return this.usersCollection.doc<UserList>(id).snapshotChanges();
   }
-
-  updateUser(todo: UserList, id: string) {
-    return this.usersCollection.doc(id).update(todo);
-  }
-
 
 
   updateUserDetail(id: string, displayName: string, avatar: string) {
@@ -215,29 +187,9 @@ export class UserService {
 
   }
 
-  pushNotification() {
-
-    this.localNotifications.schedule({
-      id: this.userId,
-      title: 'New user',
-      text: 'New User',
-      foreground: true,
-      //sound: isAndroid? 'file://sound.mp3': 'file://beep.caf',
-      sound: 'file://sound.mp3',
-      //data: { secret: key } 
-    });
-  }
-
-
-  //addChanneNewUser(id: string, channel : any){
-  //  return this.usersCollection.doc(id).update({
-  //    channel : channel
-  //  })
-  //}
 
   addChannelToAdminUser(id: string, idChannel: string, nom: string) {
-    // //return firebase.database().ref(id).push(channel)
-    // console.log(this.usersCollection.doc(id).collection('channel'))
+
     console.log(id)
     let isNotAdmin = {
       nom: nom,
@@ -267,7 +219,7 @@ export class UserService {
     }
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
-    return this.friendListe(idCurrentUser)
+    return this.friendList(idCurrentUser)
   }
 
   deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
@@ -293,7 +245,7 @@ export class UserService {
   }
 
 
-  friendListe(id: string) {
+  friendList(id: string) {
     return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -325,11 +277,6 @@ export class UserService {
   }
 
   returnListChannelOfCurrentUser(id: string) {
-    //return this.channelCollection.snapshotChanges().pipe(
-    //  map(actions => {
-    //    console.log(actions)
-    //  })
-    //);
     console.log(id)
     return this.usersCollection.doc(id).collection("channels").snapshotChanges().pipe(
       map(actions => {
@@ -415,10 +362,6 @@ export class UserService {
   }
 
 
-  addUser(todo: UserList) {
-    return this.usersCollection.add(todo);
-  }
-
   addUserDetails(id: string, displayName: string, avatar: string) {
     return this.usersCollection.doc(id).set({
       id: id,
@@ -428,7 +371,16 @@ export class UserService {
   }
 
   removeUser(id) {
-    return this.usersCollection.doc(id).delete();
+    this.friendList(id).subscribe(friends => {
+      console.log(friends)
+      friends.map(friend => {
+        console.log(friend.id)
+        //this.getUserById(friend.id).subscribe(friend => {
+        //  this.usersCollection.id
+        //})
+      })
+    })
+    //return this.usersCollection.doc(id).delete();
   }
   removeUserFromChannel(idUser: string, idChannel: string) {
     this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
@@ -446,30 +398,13 @@ export class UserService {
   getCurrentUser() {
     return new Promise<any>((resolve, reject) => {
       resolve(firebase.auth().currentUser)
-      //firebase.auth().onAuthStateChanged(function (user) {
-      //  //if (user) {
-      //  resolve(user);
-      //  //} else {
-      //  //  reject('No user logged inside !!');
-      //  //}
-      //})
+
     })
   }
   returnUser(): Observable<any> {
     return this.user
   }
 
-  get currentUser() {
-    return (
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          return user
-        } else {
-          // No user is signed in.
-        }
-      })
-    )
-  }
 
 
 
@@ -514,7 +449,7 @@ export class UserService {
       .then(value => {
         //console.log(value);
         //console.log(value.user.displayName)
-        this.userOnLine(value.user.uid)
+        this.setUserOnLine(value.user.uid)
         this.navigateTo('app')
       })
       .catch(err => {
@@ -526,7 +461,7 @@ export class UserService {
     let self = this
     this.getCurrentUser().then(user => {
       console.log(user)
-      this.userOffLine(user.uid)
+      this.setUserOffLine(user.uid)
     }).then(()=> {
       setTimeout(function () {
         return self._auth.auth.signOut();

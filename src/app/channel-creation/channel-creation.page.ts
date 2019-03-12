@@ -34,15 +34,15 @@ export class ChannelCreationPage implements OnInit {
       self.userId = user.uid
       return user.uid
     }).then((userId)=>{
-      this.userService.getUserId(userId).subscribe((user)=> {
+      this.userService.getUserById(userId).subscribe((user)=> {
         this.userDisplayName = user.payload.data().displayName
       })
       //console.log(userId)
     }).then(() => {
 
-      this.userService.friendListe(this.userId).subscribe( (users) =>{
+      this.userService.friendList(this.userId).subscribe( (users) =>{
         users.map(user => {
-          this.userService.getUserId(user.id).subscribe(user => {
+          this.userService.getUserById(user.id).subscribe(user => {
             this.userFriends.push(user)
           })
         })

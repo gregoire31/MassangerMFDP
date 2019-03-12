@@ -30,12 +30,12 @@ export class AppComponent {
 
       this.platform.pause.subscribe(() => {
 
-         this.userService.callNotificationLeave()
+         this.userService.setUserStatusOffLine()
 
      });
      this.platform.resume.subscribe(() => {
 
-       this.userService.callNotificationEnter()
+       this.userService.setUserStatusOnLine()
      });
     });
   }
@@ -79,21 +79,21 @@ export class AppComponent {
 //       this.platform.pause.subscribe(() => {
 //         var user = firebase.auth().currentUser;
 //         if(user === undefined || user === null){
-//           this.callNotificationEnterTest(user.uid)
+//           this.setUserStatusOnLine(user.uid)
 //         }
-//         //this.callNotificationLeave()
+//         //this.setUserStatusOffLine()
 //     });
 //     this.platform.resume.subscribe(() => {
 //       var user = firebase.auth().currentUser;
 //       if(user !== undefined || user !== null){
-//         this.callNotificationEnterTest(user.uid)
+//         this.setUserStatusOnLine(user.uid)
 //       }
-//       //this.callNotificationEnter()
+//       //this.setUserStatusOnLine()
 //     });
 //     });
 //   }
 
-//   callNotificationEnter(){
+//   setUserStatusOnLine(){
 //     this.localNotifications.schedule({
 //       id: 1,
 //       title: 'Messenger Ionic Enter',
@@ -103,7 +103,7 @@ export class AppComponent {
 //     });
 //   }
 
-//   callNotificationEnterTest(id : string){
+//   setUserStatusOnLine(id : string){
 //     this.localNotifications.schedule({
 //       id: 1,
 //       title: 'Messenger Ionic Enter' ,
@@ -113,7 +113,7 @@ export class AppComponent {
 //     });
 //   }
 
-//   callNotificationLeave(){
+//   setUserStatusOffLine(){
 //     this.localNotifications.schedule({
 //       id: 1,
 //       title: 'Messenger Ionic Leave',
@@ -157,7 +157,7 @@ export class AppComponent {
 //       this.platform.pause.subscribe(() => {
 //         this.userService.getCurrentUser().then(function (user) {
 //           if(user !== undefined){
-//             this.callNotificationLeave(user.uid)
+//             this.setUserStatusOffLine(user.uid)
 //           }
 //           else{
 //             this.testCallNotif()
@@ -169,7 +169,7 @@ export class AppComponent {
 //     this.platform.resume.subscribe(() => {
 //       this.userService.getCurrentUser().then(function (user) {
 //         if(user !== undefined){
-//         this.callNotificationEnter()(user.uid)
+//         this.setUserStatusOnLine()(user.uid)
 //         }
 //         else{
 //           this.testCallNotif()
@@ -182,7 +182,7 @@ export class AppComponent {
 
 
 
-//   callNotificationEnter(id : string){
+//   setUserStatusOnLine(id : string){
 //     this.localNotifications.schedule({
 //       id: 1,
 //       title: 'Messenger Ionic Enter',
@@ -204,7 +204,7 @@ export class AppComponent {
 //     });
 //   }
 
-//   callNotificationLeave(id : string){
+//   setUserStatusOffLine(id : string){
 //     this.localNotifications.schedule({
 //       id: 1,
 //       title: 'Messenger Ionic Leave',

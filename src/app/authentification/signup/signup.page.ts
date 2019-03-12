@@ -57,7 +57,7 @@ export class SignupPage implements OnInit {
         displayName: this.nomRegister,
         photoURL: photoURL,
       })
-      this.userService.userOnLine(user.user.uid)
+      this.userService.setUserOnLine(user.user.uid)
     }).then(()=>{
       
       this.userService.navigateTo('app')

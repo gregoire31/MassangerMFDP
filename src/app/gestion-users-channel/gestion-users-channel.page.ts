@@ -37,7 +37,7 @@ export class GestionUsersChannelPage implements OnInit {
         this.usersFriends = []
         console.log(users)
         users.map(user => {
-          this.userService.getUserId(user.id).subscribe( data => {
+          this.userService.getUserById(user.id).subscribe( data => {
             if(isAdmin){
               isRemovable = true
             }

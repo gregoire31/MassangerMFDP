@@ -39,12 +39,12 @@ export class Tab1Page {
     })
       .then(() => {
         //console.log(this.userId)
-        this.userService.getUserId(this.userId).subscribe(user => {
+        this.userService.getUserById(this.userId).subscribe(user => {
           //console.log(user)
           this.userName = user.payload.data().displayName
         })
       }).then(() => {
-        this.userService.friendListe(this.userId).subscribe((friends) => {  // renvoie tableau is friend true or false
+        this.userService.friendList(this.userId).subscribe((friends) => {  // renvoie tableau is friend true or false
           //console.log(friends)
           //console.log(friends)
           //console.log("TEST msg")
@@ -64,7 +64,7 @@ export class Tab1Page {
           })
           friends.map(friend => {
             if (friend.isFriend === "true") {
-              self.userService.getUserId(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
+              self.userService.getUserById(friend.id).subscribe(data => {          // renvoie tableau avatar displayName etc amis utilisateur SEULEMENT
                 if(self.idFriendsStocke.indexOf(data.payload.data().id) > -1){   // Si l'élément entrant est déja présent dans le tablea
                   let indexARemplacer = (self.idFriendsStocke.indexOf(data.payload.data().id))    // On remplace l'élément car celui ci est mis à jour (ONline / Offline)
                   self.usersFriends[indexARemplacer] = data.payload.data()
@@ -119,7 +119,8 @@ export class Tab1Page {
   }
 
   getItems() {
-    console.log(this.userNameListFilter)
+    this.userService.removeUser(this.userId)
+    //console.log(this.userNameListFilter)
   }
 
   onSearchInput($event) { 
@@ -145,41 +146,6 @@ export class Tab1Page {
     user.isDoingAdded = false
     user.wantAdd = false
 
-    //this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
-    //  this.userNameListFilter = users
-//
-    //  this.userNameListFilter.map(friend => {
-    //    console.log(friend)
-    //    if (this.idFriends.indexOf(friend.id) > -1) {
-    //      friend.canBeAdded = false
-    //      friend.isDoingAdded = false
-    //      console.log(friend.displayName + " est amis")
-    //    }
-    //    else {
-    //      if(this.idPendingFriends.indexOf(friend.id) > -1){
-    //        friend.canBeAdded = false
-    //        friend.isDoingAdded = true
-    //      }
-    //      else{
-    //        friend.canBeAdded = true
-    //        friend.isDoingAdded = false
-    //      }
-    //    }
-    //  })
-//
-//
-    //})
-
-
-    //this.userService.friendListe(this.userId).subscribe(newFriendsPending => {
-    //  if (newFriendsPending !== undefined) {
-    //    this.userService.getUserId(newFriendsPending.id).subscribe(data => {
-    //      console.log(data)
-    //      this.usersFriendPending.push({ ...data })
-    //    })
-    //  }
-    //  console.log(newFriendsPending)
-    //})
   }
   callNotification(){
     this.localNotifications.schedule({
@@ -205,64 +171,7 @@ export class Tab1Page {
     let verification = false
      this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
      this.callNotification()
-    // console.log("toto")
-    // this.userService.getUserList().subscribe((users) => {                // renvoie tous les utilisateurs de la bdd
-      // this.userNameListFilter = users
-// 
-      // this.userNameListFilter.map(friend => {
-        // console.log(friend)
-        // if (this.idFriends.indexOf(friend.id) > -1) {
-          // friend.canBeAdded = false
-          // friend.isDoingAdded = false
-          // console.log(friend.displayName + " est amis")
-        // }
-        // else {
-          // if(this.idPendingFriends.indexOf(friend.id) > -1){
-            // friend.canBeAdded = false
-            // friend.isDoingAdded = true
-          // }
-          // else{
-            // friend.canBeAdded = true
-            // friend.isDoingAdded = false
-          // }
-        // }
-      // })
-// 
-// 
-    // })
 
-     //this.userService.friendListe(idUserAAjouter).subscribe(listeAmis => {   // renvoie la liste des amis d'un user passer en paramètre
-     //  listeAmis.map(ami => {
-     //    console.log(ami)
-     //    if (ami.id === this.userId) {
-     //      verification = true
-     //      console.log("ça match")
-     //      this.userService.acceptFriend(this.userId, idUserAAjouter)
-     //      //return this.friendListe(idCurrentUser)                           // renvoie la liste des amis d'un user passer en paramètre
-     //    }
-     //  })
-     //  if (verification === false) {
-     //    console.log("n'a pas matché")
-     //    this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-     //  }
-     //})
-
-    //const friendList: Observable<boolean | void> = this.userService.friendListe(idUserAAjouter).pipe(
-    //  mergeMap(friends => friends),
-    //  map(friend => {
-    //    console.log(friend);
-//
-    //    if (friend.id === this.userId) {
-    //      verification = true;
-    //      this.userService.acceptFriend(this.userId, idUserAAjouter);
-    //    }
-    //  }),
-    //  finalize(() => {
-    //    if (verification) return true;
-    //    return false; 
-    //  })
-    //);
-    //friendList.subscribe(verif => verif ? this.userService.addFriendsToUsers(this.userId, idUserAAjouter) : null);  
   }
 
   removeFriend(user: any) {
