@@ -1,0 +1,17 @@
+
+	concaténer les messges au lieu de tout aller rechercher ! 
+	mettre msgs à droite ou à gauche suivant s'il est le currentIdUser ou non
+V  	Mettre le système d'ajout de photo.
+V	S'occuper du loggin via numéro de téléphone 
+	abaisser le niveau des messages on submit message
+	trouver un système pour envoyer message direct
+	Ajouter bouton refresh
+	bouton back navigation
+	Mettre système qui récupère les derniers messages envoyer pour les trier par ordre de dernière ajout
+	S'occuper du système de notification
+	Mettre en place les badges
+	Mettre en place l'infinite scroll pour les messages, ainsi que les utilisateurs !
+	scroll en bas pour les utilisateurs
+	scroll en haut pour les messages
+	Système de fichier image vidéo sur chat ! 
+	Refresh application toute les minutes
