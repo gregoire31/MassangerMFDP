@@ -46,9 +46,14 @@ export class Tab2Page {
       this.userService.returnListChannelOfCurrentUser(this.userId).subscribe(function(channels){
         console.log(channels)
         channels.map(channel => {
-          console.log(channel)
+          
+          let stringifyIDChannel = channel.id.length
+          if (stringifyIDChannel < 21){
+            console.log(channel)
+            self.channels.push(channel)
+          }
         })
-        self.channels = channels
+        //self.channels = channels
       })
     })
 

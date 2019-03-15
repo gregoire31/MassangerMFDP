@@ -145,6 +145,36 @@ export class UserService {
     );
   }
 
+  entrerChatPrive(currentuserId: string, userId: string) {
+    let currentIdUserId = `${currentuserId}${userId}`
+    console.log(currentIdUserId)
+    let setData = {
+      isAdmin: true,
+      name: currentIdUserId
+    }
+    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+      if (!data.exists) {
+        this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+        this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+        this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+        this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+      }
+      else {
+        this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+          console.log(data.data())
+          this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+        })
+      }
+      //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+
+      
+    })
+
+
+
+
+  }
+
 
 
   createChannel(id: string, nom: string) {

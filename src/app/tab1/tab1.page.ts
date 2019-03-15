@@ -132,7 +132,10 @@ export class Tab1Page {
     }
 
   }
-
+  entrerChatPrive(Id : string){
+    this.userService.entrerChatPrive(this.userId,Id)
+  }
+  
 
   addUserToChannel(id: string) {
 
