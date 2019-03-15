@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../service/user.service';
 import { Content } from 'ionic-angular';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 //import {take} from 'rxjs/operators'
 //import { IonInfiniteScroll } from '@ionic/angular';
 //import { ThrowStmt } from '@angular/compiler';
@@ -26,11 +26,12 @@ export class TextMessagePage implements OnInit {
   channel: any
   textMsg: string
   userId: string
-  messages: any[] = []
+  messagesFiltre: any[] = []
   avatar: string
   init : boolean
   numberResult: number = 100
   page = 0;
+  msgSub : Subscription;
 
   constructor(public activatedRoute: ActivatedRoute, private userService: UserService) { }
 
@@ -48,8 +49,25 @@ export class TextMessagePage implements OnInit {
       self.userId = user.uid
     })
 
-     this.userService.listeAllMessageOfAChannel(this.channelId, 1,10).subscribe((messages) => {
-      this.messages = messages
+     this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId, 1,10).subscribe((messages) => {
+      //this.messagesFiltre = []
+       //console.log(messages)
+       //this.messagesFiltre = messages
+       messages.map(message => {
+         //console.log(message)
+        this.userService.getUserById(message.idUser).subscribe(user => {
+          //console.log(user.payload.data())
+          message.avatar = user.payload.data().avatar
+          console.log(message)
+          
+          //message.avatar = user.payload.data().avatar
+          //this.messagesFiltre.push(message)
+          
+        })
+        
+       })
+       this.messagesFiltre = messages
+       //this.messages = messages
 
      })
     
@@ -73,6 +91,9 @@ export class TextMessagePage implements OnInit {
 
     // })
     //this.loadData();
+  }
+  ionViewWillLeave () {
+    this.msgSub
   }
 
 

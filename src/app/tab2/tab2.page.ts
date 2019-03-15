@@ -17,6 +17,7 @@ export class Tab2Page {
   displayName : string
   userList : any
   channels : any
+  test : any
 
   constructor(private userService : UserService, public activatedRoute: ActivatedRoute) {
     this.userService.getUserList().subscribe( (users) =>{
@@ -43,16 +44,20 @@ export class Tab2Page {
       })
     }
     ).then(() => {
-      this.userService.returnListChannelOfCurrentUser(this.userId).subscribe(function(channels){
+      let self = this
+      this.test = this.userService.returnListChannelOfCurrentUser(this.userId).subscribe(function(channels){
         console.log(channels)
-        channels.map(channel => {
-          
-          let stringifyIDChannel = channel.id.length
-          if (stringifyIDChannel < 21){
-            console.log(channel)
-            self.channels.push(channel)
-          }
-        })
+        self.channels = channels
+        //let selfe = self
+        //channels.map(channel => {
+        //  let selfi = selfe
+        //  console.log(channel.id)
+        //  let stringifyIDChannel = channel.id.length
+        //  if (stringifyIDChannel < 21){
+        //    console.log(channel)
+        //    selfi.channels.push(channel)
+        //  }
+        //})
         //self.channels = channels
       })
     })
@@ -71,6 +76,10 @@ export class Tab2Page {
   }
   navigateByUrlTxt(id : string){
     this.userService.navigateTo(`app/tabs/textMessage/${id}`);
+  }
+
+  deleteChannel(channelId){
+    this.userService.deleteChannel(channelId)
   }
 
 

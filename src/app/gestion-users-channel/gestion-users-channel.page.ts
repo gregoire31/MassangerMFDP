@@ -35,7 +35,7 @@ export class GestionUsersChannelPage implements OnInit {
       })
       this.userService.listeAllUsersOfChannels(this.channelId).subscribe(users => {
         this.usersFriends = []
-        console.log(users)
+        
         users.map(user => {
           this.userService.getUserById(user.id).subscribe( data => {
             if(isAdmin){
@@ -46,7 +46,8 @@ export class GestionUsersChannelPage implements OnInit {
             }
             if(this.userId !== data.payload.data().id){
               let dato = data.payload.data()
-              this.usersFriends.push({dato,isRemovable})
+              console.log(dato)
+              self.usersFriends.push({dato,isRemovable})
             }
           })
         })
@@ -55,8 +56,10 @@ export class GestionUsersChannelPage implements OnInit {
     })
   }
 
+
+
   removeuserChannel(user: any) {
-    this.userService.removeUserFromChannel(user.data.id, this.channelId)
+    this.userService.removeUserFromChannel(user.dato.id, this.channelId)
   }
   deleteChannel(){
     this.userService.deleteChannel(this.channelId)
@@ -66,12 +69,5 @@ export class GestionUsersChannelPage implements OnInit {
   navigateByUrlTxt(){
     this.userService.navigateTo(`app/tabs/textMessage/${this.channelId}`);
   }
-
-  testos() {
-    console.log(this.usersFriends)
-  }
-
-
-
 
 }

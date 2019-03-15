@@ -92,6 +92,8 @@ export class UserService {
     })
   }
 
+
+
   //userLeaveApp(idUser: string) {
   //  this.usersCollection.doc(idUser).update({
   //    "isOnline": "pending"
@@ -167,15 +169,9 @@ export class UserService {
       }
       //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
 
-      
     })
 
-
-
-
   }
-
-
 
   createChannel(id: string, nom: string) {
 

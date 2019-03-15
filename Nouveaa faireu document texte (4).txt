@@ -15,3 +15,6 @@ V	S'occuper du loggin via numéro de téléphone
 	scroll en haut pour les messages
 	Système de fichier image vidéo sur chat ! 
 	Refresh application toute les minutes
+
+
+REVOIR TAB 1 !!!! Simplifier le code

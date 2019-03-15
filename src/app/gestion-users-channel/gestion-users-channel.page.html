@@ -18,12 +18,12 @@
         <ion-row>
           <ion-col size="2">
             <ion-avatar>
-              <img [src]="user.data.avatar">
+              <img [src]="user.dato.avatar">
             </ion-avatar>
           </ion-col>
           <ion-col size="10">
             <div class="userNameText">
-              <ion-label (click)="addfriend(user.data.id)">{{user.data.displayName}}</ion-label>
+              <ion-label >{{user.dato.displayName}}</ion-label>
             </div>
           </ion-col>
         </ion-row>
@@ -33,10 +33,8 @@
   </ion-list>
 
 
-
   <button ion-button icon-only (click)="testos()">Tester
     </button>
 
-    <ion-button *ngIf="userIdAdmin" (click)="deleteChannel()">SupprimerChannel
-      </ion-button>
+    
 </ion-content>
