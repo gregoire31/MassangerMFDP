@@ -78,8 +78,9 @@ export class Tab2Page {
     this.userService.navigateTo(`app/tabs/textMessage/${id}`);
   }
 
-  deleteChannel(channelId){
-    this.userService.deleteChannel(channelId)
+  deleteChannel(channel){
+    console.log(channel.name)
+    this.userService.deleteChannel(channel.name)
   }
 
 

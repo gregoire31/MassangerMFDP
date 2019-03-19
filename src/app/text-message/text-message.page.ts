@@ -49,7 +49,7 @@ export class TextMessagePage implements OnInit {
       self.userId = user.uid
     })
 
-     this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId, 1,10).subscribe((messages) => {
+     this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId).subscribe((messages) => {
       //this.messagesFiltre = []
        //console.log(messages)
        //this.messagesFiltre = messages
@@ -91,9 +91,6 @@ export class TextMessagePage implements OnInit {
 
     // })
     //this.loadData();
-  }
-  ionViewWillLeave () {
-    this.msgSub
   }
 
 

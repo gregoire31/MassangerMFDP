@@ -13,9 +13,9 @@ export interface UserList {
   displayName: string;
   avatar: string;
   channel: any[];
-  isOnline: boolean
+  isOnline: boolean;
+  details : string
 }
-
 
 
 interface Message {
@@ -31,7 +31,7 @@ interface Message {
 
 }
 
-export interface friendUserType { isFriend: string }
+export interface friendUserType { isFriend: string , details : any }
 export interface isAdminType { isAdmin: boolean }
 
 
@@ -156,17 +156,28 @@ export class UserService {
     }
     this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
       if (!data.exists) {
+        return new Promise(resolve => {
         this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
         this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
         this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
         this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+        }).then(()=> {
+          this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+            console.log(data.data())
+            this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+          })
+        })
+        
       }
-      else {
+      else{
         this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
           console.log(data.data())
           this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
         })
       }
+
+      
+
       //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
 
     })
@@ -236,6 +247,7 @@ export class UserService {
 
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
+    this.getUserList()
     console.log("complete")
   }
 
@@ -286,10 +298,11 @@ export class UserService {
   deleteChannel(idChannel: string) {
     this.listeAllUsersOfChannels(idChannel).subscribe(users => {
       users.map(user => {
+        console.log(user)
         this.usersCollection.doc(user.id).collection("channels").doc(idChannel).delete()
       })
     })
-    this.channelCollection.doc(idChannel).delete()
+    //this.channelCollection.doc(idChannel).delete()
   }
 
 
@@ -303,7 +316,7 @@ export class UserService {
   }
 
   returnListChannelOfCurrentUser(id: string) {
-    console.log(id)
+    //console.log(id)
     return this.usersCollection.doc(id).collection("channels").snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -368,7 +381,7 @@ export class UserService {
   }
 
 
-  listeAllMessageOfAChannel(idChannel: string, numberResultStart: number, numberResultFinal) {
+  listeAllMessageOfAChannel(idChannel: string) {
     let date = new Date().getTime()
     console.log(date)
 
@@ -488,18 +501,18 @@ export class UserService {
     this.getCurrentUser().then(user => {
       console.log(user)
       this.setUserOffLine(user.uid)
-    }).then(()=> {
+    }).then(() => {
       setTimeout(function () {
         return self._auth.auth.signOut();
-      
-    }, 100);
-      
-      
+
+      }, 100);
+
+
     })
 
   }
-    
-   
-  
+
+
+
 
 }

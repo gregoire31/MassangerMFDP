@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard'
+import { UserListService } from './resolver/user-list.service';
 
 
 const routes: Routes = [
@@ -26,7 +27,12 @@ const routes: Routes = [
     path: 'app',
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canActivate: [AuthGuard]
-  },  { path: 'gestion-users-channel', loadChildren: './gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule' },
+  },
+  //{ path: 'list-users', loadChildren: './list-users/list-users.module#ListUsersPageModule' },
+
+
+  //{ path: 'gestion-users-channel', loadChildren: './gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule' },
+  //{ path: 'utilisateurs', loadChildren: './utilisateurs/utilisateurs.module#UtilisateursPageModule' },
 
   //{ path: 'channel-creation', loadChildren: './channel-creation/channel-creation.module#ChannelCreationPageModule' }
 
@@ -37,6 +43,9 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  //providers : [
+  //  UserListService
+  //]
 })
 export class AppRoutingModule {}

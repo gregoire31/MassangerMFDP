@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { UserListService } from '../resolver/user-list.service'
 
 const routes: Routes = [
   {
@@ -67,6 +68,19 @@ const routes: Routes = [
           }
         ]
       },
+      {
+        path: 'ListUsers',
+        children: [
+          {
+            path: '',
+            resolve : {
+              userLists : UserListService
+            },
+            loadChildren: '../list-users/list-users.module#ListUsersPageModule'
+          }
+        ]
+      },
+
 
 
       {
