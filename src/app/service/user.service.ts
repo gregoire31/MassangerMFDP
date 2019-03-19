@@ -6,6 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { map } from 'rxjs/operators';
+import { promise } from 'protractor';
 
 
 export interface UserList {
@@ -14,7 +15,7 @@ export interface UserList {
   avatar: string;
   channel: any[];
   isOnline: boolean;
-  details : string
+  details: string
 }
 
 
@@ -31,7 +32,13 @@ interface Message {
 
 }
 
-export interface friendUserType { isFriend: string , details : any }
+interface Channel {
+  isAdmin: boolean,
+  name: string,
+  id: string
+}
+
+export interface friendUserType { isFriend: string, details: any }
 export interface isAdminType { isAdmin: boolean }
 
 
@@ -139,7 +146,7 @@ export class UserService {
     return this.usersCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data();
+          const data = a.payload.doc.data() as UserList;
           const id = a.payload.doc.id;
           return { id, ...data };
         });
@@ -149,38 +156,119 @@ export class UserService {
 
   entrerChatPrive(currentuserId: string, userId: string) {
     let currentIdUserId = `${currentuserId}${userId}`
-    console.log(currentIdUserId)
+    let verificationChannelExiste = false
+    let idReel: string
+    //console.log(currentIdUserId)
     let setData = {
       isAdmin: true,
       name: currentIdUserId
     }
-    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-      if (!data.exists) {
-        return new Promise(resolve => {
-        this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-        this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-        this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-        this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-        }).then(()=> {
+    return new Promise(resolve=> {
+      this.returnListChannelOfCurrentUser(currentuserId).subscribe(channels => {
+        if(channels.length === 0){
+          resolve([false,""])
+        }
+        channels.map((channel, index) => {
+          //console.log(channel.name)
+          //console.log(channel.name.length)
+          if (channel.name.length > 30) {
+            let premierePartie = channel.name.substr(0, 28)
+            let deuxiemePartie = channel.name.substr(28, 55)
+            let deuxiemeIdPossible = deuxiemePartie + premierePartie
+
+            console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
+            if (channel.name === currentIdUserId) {
+              console.log("PREMIERE IDDDDDDDD")
+              resolve([true,currentIdUserId]
+              //verificationChannelExiste = true
+              //idReel = currentIdUserId
+              )
+            }
+            if (channel.name === deuxiemeIdPossible) {
+              console.log("DEXIEME IDDDDDDD")
+              resolve([true,deuxiemeIdPossible])
+              //verificationChannelExiste = true
+              //idReel = deuxiemeIdPossible
+            }
+            if(index === channels.length -1){
+              console.log("rien trouvé")
+              resolve([false,""])
+            }
+  
+          }
+        })
+        //console.log("finis")
+        //resolve([false,""])
+      })
+    }).then((data)=> {
+      console.log(data[0])
+      console.log(data[1])
+
+      if(data[0] === false){
+        return new Promise( () => {
+          this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+          this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+          this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+          this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+        }).then(() => {
           this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
             console.log(data.data())
             this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
           })
         })
-        
+
+      }else{
+        this.navigateTo(`app/tabs/textMessage/${data[1]}`)
       }
-      else{
-        this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-          console.log(data.data())
-          this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
-        })
-      }
-
-      
-
-      //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
-
+      //console.log(idReel)
+      //console.log(verificationChannelExiste)
+      //if (verificationChannelExiste === false) {
+      //  return new Promise(resolve => {
+      //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+      //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+      //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+      //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+      //  }).then(() => {
+      //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+      //      console.log(data.data())
+      //      this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+      //    })
+      //  })
+      //}
+      //else {
+      //  this.navigateTo(`app/tabs/textMessage/${idReel}`)
+      //}
     })
+
+
+
+
+    
+
+    //this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+    //  if (!data.exists) {
+    //    return new Promise(resolve => {
+    //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+    //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+    //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+    //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+    //    }).then(()=> {
+    //      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+    //        console.log(data.data())
+    //        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+    //      })
+    //    })
+    //    
+    //  }
+    //  else{
+    //    
+    //  }
+    //
+    //  
+    //
+    //  //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+    //
+    //})
 
   }
 
@@ -196,7 +284,7 @@ export class UserService {
     }).then(function (docRef) {
 
       let isAdmin = {
-        nom: nom,
+        name: nom,
         isAdmin: true
       }
 
@@ -229,7 +317,7 @@ export class UserService {
 
     console.log(id)
     let isNotAdmin = {
-      nom: nom,
+      name: nom,
       isAdmin: true
     }
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
@@ -238,16 +326,19 @@ export class UserService {
 
 
   addFriendsToUsers(idCurrentUser: string, idUserAAjouter: any) {
-    let isFriend = {
+    let isNotfriend = {
+      isFriend : "false"
+    }
+    let isFriendPending = {
       isFriend: "pending"
     }
     let isFriendwantAdd = {
       isFriend: "wantAdd"
     }
 
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
-    this.getUserList()
+    //this.getUserList()
     console.log("complete")
   }
 
@@ -257,7 +348,7 @@ export class UserService {
     }
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
-    return this.friendList(idCurrentUser)
+    //return this.friendList(idCurrentUser)
   }
 
   deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
@@ -267,8 +358,9 @@ export class UserService {
 
   addChannelToUser(id: string, idChannel: string, nom: string) {
     console.log(id)
+
     let isNotAdmin = {
-      nom: nom,
+      name: nom,
       isAdmin: false
     }
     return this.usersCollection.doc(id).collection('channels').doc(idChannel).set(isNotAdmin)
@@ -276,7 +368,7 @@ export class UserService {
 
   addUserToChannel(idChannel: string, idUser: string, nameChannel: string) {
     let isNotAdmin = {
-      nom: nameChannel,
+      name: nameChannel,
       isAdmin: false
     }
     this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isNotAdmin)
@@ -320,7 +412,7 @@ export class UserService {
     return this.usersCollection.doc(id).collection("channels").snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data();
+          const data = a.payload.doc.data() as Channel;
           const id = a.payload.doc.id;
           return { id, ...data };
         });

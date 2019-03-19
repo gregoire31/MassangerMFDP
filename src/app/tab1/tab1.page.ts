@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, NgZone  } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { map, mergeMap, finalize } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import {  Subscription  } from 'rxjs';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Platform } from 'ionic-angular';
 
@@ -27,12 +27,10 @@ export class Tab1Page {
   wantAddFriend :any[]=[]
   idFriendsStocke:any[]=[]
   friends : any[] = []
+  subscribe :Subscription
 
-  constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform) {
+  constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform, private zone : NgZone) {
 
-  }
-
-  ngOnInit() {
     console.log("HELLO FROM TAB1")
     let self = this
     this.userService.getCurrentUser().then(function (user) {
@@ -52,38 +50,78 @@ export class Tab1Page {
           friends.map(friend => {
             this.idFriendsStocke[i]=friend.id
             i ++
-            
+
             this.userService.getUserById(friend.id).subscribe(friendDetails => {
-              console.log(friendDetails.payload.data())
-              console.log(friend)
+              //console.log(friendDetails.payload.data())
+              //console.log(friend)
               friend.details = [friendDetails.payload.data(),friend.isFriend]
 
             })
           })
-          console.log(friends)
+          //console.log(friends)
           
           this.usersFriends = friends
         })
-      }).then(()=> {
-        this.userService.getUserList().subscribe(users => {
-          users.map(user => {
-            //console.log(user.id)
-            console.log(self.usersFriends)
-            if(self.idFriendsStocke.indexOf(user.id) > -1){
-              let index = self.idFriendsStocke.indexOf(user.id)
-              user.details = this.usersFriends[index].isFriend
-              //user.details = false
-              
-            }
-            else{
-              user.details = "false"
-            }
-          })
-          console.log(users)
-          this.userNameListFilter = users
-        })
+        
       })
+
   }
+
+  ngOnInit() {
+
+        
+          
+         this.userService.getUserList().subscribe(users => {
+
+           console.log(users)
+           users.map(user => {
+          
+             //console.log(user.id)
+             //console.log(self.usersFriends)
+             if(this.idFriendsStocke.indexOf(user.id) > -1){
+               let index = this.idFriendsStocke.indexOf(user.id)
+               user.details = this.usersFriends[index].isFriend
+               //user.details = false
+            
+             }
+             else{
+               user.details = "false"
+             }
+           })
+           console.log(users)
+           this.userNameListFilter = users
+           //this.zone.run(() => {
+           //  this.userNameListFilter = users
+           // });
+         })
+      
+  }
+
+
+  // friendList(id: string) {
+  //   return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
+  //     map(actions => {
+  //       return actions.map(a => {
+  //         const data = a.payload.doc.data() as friendUserType;
+  //         const id = a.payload.doc.id;
+  //         return { id, ...data };
+  //       });
+  //     })
+  //   );
+  // }
+
+  
+  // getUserList() {
+  //   return this.usersCollection.snapshotChanges().pipe(
+  //     map(actions => {
+  //       return actions.map(a => {
+  //         const data = a.payload.doc.data();
+  //         const id = a.payload.doc.id;
+  //         return { id, ...data };
+  //       });
+  //     })
+  //   );
+  // }
 
   // ngOnInit() {
   //   let self = this
@@ -175,7 +213,7 @@ export class Tab1Page {
   // }
 
   getItems() {
-    this.userService.removeUser(this.userId)
+    console.log(this.usersFriends)
     //console.log(this.userNameListFilter)
   }
 

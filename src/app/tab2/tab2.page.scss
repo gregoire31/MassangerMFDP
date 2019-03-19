@@ -1,18 +1,24 @@
 .textCenter{
-    font-size:24px;
-    margin-top:18px;
-    text-align:center
-  }
-  .buttonCustom{
-    margin-top : 20px;
-    margin-left: 30%
-  }
-  .center {
-    margin:auto
-  }
+  font-size:24px;
+  margin-top:18px;
+  text-align:center
+}
+.buttonCustom{
+  margin-top : 20px;
+  margin-left: 30%
+}
+.center {
+  margin:auto
+}
 
-  .userNameText{
-    font-size:24px;
-    margin-top:18px;
-    text-align:center
-  }
+.userNameText{
+  font-size:24px;
+  margin-top:18px;
+  text-align:center
+}
+ion-header ion-button{
+max-width: 100%;
+}
+ion-header ion-icon{
+font-size: 50px;
+}
