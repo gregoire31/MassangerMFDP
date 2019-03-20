@@ -45,8 +45,9 @@ export class ChannelCreationPage implements OnInit {
           console.log(user)
           if(user.isFriend ==="true"){
             this.userService.getUserById(user.id).subscribe(user => {
-            
+
               this.userFriends.push(user.payload.data())
+              
             })
           }
         })

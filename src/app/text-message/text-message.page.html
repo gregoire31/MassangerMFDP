@@ -21,7 +21,26 @@
   <ion-list *ngFor="let message of messagesFiltre;">
      
 
-      <ion-grid>
+      <ion-grid *ngIf="message.id === userId">
+        <ion-row class="messageDateNumber">        
+            <div>
+              <ion-label>{{message.dateNumber}}</ion-label>
+            </div>
+        </ion-row>
+        <ion-row>
+          <ion-col class="messageAvatar" size="2">
+            <ion-avatar>
+              <img [src]="message.avatar">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="10">
+            <div class="userNameText">
+              <ion-text>{{message.message}}</ion-text>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-grid *ngIf="message.id === userId">
         <ion-row class="messageDateNumber">        
             <div>
               <ion-label>{{message.dateNumber}}</ion-label>

@@ -145,6 +145,7 @@ export class UserService {
   getUserList() {
     return this.usersCollection.snapshotChanges().pipe(
       map(actions => {
+        console.log(actions)
         return actions.map(a => {
           const data = a.payload.doc.data() as UserList;
           const id = a.payload.doc.id;
@@ -163,10 +164,10 @@ export class UserService {
       isAdmin: true,
       name: currentIdUserId
     }
-    return new Promise(resolve=> {
+    return new Promise(resolve => {
       this.returnListChannelOfCurrentUser(currentuserId).subscribe(channels => {
-        if(channels.length === 0){
-          resolve([false,""])
+        if (channels.length === 0) {
+          resolve([false, ""])
         }
         channels.map((channel, index) => {
           //console.log(channel.name)
@@ -179,33 +180,33 @@ export class UserService {
             console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
             if (channel.name === currentIdUserId) {
               console.log("PREMIERE IDDDDDDDD")
-              resolve([true,currentIdUserId]
-              //verificationChannelExiste = true
-              //idReel = currentIdUserId
+              resolve([true, currentIdUserId]
+                //verificationChannelExiste = true
+                //idReel = currentIdUserId
               )
             }
             if (channel.name === deuxiemeIdPossible) {
               console.log("DEXIEME IDDDDDDD")
-              resolve([true,deuxiemeIdPossible])
+              resolve([true, deuxiemeIdPossible])
               //verificationChannelExiste = true
               //idReel = deuxiemeIdPossible
             }
-            if(index === channels.length -1){
+            if (index === channels.length - 1) {
               console.log("rien trouvé")
-              resolve([false,""])
+              resolve([false, ""])
             }
-  
+
           }
         })
         //console.log("finis")
         //resolve([false,""])
       })
-    }).then((data)=> {
+    }).then((data) => {
       console.log(data[0])
       console.log(data[1])
 
-      if(data[0] === false){
-        return new Promise( () => {
+      if (data[0] === false) {
+        return new Promise(() => {
           this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
           this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
           this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
@@ -217,7 +218,7 @@ export class UserService {
           })
         })
 
-      }else{
+      } else {
         this.navigateTo(`app/tabs/textMessage/${data[1]}`)
       }
       //console.log(idReel)
@@ -243,7 +244,7 @@ export class UserService {
 
 
 
-    
+
 
     //this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
     //  if (!data.exists) {
@@ -326,9 +327,7 @@ export class UserService {
 
 
   addFriendsToUsers(idCurrentUser: string, idUserAAjouter: any) {
-    let isNotfriend = {
-      isFriend : "false"
-    }
+
     let isFriendPending = {
       isFriend: "pending"
     }
@@ -338,9 +337,12 @@ export class UserService {
 
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
+    this.usersCollection.doc(idUserAAjouter).update({})
+    this.usersCollection.doc(idCurrentUser).update({})
     //this.getUserList()
     console.log("complete")
   }
+
 
   acceptFriend(idCurrentUser: string, idUserAAjouter: string) {
     let isFriend = {
@@ -350,12 +352,23 @@ export class UserService {
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
     //return this.friendList(idCurrentUser)
   }
-
+  
   deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
   }
-
+  
+  friendList(id: string) {
+    return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as friendUserType;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
   addChannelToUser(id: string, idChannel: string, nom: string) {
     console.log(id)
 
@@ -375,17 +388,6 @@ export class UserService {
   }
 
 
-  friendList(id: string) {
-    return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as friendUserType;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
-    );
-  }
 
   deleteChannel(idChannel: string) {
     this.listeAllUsersOfChannels(idChannel).subscribe(users => {
@@ -398,14 +400,6 @@ export class UserService {
   }
 
 
-  changeAdminModeUser(idChannel: string, idUser: string) {
-
-    let isAdmin = {
-      isAdmin: true
-    }
-
-    this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isAdmin)
-  }
 
   returnListChannelOfCurrentUser(id: string) {
     //console.log(id)
@@ -420,9 +414,51 @@ export class UserService {
     );
   }
 
+  removeUser(id) {
+    this.friendList(id).subscribe(friends => {
+      console.log(friends)
+      friends.map(friend => {
+        console.log(friend.id)
+        //this.getUserById(friend.id).subscribe(friend => {
+        //  this.usersCollection.id
+        //})
+      })
+    })
+    //return this.usersCollection.doc(id).delete();
+  }
+  removeUserFromChannel(idUser: string, idChannel: string) {
+    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
+    this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
+  }
+
+  getRoleofUser(id: string, idChannel: string) {
+    return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
+      map(actions => {
+        return actions.payload.data() as isAdminType
+      })
+    )
+  }
+
+  addUserDetails(id: string, displayName: string, avatar: string) {
+    return this.usersCollection.doc(id).set({
+      id: id,
+      displayName: displayName,
+      avatar: avatar
+    })
+  }
+
   returnDetailsChannel(id: string) {
     return this.channelCollection.doc(id).valueChanges()
   }
+  changeAdminModeUser(idChannel: string, idUser: string) {
+
+    let isAdmin = {
+      isAdmin: true
+    }
+
+    this.channelCollection.doc(idChannel).collection('users').doc(idUser).set(isAdmin)
+  }
+
 
   addMessageToChannel(idChannel: string, idUser: string, message: string, date: Date, avatar: string) {
     //console.log("ID CHANNEL : " + idChannel + "ID User : " + idUser + "message : " + message + "date : " + date + "avatar : "+ avatar)
@@ -493,38 +529,9 @@ export class UserService {
   }
 
 
-  addUserDetails(id: string, displayName: string, avatar: string) {
-    return this.usersCollection.doc(id).set({
-      id: id,
-      displayName: displayName,
-      avatar: avatar
-    })
-  }
 
-  removeUser(id) {
-    this.friendList(id).subscribe(friends => {
-      console.log(friends)
-      friends.map(friend => {
-        console.log(friend.id)
-        //this.getUserById(friend.id).subscribe(friend => {
-        //  this.usersCollection.id
-        //})
-      })
-    })
-    //return this.usersCollection.doc(id).delete();
-  }
-  removeUserFromChannel(idUser: string, idChannel: string) {
-    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
-    this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
-  }
 
-  getRoleofUser(id: string, idChannel: string) {
-    return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
-      map(actions => {
-        return actions.payload.data() as isAdminType
-      })
-    )
-  }
+
 
   getCurrentUser() {
     return new Promise<any>((resolve, reject) => {

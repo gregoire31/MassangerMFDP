@@ -1,7 +1,7 @@
-import { Component, NgZone  } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { map, mergeMap, finalize } from 'rxjs/operators';
-import {  Subscription  } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { Platform } from 'ionic-angular';
 
@@ -23,13 +23,15 @@ export class Tab1Page {
   idFriends: any[] = []
   newFriends: any[] = []
   event: string
-  idPendingFriends :any[]=[]
-  wantAddFriend :any[]=[]
-  idFriendsStocke:any[]=[]
-  friends : any[] = []
-  subscribe :Subscription
+  idPendingFriends: any[] = []
+  wantAddFriend: any[] = []
+  idFriendsStocke: any[] = []
+  friends: any[] = []
+  subscribe: Subscription
+  usrListFinal: any[] = []
+  isFriendsStocke: any[] = []
 
-  constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform, private zone : NgZone) {
+  constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform, private zone: NgZone) {
 
     console.log("HELLO FROM TAB1")
     let self = this
@@ -40,61 +42,122 @@ export class Tab1Page {
       .then(() => {
         //console.log(this.userId)
         this.userService.getUserById(this.userId).subscribe(user => {
-          //console.log(user)
+
           this.userName = user.payload.data().displayName
         })
       }).then(() => {
+
+        this.userService.getUserList().subscribe(users => this.users = users)
+
+
         this.userService.friendList(this.userId).subscribe(friends => {
-          console.log(friends)
-          let i = 0
-          friends.map(friend => {
-            this.idFriendsStocke[i]=friend.id
-            i ++
-
-            this.userService.getUserById(friend.id).subscribe(friendDetails => {
-              //console.log(friendDetails.payload.data())
-              //console.log(friend)
-              friend.details = [friendDetails.payload.data(),friend.isFriend]
-
-            })
+          this.idFriendsStocke = []
+          this.isFriendsStocke = []
+          console.log("en piste")
+          //console.log(friends)                                                              // data updated
+          friends.map((friend, index) => {
+            //this.userService.getUserById(friend.id).subscribe(dataFriend => {
+            //  this.friends[index] = [dataFriend.payload.data(), friend.isFriend]
+            //  console.log(this.friends[index])
+            //})
+            console.log(friend)
+            this.idFriendsStocke[index] = friend.id
+            this.isFriendsStocke[index] = friend.isFriend
           })
-          //console.log(friends)
           
-          this.usersFriends = friends
+          this.users.map((user) => {
+            console.log(this.idFriendsStocke)
+            if (this.idFriendsStocke.indexOf(user.id) > -1) {
+              //console.log(this.friends[index])
+              user.isFriend = this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]
+              //console.log(user)
+              //user = [this.friends[this.idFriendsStocke.indexOf(user.id)]]
+              //this.userService.getUserById(user.id).subscribe(dataFriend => {
+              //  user[index] = [dataFriend.payload.data(), this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]]
+              //  //console.log(this.friends[index])
+              //  console.log(user)
+              //})
+              //this.userService.getUserById(user.id).subscribe(friendDetails => {
+              //
+              //  user = [friendDetails.payload.data(), this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]]
+              //  console.log(user)
+              //})
+            }
+            else {
+              user.isFriend = "false"
+              //console.log(user)
+            }
+            //console.log(user)
+            //friends.map(friend => {
+            //  if (friend.id === user.id) {
+            //    console.log("OK")
+            //    this.userService.getUserById(friend.id).subscribe(friendDetails => {
+            //
+            //      user = [friendDetails.payload.data(), friend.isFriend]
+            //
+            //    })
+            //  }
+            //
+            //})
+            //console.log(user)
+
+
+            //this.userService.getUserById(user.id).subscribe(friendDetails => {
+            //  user.details = [friendDetails.payload.data(), user.isFriend]
+            //})
+
+          })
+          //console.log(this.users)
+          //console.log(friends)
+          //console.log(this.users)
+
+          //friends.map(friend => {
+          //  this.idFriendsStocke[i] = friend.id
+          //  i++
+          //
+          //  this.userService.getUserById(friend.id).subscribe(friendDetails => {
+          //    //console.log(friendDetails.payload.data())
+          //    //console.log(friend)
+          //    friend.details = [friendDetails.payload.data(), friend.isFriend]
+          //
+          //  })
+          //})
+          //console.log(friends)
+
+          //this.usersFriends = friends
         })
-        
+
       })
 
   }
 
   ngOnInit() {
 
-        
-          
-         this.userService.getUserList().subscribe(users => {
 
-           console.log(users)
-           users.map(user => {
-          
-             //console.log(user.id)
-             //console.log(self.usersFriends)
-             if(this.idFriendsStocke.indexOf(user.id) > -1){
-               let index = this.idFriendsStocke.indexOf(user.id)
-               user.details = this.usersFriends[index].isFriend
-               //user.details = false
-            
-             }
-             else{
-               user.details = "false"
-             }
-           })
-           console.log(users)
-           this.userNameListFilter = users
-           //this.zone.run(() => {
-           //  this.userNameListFilter = users
-           // });
-         })
-      
+    //this.userService.getUserList().subscribe(users => {
+    //  //
+    //  console.log(users)
+    //  users.map(user => {
+    //
+    //    //console.log(user.id)
+    //    //console.log(self.usersFriends)
+    //    if (this.idFriendsStocke.indexOf(user.id) > -1) {
+    //      let index = this.idFriendsStocke.indexOf(user.id)
+    //      user.details = this.usersFriends[index].isFriend
+    //      //user.details = false
+    //
+    //    }
+    //    else {
+    //      user.details = "false"
+    //    }
+    //  })
+    //  console.log(users)
+    //  this.userNameListFilter = users
+    //  //this.zone.run(() => {
+    //  //  this.userNameListFilter = users
+    //  // });
+    //})
+
   }
 
 
@@ -110,7 +173,7 @@ export class Tab1Page {
   //   );
   // }
 
-  
+
   // getUserList() {
   //   return this.usersCollection.snapshotChanges().pipe(
   //     map(actions => {
@@ -153,7 +216,7 @@ export class Tab1Page {
   //               this.wantAddFriend.push(friend.id)
   //             }
   //           }
-            
+
   //         })
   //         friends.map(friend => {
   //           if (friend.isFriend === "true") {
@@ -166,7 +229,7 @@ export class Tab1Page {
   //                 this.idFriendsStocke.push(data.payload.data().id)
   //                 self.usersFriends.push({ ...data.payload.data() })
   //               }
-                
+
   //             })
   //           }
   //         })
@@ -213,11 +276,14 @@ export class Tab1Page {
   // }
 
   getItems() {
-    console.log(this.usersFriends)
+    console.log(this.users)
     //console.log(this.userNameListFilter)
   }
 
-  onSearchInput($event) { 
+
+
+
+  onSearchInput($event) {
     if ($event !== undefined) {
       this.event = $event
       this.userNameListFilter = []
@@ -226,10 +292,10 @@ export class Tab1Page {
     }
 
   }
-  entrerChatPrive(Id : string){
-    this.userService.entrerChatPrive(this.userId,Id)
+  entrerChatPrive(Id: string) {
+    this.userService.entrerChatPrive(this.userId, Id)
   }
-  
+
 
   addUserToChannel(id: string) {
 
@@ -237,17 +303,17 @@ export class Tab1Page {
   }
 
   acceptFriend(user: any) {
-    user.details = "true"
+    user.isFriend = "true"
     let id = user.id
     this.userService.acceptFriend(this.userId, id)
 
   }
-  callNotification(){
+  callNotification() {
     this.localNotifications.schedule({
       id: 1,
       title: 'Messenger Ionic',
       text: "You've added a friend",
-      sound: this.plt.is('android')? 'file://sound.mp3': 'file://beep.caf',
+      sound: this.plt.is('android') ? 'file://sound.mp3' : 'file://beep.caf',
       vibrate: true
       //data: { secret: key }
     });
@@ -257,23 +323,21 @@ export class Tab1Page {
 
 
   addfriend(user: any) {
-    user.details = "false"
+    user.isFriend = "wantAdd"
     let idUserAAjouter = user.id
-     this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-     this.callNotification()
+    this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
+    this.callNotification()
   }
 
   removeFriend(user: any) {
     console.log(user)
-    console.log(user[0].id)
-    user.details = "false"
+    user.isFriend = "false"
 
-    this.userService.deniedFriend(this.userId, user[0].id)
-    console.log(this.userNameListFilter)
+    this.userService.deniedFriend(this.userId, user.id)
   }
 
   refuseInvitation(user: any) {
-    user.details = "false"
+    user.isFriend = "false"
 
     this.userService.deniedFriend(this.userId, user.id)
   }

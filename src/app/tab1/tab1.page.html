@@ -13,8 +13,8 @@
     <ion-searchbar (ionChange)="onSearchInput($event)" debounce="500"></ion-searchbar>
   
   
-    <ion-list *ngFor="let user of userNameListFilter; let i = index">
-      <ion-item *ngIf="user.id !== userId && user.details=='pending'">
+    <ion-list *ngFor="let user of users; let i = index">
+      <ion-item *ngIf="user.id !== userId && user.isFriend=='pending'">
         <ion-grid>
           <ion-row>
             <ion-col size="2">
@@ -40,7 +40,7 @@
         </ion-grid>
         
       </ion-item>
-      <ion-item *ngIf="user.id !== userId && user.details!='pending'">
+      <ion-item *ngIf="user.id !== userId && user.isFriend!='pending'">
         <ion-grid>
           <ion-row>
             <ion-col size="2">
@@ -57,8 +57,8 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-        <ion-icon name="add-circle" (click)="addfriend(user)" *ngIf="user.details=='false'"></ion-icon>
-        <ion-icon name="remove-circle" (click)="refuseInvitation(user)" *ngIf="user.details=='wantAdd'"></ion-icon>
+        <ion-icon name="add-circle" (click)="addfriend(user)" *ngIf="user.isFriend=='false'"></ion-icon>
+        <ion-icon name="remove-circle" (click)="refuseInvitation(user)" *ngIf="user.isFriend=='wantAdd'"></ion-icon>
         
       </ion-item>
     </ion-list>
@@ -101,25 +101,25 @@
         <ion-icon name="log-out"></ion-icon> tester Friends
       </ion-button>
     </div>
-    <ion-list *ngFor="let user of usersFriends; let i = index">
+    <ion-list *ngFor="let user of users">
     <ion-item *ngIf="user.isFriend=='true'">
       <ion-grid>
         <ion-row>
           <ion-col size="2">
             <ion-avatar>
-                <ion-badge *ngIf="user.details[0].isOnline" id="notifications-badge" color="success">0</ion-badge>
-                <ion-badge *ngIf="!user.details[0].isOnline" id="notifications-badge" color="danger">0</ion-badge>
-              <img [src]="user.details[0].avatar">
+                <ion-badge *ngIf="user.isOnline" id="notifications-badge" color="success">0</ion-badge>
+                <ion-badge *ngIf="!user.isOnline" id="notifications-badge" color="danger">0</ion-badge>
+              <img [src]="user.avatar">
             </ion-avatar>
           </ion-col>
-          <ion-col (click)="entrerChatPrive(user.details[0].id)" size="10">
+          <ion-col (click)="entrerChatPrive(user.id)" size="10">
             <div class="userNameText">
-              <ion-label >{{user.details[0].displayName}}</ion-label>
+              <ion-label >{{user.displayName}}</ion-label>
             </div>
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-icon name="remove-circle" (click)="removeFriend(user.details)"></ion-icon>
+      <ion-icon name="remove-circle" (click)="removeFriend(user)"></ion-icon>
     </ion-item>
 
   </ion-list>
