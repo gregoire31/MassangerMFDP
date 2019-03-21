@@ -15,7 +15,8 @@ export interface UserList {
   avatar: string;
   channel: any[];
   isOnline: boolean;
-  details: string
+  details: string,
+  friends: any[]
 }
 
 
@@ -54,7 +55,7 @@ export class UserService {
     public toastController: ToastController,
     private _auth: AngularFireAuth,
     private router: Router,
-    db: AngularFirestore,
+    public db: AngularFirestore,
     public activatedRoute: ActivatedRoute
   ) {
 
@@ -335,12 +336,48 @@ export class UserService {
       isFriend: "wantAdd"
     }
 
-    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
-    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
-    this.usersCollection.doc(idUserAAjouter).update({})
-    this.usersCollection.doc(idCurrentUser).update({})
-    //this.getUserList()
-    console.log("complete")
+    // this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
+    // this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
+    this.db.collection<UserList>('users', ref => ref.where("id", "==", idCurrentUser)).valueChanges().subscribe( data =>{
+      let dataAstocke = `${idUserAAjouter}/isPending`
+      var dataFinal = data[0].friends;
+      dataFinal.push(dataAstocke)
+      console.log(typeof(data))
+      console.log(dataFinal)
+      this.usersCollection.doc(idCurrentUser).update({
+        "friends" : dataFinal
+      })
+    })
+    
+//
+    ////this.getUserList()
+    //console.log("complete")
+    let data = []
+
+    // this.usersCollection.doc(idUserAAjouter).update(map => {
+    //   console.log(map)
+    //   //"friends" : {
+    //   //  [idCurrentUser] : "pending"
+    //   //}
+    // })
+    // this.usersCollection.doc(idCurrentUser).update(map => {
+    //   console.log(map)
+    //   //"friends" : {
+    //   //  [idCurrentUser] : "pending"
+    //   //}
+    // })
+    //console.log(friends)
+    //this.db.collection("users").doc(idCurrentUser).get().subscribe()
+    //this.usersCollection.doc(idCurrentUser).update({
+    //  
+    //  [idUserAAjouter]: "pending"
+//
+    //})
+    //this.usersCollection.doc(idUserAAjouter).update({
+//
+    //  [idCurrentUser]: "pending"
+//
+    //})
   }
 
 
@@ -351,13 +388,16 @@ export class UserService {
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
     //return this.friendList(idCurrentUser)
+    this.usersCollection.doc(idCurrentUser).update(map(map => {
+
+    }))
   }
-  
+
   deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
   }
-  
+
   friendList(id: string) {
     return this.usersCollection.doc(id).collection("amis").snapshotChanges().pipe(
       map(actions => {

@@ -51,6 +51,8 @@ export class Tab1Page {
 
 
         this.userService.friendList(this.userId).subscribe(friends => {
+
+          //this.userService.getUserList().subscribe(users => this.users = users)
           this.idFriendsStocke = []
           this.isFriendsStocke = []
           console.log("en piste")
