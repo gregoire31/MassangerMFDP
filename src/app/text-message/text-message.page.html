@@ -1,14 +1,31 @@
 
 
 <ion-header>
-  <ion-toolbar>
-    <!-- <ion-title>{{channel.name}}</ion-title> -->
-    <ion-title>test</ion-title>
-    <ion-buttons slot="end">
-      <button ion-button icon-only (click)="navigateByUrlTxt()">
-        <ion-icon name="information-circle-outline"></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-toolbar color="medium">
+
+      <ion-row>
+          <ion-col class="toolbarIcon">
+              <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
+          </ion-col>
+          <ion-col class="toolbarText">
+            <!--<ion-title>{{channel.nacme}}</ion-title>-->
+            <ion-title>Nom conversation</ion-title>
+          </ion-col>
+          <ion-col class="toolbarIcon">
+              <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="cog"></ion-icon></ion-button>
+            <!--
+            <ion-buttons slot="end">
+                <button ion-button icon-only (click)="navigateByUrlTxt()">
+                  <ion-icon name="cog"></ion-icon>
+                </button>
+              </ion-buttons>
+            -->
+          </ion-col>
+      </ion-row>
+
+    
+    
+
   </ion-toolbar>
 
 
@@ -21,44 +38,42 @@
   <ion-list *ngFor="let message of messagesFiltre;">
      
 
-      <ion-grid *ngIf="message.id === userId">
+      <ion-grid class="myMessage" *ngIf="message.idUser === userId">
         <ion-row class="messageDateNumber">        
             <div>
               <ion-label>{{message.dateNumber}}</ion-label>
             </div>
         </ion-row>
-        <ion-row>
-          <ion-col class="messageAvatar" size="2">
-            <ion-avatar>
-              <img [src]="message.avatar">
-            </ion-avatar>
-          </ion-col>
-          <ion-col size="10">
+        <ion-row class="rowText">
+          <ion-col class="colUserNameText">
             <div class="userNameText">
               <ion-text>{{message.message}}</ion-text>
             </div>
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-grid *ngIf="message.id === userId">
-        <ion-row class="messageDateNumber">        
-            <div>
-              <ion-label>{{message.dateNumber}}</ion-label>
-            </div>
-        </ion-row>
-        <ion-row>
-          <ion-col class="messageAvatar" size="2">
-            <ion-avatar>
-              <img [src]="message.avatar">
-            </ion-avatar>
-          </ion-col>
-          <ion-col size="10">
-            <div class="userNameText">
-              <ion-text>{{message.message}}</ion-text>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+
+      <ion-grid class="yourMessage" *ngIf="message.idUser !== userId"> 
+          <ion-row class="messageDateNumber">        
+              <div>
+                <ion-label>{{message.dateNumber}}</ion-label>
+              </div>
+          </ion-row>
+          <ion-row class="rowText">
+              <ion-col class="messageAvatar">
+                  <ion-avatar>
+                    <img [src]="message.avatar">
+                  </ion-avatar>
+              </ion-col>
+            <ion-col class="colUserNameText">
+              <div class="userNameText">
+                <ion-text>{{message.message}}</ion-text>
+              </div>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+
   </ion-list>
 
   
@@ -75,11 +90,11 @@
     <ion-item color="medium" class="createMessage">
       <ion-grid>
         <ion-row>
-          <ion-col size="10">         
+          <ion-col class="inputMessage">         
               <ion-input placeholder="Message..." type="text" [(ngModel)]="textMsg"></ion-input>
               
           </ion-col>
-          <ion-col class="sendMessage" size ="2">
+          <ion-col class="sendMessage">
             <ion-button (click)="TextSubmit()" color="light" fill="clear"><ion-icon name="send"></ion-icon></ion-button>
           </ion-col>
         </ion-row>
@@ -89,9 +104,10 @@
               <ion-button (click)="compareDate()"> test TimeStamp</ion-button>
           </ion-col>
         </ion-row>
-        -->
+      -->
       </ion-grid>
     </ion-item>
+  
   
 
 

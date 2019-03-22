@@ -30,6 +30,8 @@ export class Tab1Page {
   subscribe: Subscription
   usrListFinal: any[] = []
   isFriendsStocke: any[] = []
+  booleanUser: boolean = false
+  booleanFriend: boolean = false
 
   constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform, private zone: NgZone) {
 
@@ -47,90 +49,64 @@ export class Tab1Page {
         })
       }).then(() => {
 
-        this.userService.getUserList().subscribe(users => this.users = users)
+        this.userService.getUserList().subscribe(users => {
+
+          //if (this.booleanUser === false) {
+           this.users = users
+           if (this.friends.length !== 0) {
+              this.mapfriends(this.users, this.friends)
+          //    this.booleanUser = true
+          //  }
+          }
+        })
 
 
         this.userService.friendList(this.userId).subscribe(friends => {
 
-          //this.userService.getUserList().subscribe(users => this.users = users)
-          this.idFriendsStocke = []
-          this.isFriendsStocke = []
-          console.log("en piste")
-          //console.log(friends)                                                              // data updated
-          friends.map((friend, index) => {
-            //this.userService.getUserById(friend.id).subscribe(dataFriend => {
-            //  this.friends[index] = [dataFriend.payload.data(), friend.isFriend]
-            //  console.log(this.friends[index])
-            //})
-            console.log(friend)
-            this.idFriendsStocke[index] = friend.id
-            this.isFriendsStocke[index] = friend.isFriend
-          })
-          
-          this.users.map((user) => {
-            console.log(this.idFriendsStocke)
-            if (this.idFriendsStocke.indexOf(user.id) > -1) {
-              //console.log(this.friends[index])
-              user.isFriend = this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]
-              //console.log(user)
-              //user = [this.friends[this.idFriendsStocke.indexOf(user.id)]]
-              //this.userService.getUserById(user.id).subscribe(dataFriend => {
-              //  user[index] = [dataFriend.payload.data(), this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]]
-              //  //console.log(this.friends[index])
-              //  console.log(user)
-              //})
-              //this.userService.getUserById(user.id).subscribe(friendDetails => {
-              //
-              //  user = [friendDetails.payload.data(), this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]]
-              //  console.log(user)
-              //})
-            }
-            else {
-              user.isFriend = "false"
-              //console.log(user)
-            }
-            //console.log(user)
-            //friends.map(friend => {
-            //  if (friend.id === user.id) {
-            //    console.log("OK")
-            //    this.userService.getUserById(friend.id).subscribe(friendDetails => {
-            //
-            //      user = [friendDetails.payload.data(), friend.isFriend]
-            //
-            //    })
-            //  }
-            //
-            //})
-            //console.log(user)
-
-
-            //this.userService.getUserById(user.id).subscribe(friendDetails => {
-            //  user.details = [friendDetails.payload.data(), user.isFriend]
-            //})
-
-          })
-          //console.log(this.users)
-          //console.log(friends)
-          //console.log(this.users)
-
-          //friends.map(friend => {
-          //  this.idFriendsStocke[i] = friend.id
-          //  i++
-          //
-          //  this.userService.getUserById(friend.id).subscribe(friendDetails => {
-          //    //console.log(friendDetails.payload.data())
-          //    //console.log(friend)
-          //    friend.details = [friendDetails.payload.data(), friend.isFriend]
-          //
-          //  })
-          //})
-          //console.log(friends)
-
-          //this.usersFriends = friends
+          this.friends = friends
+          //console.log("send from friendList")
+          //if (this.booleanFriend === false) {
+           if (this.users.length !== 0) {
+              this.mapfriends(this.users, this.friends);
+          //    this.booleanFriend = true
+          //    this.booleanUser = false
+          //  }
+          }
         })
 
       })
 
+  }
+
+  private mapfriends(users, friends) {
+    console.log(friends)
+    console.log(users)
+    this.idFriendsStocke = []
+    this.isFriendsStocke = []
+
+    friends.map((friend, index) => {
+
+      console.log(friend)
+      this.idFriendsStocke[index] = friend.id
+      this.isFriendsStocke[index] = friend.isFriend
+    })
+
+
+    this.users = users.map((user) => {
+      //console.log(this.idFriendsStocke)
+      if (this.idFriendsStocke.indexOf(user.id) > -1) {
+        user.isFriend = this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]
+
+      }
+      else {
+        user.isFriend = "false"
+
+      }
+
+
+    })
+    console.log(users)
+    this.users = users
   }
 
   ngOnInit() {

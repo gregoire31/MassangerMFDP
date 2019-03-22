@@ -1,43 +1,63 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Tab Two
-    </ion-title>
+  <ion-toolbar color="medium">
+    <ion-row>
+      <ion-col class="toolbarTitle" size="10">
+        <ion-title>
+          Conversation
+        </ion-title>
+      </ion-col>
+      <ion-col size="2">
+        <ion-button (click)="navigateByUrl()" color="light" fill="clear"><ion-icon name="add"></ion-icon></ion-button> 
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!--
   <div class="textCenter">
     <ion-input type="text" [(ngModel)]="channelName"></ion-input>
   </div>
+  -->
+  <!--
   <ion-button (click)="voirChannel()">voir channel</ion-button> 
-  <ion-item *ngFor="let channel of channels">
+  -->
+  <ion-item class="item-divider" *ngFor="let channel of channels" >
     <ion-grid>
       <ion-row>
 
-        <ion-col size="6">
-          <div class="userNameText">
-            <ion-label>{{channel.nom}}</ion-label>
+        <ion-col class="nameChannel">
+          <div class="userNameText" (click)="navigateByUrlTxt(channel.id)">
+            <ion-label>{{channel.name}}</ion-label>
             
           </div>
         </ion-col>
 
-        <ion-col size="6">
+        <ion-col class="trashChannel">
+          <!--
           <div class="userNameText">
 
-             <!-- <ion-button (click)="navigateByUrl(channel.id)">ouvre nouveau channel</ion-button>  -->
+             
              <ion-button (click)="navigateByUrlTxt(channel.id)">ouvre nouveau channel</ion-button> 
              
           </div>
-          <div *ngIf="channel.isAdmin" class="userNameText">
+          -->
+          <div *ngIf="channel.isAdmin" >
               
               <!-- <ion-button (click)="navigateByUrl(channel.id)">ouvre nouveau channel</ion-button>  -->
-              <ion-button color="danger" (click)="deleteChannel(channel)">delete</ion-button> 
-              
+              <!--
+              <ion-button color="danger" (click)="deleteChannel(channel)">
+                
+              </ion-button> 
+               -->
+              <ion-icon color="dark" (click)="deleteChannel(channel)" name="trash"></ion-icon>
+
            </div>
         </ion-col>
-
-
+        <!--
+        <ion-icon color="dark" (click)="deleteChannel(channel)" name="cog"></ion-icon>
+        <ion-icon color="dark" (click)="deleteChannel(channel)" name="trash"></ion-icon>
+        -->
       </ion-row>
     </ion-grid>
   </ion-item>
@@ -48,7 +68,8 @@
 
   <ion-button shape="round" color="primary" (click)="openChannelCreation()"> ouvre nouveau channel</ion-button> -->
 
+  <!--
   <ion-button (click)="navigateByUrl()">ouvre nouveau channel</ion-button> 
-  
+  -->
 
 </ion-content>

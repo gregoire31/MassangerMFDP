@@ -1,52 +1,68 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Tab Three
-    </ion-title>
+  <ion-toolbar color="medium">
+    <ion-row>
+      <ion-col class="toolbarTitle" size="10">
+        <ion-title>
+          Profil
+        </ion-title>
+      </ion-col>
+      <ion-col size="2">
+        <ion-button (click)="save()" color="light" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-button> 
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content>
 
-  <ion-list>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12">
+<ion-list>
+  
+    <ion-grid>
+      <ion-row class="statutProfil">   
             <ion-avatar class="center">
               <img [src]="avatar">
             </ion-avatar>
-          </ion-col>
-          <ion-col size="10">
-            <div class="textCenter">
+            <p>{{displayNameFige}}</p>           
+      </ion-row>
+
+      <ion-row class="modifAvatarProfil">     
+              <p>Modifier avatar</p>
+              <div>
+                <ion-icon color="dark" (click)="takeImage()" name="camera"></ion-icon>
+                <ion-icon color="dark" (click)="getImage()" name="photos"></ion-icon>
+              </div>
+      </ion-row>
+
+      <ion-row class="modifNameProfil">
+              <p>Modifier Username</p>
               <ion-input type="text" [(ngModel)]="displayName"></ion-input>
-            </div>
-
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-  </ion-list>
-
-  <div class="buttonCustom">
-    <ion-button shape="round" color="tertiary" (click)="save()">
-      <ion-icon name="checkmark-circle"></ion-icon> Save
-    </ion-button>
-  </div>
-
-
-  <div class="buttonCustom">
-    <ion-button shape="round" color="primary" (click)="logout()">
-      <ion-icon name="log-out"></ion-icon> Logout
-    </ion-button>
-  </div>
-
-  <ion-button (click)="takeImage()" color="primary"> Prendre une photo</ion-button>
-  <ion-button (click)="getImage()" color="primary"> Selectionner une photo</ion-button>
+      </ion-row>
+      <!--
+      <ion-row>
+          <div class="buttonCustom">
+              <ion-button shape="round" color="tertiary" (click)="save()">
+                  Sauvegarder <ion-icon name="checkmark-circle"></ion-icon> 
+              </ion-button>
+          </div>
+      </ion-row>
+      -->
+    </ion-grid>
   
-  <ion-avatar>
-      <img [src]="myPhoto">
-    </ion-avatar>
+</ion-list>
 
+<ion-list class="logout">
+  <div class="buttonCustom">
+      <ion-button shape="round" color="primary" (click)="logout()">
+          Logout <ion-icon name="log-out"></ion-icon> 
+      </ion-button>
+  </div>
+</ion-list>
+
+<!--
+<ion-avatar>
+    <img [src]="myPhoto">
+  </ion-avatar>
+-->
 
 </ion-content>

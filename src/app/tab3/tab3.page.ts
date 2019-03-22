@@ -15,6 +15,7 @@ export class Tab3Page {
   userId : string
   //userName = "toto"
   displayName: string
+  displayNameFige : string
   myPhoto : any = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
 
   constructor(private userService : UserService, private camera: Camera) {
@@ -32,7 +33,9 @@ export class Tab3Page {
         let userData = user.payload.data()
         this.avatar = userData.avatar
         this.displayName = userData.displayName
+        this.displayNameFige = this.displayName
         self.users = user
+        
       })
     }
     )

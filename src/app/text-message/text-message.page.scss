@@ -1,18 +1,4 @@
-.userNameText{
-  font-size:24px;
-  text-align:center;
-  display: flex;
-}
-.userNameText ion-text{
-  background-color: #f8d5ff;
-  border-radius: 10px 10px 10px 0px;
-  padding: 5px 15px;
-  font-size: 20px;
-}
-.messageDateNumber{
-  display: flex;
-  justify-content: center;
-}
+
 ion-grid{
   max-width: 100%;
 }
@@ -25,23 +11,83 @@ ion-list{
 ion-label{
   font-size: 12px;
 }
+ion-input{
+  border-bottom: 2px solid #fff;
+}
+
+.toolbarIcon{
+  max-width: 80px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+}
+.toolbarText{
+  max-width: calc(100% - 100px);
+}
+
+.myMessage .rowText{
+  justify-content: end;
+}
+.colUserNameText{
+  max-width: 80%;
+}
+
+.userNameText{
+  font-size:24px;
+  text-align:center;
+  display: flex;
+}
+.myMessage userNameText{
+  justify-content: end;
+}
+.userNameText ion-text{
+  background-color: #f8d5ff;
+  padding: 5px 15px;
+  font-size: 20px;
+  max-width: 100%;
+}
+.yourMessage .userNameText ion-text{
+  border-radius: 10px 10px 10px 0px;
+}
+.myMessage .userNameText ion-text{
+  border-radius: 10px 10px 0px 10px;
+}
+
+.messageDateNumber{
+  display: flex;
+  justify-content: center;
+}
+
+
 .messageAvatar{
   align-self: flex-end;
+  padding-right: 0;
+  padding-left: 0;
+  max-width: 50px;
 }
+.messageAvatar ion-avatar{
+  width: 50px;
+  height: 50px;
+}
+
+.list.list-md.hydrated:last-of-type {
+  padding-bottom: 60px;
+}
+
 .createMessage{
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
   position: fixed;
   width: 100%;
   left: 0;
-  bottom:50px;
+  bottom: 30px;
 }
 .createMessage ion-col{
   padding: 0;
 }
 .sendMessage{
-  text-align: center;
+  display: flex;
+  justify-content: end;
+  max-width: 50px;
 }
-ion-input{
-  border-bottom: 2px solid #fff;
-}
+
+
+

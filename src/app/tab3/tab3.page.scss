@@ -1,12 +1,61 @@
+ion-header ion-button{
+  max-width: 100%;
+  }
+ion-header ion-icon{
+font-size: 40px;
+}
+ion-toolbar .toolbarTitle{
+  display: flex;
+}
 .textCenter{
-    font-size:24px;
-    margin-top:18px;
-    text-align:center
-  }
-  .buttonCustom{
-    margin-top : 20px;
-    margin-left: 30%
-  }
-  .center {
-    margin:auto
-  }
+  font-size:24px;
+  margin-top:18px;
+  text-align:center;
+}
+.buttonCustom{
+  text-align: center;
+}
+.center {
+  margin:auto;
+}
+
+.statutProfil{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: .1px solid gray;
+}
+.modifAvatarProfil,
+.modifNameProfil{
+  border-bottom: .1px solid gray;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.modifAvatarProfil{
+  display: flex;
+  align-items: center;
+}
+.modifAvatarProfil div{
+  display: flex;
+  width: 120px;
+  justify-content: space-evenly;
+}
+.modifAvatarProfil div ion-icon{
+  font-size: 24px;
+  display: flex;
+}
+.modifNameProfil ion-input{
+  max-width: 120px;
+  text-align: right;
+  margin-right: 10px;
+  margin: 10px;
+  max-height: 30px;
+  border-bottom: 1px solid black;
+}
+.logout{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}

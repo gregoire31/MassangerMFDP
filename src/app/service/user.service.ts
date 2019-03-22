@@ -146,7 +146,7 @@ export class UserService {
   getUserList() {
     return this.usersCollection.snapshotChanges().pipe(
       map(actions => {
-        console.log(actions)
+        //console.log(actions)
         return actions.map(a => {
           const data = a.payload.doc.data() as UserList;
           const id = a.payload.doc.id;
@@ -336,18 +336,18 @@ export class UserService {
       isFriend: "wantAdd"
     }
 
-    // this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
-    // this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
-    this.db.collection<UserList>('users', ref => ref.where("id", "==", idCurrentUser)).valueChanges().subscribe( data =>{
-      let dataAstocke = `${idUserAAjouter}/isPending`
-      var dataFinal = data[0].friends;
-      dataFinal.push(dataAstocke)
-      console.log(typeof(data))
-      console.log(dataFinal)
-      this.usersCollection.doc(idCurrentUser).update({
-        "friends" : dataFinal
-      })
-    })
+     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
+     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
+    //this.db.collection<UserList>('users', ref => ref.where("id", "==", idCurrentUser)).valueChanges().subscribe( data =>{
+    //  let dataAstocke = `${idUserAAjouter}/isPending`
+    //  var dataFinal = data[0].friends;
+    //  dataFinal.push(dataAstocke)
+    //  console.log(typeof(data))
+    //  console.log(dataFinal)
+    //  this.usersCollection.doc(idCurrentUser).update({
+    //    "friends" : dataFinal
+    //  })
+    //})
     
 //
     ////this.getUserList()
