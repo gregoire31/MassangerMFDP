@@ -79,8 +79,8 @@ export class Tab2Page {
   }
 
   deleteChannel(channel){
-    console.log(channel.name)
-    this.userService.deleteChannel(channel.name)
+    console.log(channel.id)
+    this.userService.removeChannel(channel.id)
   }
 
 

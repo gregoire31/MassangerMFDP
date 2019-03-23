@@ -24,7 +24,7 @@ export class TextMessagePage implements OnInit {
   channelId: string
   channelName: string
   channel: any
-  textMsg: string
+  textMsg: string = ""
   userId: string
   messagesFiltre: any[] = []
   avatar: string
@@ -42,6 +42,7 @@ export class TextMessagePage implements OnInit {
     this.userService.returnDetailsChannel(this.channelId).subscribe((channel) => {
       //self.channelName = channel.name 
       self.channel = channel
+      console.log(channel)
     })
     this.userService.getCurrentUser().then(function (user) {
       //console.log(user)
@@ -155,6 +156,7 @@ export class TextMessagePage implements OnInit {
     //}
     //console.log(this.channelId)
     let date = new Date();
+    console.log(this.textMsg)
 
     this.userService.addMessageToChannel(this.channelId, this.userId, this.textMsg, date, this.avatar)
     //this.contentArea.scrollToBottom();

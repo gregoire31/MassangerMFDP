@@ -156,73 +156,124 @@ export class UserService {
     );
   }
 
+
+  removeChannel(idChannel : string) {
+    let waitBeforeDeleteChannel = false
+    let usersId = []
+    this.channelCollection.doc(idChannel).collection("messages").snapshotChanges().subscribe(data => {
+      console.log(data.length)
+      data.map((idADelete,index)=> {
+        this.channelCollection.doc(idChannel).collection("messages").doc(idADelete.payload.doc.id).delete()
+        if(index === data.length -1 && waitBeforeDeleteChannel){
+          this.channelCollection.doc(idChannel).delete()
+        }
+        if(index === data.length -1 && waitBeforeDeleteChannel === false){
+          waitBeforeDeleteChannel = true
+        }
+      })
+    })
+    this.channelCollection.doc(idChannel).collection("users").snapshotChanges().subscribe(data => {
+      data.map((idADelete,index)=> {
+        this.channelCollection.doc(idChannel).collection("users").doc(idADelete.payload.doc.id).delete()
+        usersId[index] = idADelete.payload.doc.id
+        if(index === data.length -1 && waitBeforeDeleteChannel){
+          this.channelCollection.doc(idChannel).delete()
+        }
+        if(index === data.length -1 && waitBeforeDeleteChannel === false){
+          waitBeforeDeleteChannel = true
+        }
+        console.log(usersId)
+
+      })
+    })
+    this.channelCollection.doc(idChannel).collection("users").snapshotChanges().subscribe(data => {
+      data.map((idADelete)=> {
+        this.usersCollection.doc(idADelete.payload.doc.id).collection("channels").doc(idChannel).delete()
+      })
+    })
+    //usersId.map(user => {
+    //  this.usersCollection.doc(user).collection("channels").doc(idChannel).delete()
+    //})
+  }
+
   entrerChatPrive(currentuserId: string, userId: string) {
     let valeurBoolean = false
     let currentIdUserId = `${currentuserId}${userId}`
     let currentIdUserIdInverse = `${userId}${currentuserId}`
     this.usersCollection.doc(currentuserId).collection("channels").snapshotChanges().subscribe(data => {
       console.log("ça rentre")
-      if(data.length === 0){
+      if (data.length === 0) {
         let isAdmin = {
-          isAdmin : true,
-          name : ""
+          isAdmin: true,
+          name: ""
         }
-        this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then( () => {
-          this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
-            this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
-              this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
-                this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
-              })
-            })
-          })
-        })
-        
-      }
-      else{
-
-        let longeurData = data.length - 1
-      data.map( (aa, index) => {
-        if(aa.payload.doc.id === currentIdUserId){
-          console.log("channel déja créé")
-          valeurBoolean = true
-          this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserId}`);
-          //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
-          
-          index = longeurData + 1
-        } if(aa.payload.doc.id === currentIdUserIdInverse){
-          valeurBoolean = true
-          this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserIdInverse}`)
-          
-          index = longeurData + 1
-          console.log("channel déja créé")
+        let name = {
+          name: ""
         }
-        console.log(index)
-        console.log(longeurData)
-        if(index === longeurData && valeurBoolean === false){
-          console.log("FINITO")
-          let isAdmin = {
-            isAdmin : true,
-            name : ""
-          }
-
-          this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then( () => {
-            this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
-              this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
+        this.channelCollection.doc(currentIdUserId).set(name).then(() => {
+          this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then(() => {
+            this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
+              this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
                 this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
                   this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
                 })
               })
             })
           })
+        })
 
-          
-        }
-        
-      })
+
       }
-      
+      else {
+
+        let longeurData = data.length - 1
+        data.map((aa, index) => {
+          if (aa.payload.doc.id === currentIdUserId) {
+            console.log("channel déja créé")
+            valeurBoolean = true
+            this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserId}`);
+            //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+
+            index = longeurData + 1
+          } if (aa.payload.doc.id === currentIdUserIdInverse) {
+            valeurBoolean = true
+            this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserIdInverse}`)
+
+            index = longeurData + 1
+            console.log("channel déja créé")
+          }
+          console.log(index)
+          console.log(longeurData)
+          if (index === longeurData && valeurBoolean === false) {
+            console.log("FINITO")
+            let isAdmin = {
+              isAdmin: true,
+              name: ""
+            }
+            let name = {
+              name: ""
+            }
+
+            this.channelCollection.doc(currentIdUserId).set(name).then(() => {
+              this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then(() => {
+                this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
+                  this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
+                    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
+                      this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+                    })
+                  })
+                })
+              })
+            })
+
+
+          }
+
+        })
+      }
+
     })
-    
+
     //if(this.channelCollection.doc(currentIdUserId).get().subscribe(data => {
     //  if(data.data() !== undefined){
     //    
@@ -248,7 +299,7 @@ export class UserService {
     //        let premierePartie = channel.name.substr(0, 28)
     //        let deuxiemePartie = channel.name.substr(28, 55)
     //        let deuxiemeIdPossible = deuxiemePartie + premierePartie
-//
+    //
     //        console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
     //        if (channel.name === currentIdUserId) {
     //          console.log("PREMIERE IDDDDDDDD")
@@ -267,7 +318,7 @@ export class UserService {
     //          console.log("rien trouvé")
     //          resolve([false, ""])
     //        }
-//
+    //
     //      }
     //    })
     //    //console.log("finis")
@@ -276,7 +327,7 @@ export class UserService {
     //}).then((data) => {
     //  console.log(data[0])
     //  console.log(data[1])
-//
+    //
     //  if (data[0] === false) {
     //    return new Promise(() => {
     //      this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
@@ -289,7 +340,7 @@ export class UserService {
     //        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
     //      })
     //    })
-//
+    //
     //  } else {
     //    this.navigateTo(`app/tabs/textMessage/${data[1]}`)
     //  }
@@ -312,12 +363,12 @@ export class UserService {
     //  //  this.navigateTo(`app/tabs/textMessage/${idReel}`)
     //  //}
     //})
-//
-//
-//
-//
-//
-//
+    //
+    //
+    //
+    //
+    //
+    //
     ////this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
     ////  if (!data.exists) {
     ////    return new Promise(resolve => {
@@ -407,8 +458,8 @@ export class UserService {
       isFriend: "wantAdd"
     }
 
-     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
-     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
     //this.db.collection<UserList>('users', ref => ref.where("id", "==", idCurrentUser)).valueChanges().subscribe( data =>{
     //  let dataAstocke = `${idUserAAjouter}/isPending`
     //  var dataFinal = data[0].friends;
@@ -419,8 +470,8 @@ export class UserService {
     //    "friends" : dataFinal
     //  })
     //})
-    
-//
+
+    //
     ////this.getUserList()
     //console.log("complete")
     let data = []
@@ -442,12 +493,12 @@ export class UserService {
     //this.usersCollection.doc(idCurrentUser).update({
     //  
     //  [idUserAAjouter]: "pending"
-//
+    //
     //})
     //this.usersCollection.doc(idUserAAjouter).update({
-//
+    //
     //  [idCurrentUser]: "pending"
-//
+    //
     //})
   }
 
@@ -470,7 +521,7 @@ export class UserService {
   }
 
   removeFriend(idCurrentUser: string, idUserAAjouter: string) {
-    
+
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
   }
