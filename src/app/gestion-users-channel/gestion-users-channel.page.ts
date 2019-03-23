@@ -36,7 +36,7 @@ export class GestionUsersChannelPage implements OnInit {
       this.userService.listeAllUsersOfChannels(this.channelId).subscribe(users => {
         this.usersFriends = []
         
-        users.map(user => {
+        users.map((user,index) => {
           this.userService.getUserById(user.id).subscribe( data => {
             if(isAdmin){
               isRemovable = true
@@ -47,7 +47,8 @@ export class GestionUsersChannelPage implements OnInit {
             if(this.userId !== data.payload.data().id){
               let dato = data.payload.data()
               console.log(dato)
-              self.usersFriends.push({dato,isRemovable})
+              this.usersFriends[index] = {dato, isRemovable}
+              //self.usersFriends.push({dato,isRemovable})
             }
           })
         })

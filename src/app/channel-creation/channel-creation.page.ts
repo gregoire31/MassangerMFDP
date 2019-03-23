@@ -41,12 +41,12 @@ export class ChannelCreationPage implements OnInit {
     }).then(() => {
 
       this.userService.friendList(this.userId).subscribe( (users) =>{
-        users.map(user => {
+        users.map((user,index) => {
           console.log(user)
           if(user.isFriend ==="true"){
             this.userService.getUserById(user.id).subscribe(user => {
 
-              this.userFriends.push(user.payload.data())
+              this.userFriends[index] = (user.payload.data())
               
             })
           }

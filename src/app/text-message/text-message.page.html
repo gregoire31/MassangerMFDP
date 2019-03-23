@@ -11,7 +11,7 @@
             <!--<ion-title>{{channel.nacme}}</ion-title>-->
             <ion-title>Nom conversation</ion-title>
           </ion-col>
-          <ion-col class="toolbarIcon">
+          <ion-col *ngIf="channel.name!=''" class="toolbarIcon">
               <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="cog"></ion-icon></ion-button>
             <!--
             <ion-buttons slot="end">

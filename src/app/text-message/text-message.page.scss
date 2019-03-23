@@ -14,7 +14,12 @@ ion-label{
 ion-input{
   border-bottom: 2px solid #fff;
 }
-
+ion-header ion-button{
+  max-width: 100%;
+}
+ion-header ion-icon{
+  font-size: 40px;
+}
 .toolbarIcon{
   max-width: 80px;
   width: 50px;
@@ -37,7 +42,7 @@ ion-input{
   text-align:center;
   display: flex;
 }
-.myMessage userNameText{
+.myMessage .userNameText{
   justify-content: end;
 }
 .userNameText ion-text{

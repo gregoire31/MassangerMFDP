@@ -50,7 +50,8 @@ export class Tab1Page {
       }).then(() => {
 
         this.userService.getUserList().subscribe(users => {
-
+            //console.log(this)
+            console.log(this.friends)
           //if (this.booleanUser === false) {
            this.users = users
            if (this.friends.length !== 0) {
@@ -83,13 +84,15 @@ export class Tab1Page {
     console.log(users)
     this.idFriendsStocke = []
     this.isFriendsStocke = []
-
-    friends.map((friend, index) => {
-
-      console.log(friend)
-      this.idFriendsStocke[index] = friend.id
-      this.isFriendsStocke[index] = friend.isFriend
-    })
+    
+    if(friends.length !== 0){
+      friends.map((friend, index) => {
+  
+        console.log(friend)
+        this.idFriendsStocke[index] = friend.id
+        this.isFriendsStocke[index] = friend.isFriend
+      })
+    }
 
 
     this.users = users.map((user) => {
@@ -311,7 +314,7 @@ export class Tab1Page {
     console.log(user)
     user.isFriend = "false"
 
-    this.userService.deniedFriend(this.userId, user.id)
+    this.userService.removeFriend(this.userId, user.id)
   }
 
   refuseInvitation(user: any) {

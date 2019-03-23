@@ -1,40 +1,46 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-
-      <button ion-button icon-only (click)="navigateByUrlTxt()">
-        <ion-icon name="arrow-back"></ion-icon>
-      </button>
-
-    </ion-buttons>
-    <ion-title>gestionUsersChannel</ion-title>
+  <ion-toolbar color="medium">
+      <ion-row>
+          <ion-col class="toolbarIcon">
+              <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
+          </ion-col>
+          <ion-col class="toolbarText">
+            <ion-title>gestionUsersChannel</ion-title>
+          </ion-col>
+      </ion-row>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content padding>
   <ion-list>
     <ion-item *ngFor="let user of usersFriends; let i = index">
       <ion-grid>
-        <ion-row>
-          <ion-col size="2">
+        <ion-row class="memberChannel">
+
+          <ion-col class="userAvatar">
             <ion-avatar>
               <img [src]="user.dato.avatar">
             </ion-avatar>
           </ion-col>
-          <ion-col size="10">
+
+          <ion-col class="nameMembers">
             <div class="userNameText">
               <ion-label >{{user.dato.displayName}}</ion-label>
             </div>
           </ion-col>
+
+          <ion-col class="deleteMember">
+              
+            <ion-icon color="dark" name="trash" *ngIf="user.isRemovable" (click)="removeuserChannel(user)"></ion-icon>
+              
+          </ion-col>
+          
         </ion-row>
       </ion-grid>
-      <ion-icon name="remove-circle" *ngIf="user.isRemovable" (click)="removeuserChannel(user)"></ion-icon>
+      
     </ion-item>
   </ion-list>
-
-
-  <button ion-button icon-only (click)="testos()">Tester
-    </button>
 
     
 </ion-content>

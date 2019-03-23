@@ -157,120 +157,191 @@ export class UserService {
   }
 
   entrerChatPrive(currentuserId: string, userId: string) {
+    let valeurBoolean = false
     let currentIdUserId = `${currentuserId}${userId}`
-    let verificationChannelExiste = false
-    let idReel: string
-    //console.log(currentIdUserId)
-    let setData = {
-      isAdmin: true,
-      name: currentIdUserId
-    }
-    return new Promise(resolve => {
-      this.returnListChannelOfCurrentUser(currentuserId).subscribe(channels => {
-        if (channels.length === 0) {
-          resolve([false, ""])
+    let currentIdUserIdInverse = `${userId}${currentuserId}`
+    this.usersCollection.doc(currentuserId).collection("channels").snapshotChanges().subscribe(data => {
+      console.log("ça rentre")
+      if(data.length === 0){
+        let isAdmin = {
+          isAdmin : true,
+          name : ""
         }
-        channels.map((channel, index) => {
-          //console.log(channel.name)
-          //console.log(channel.name.length)
-          if (channel.name.length > 30) {
-            let premierePartie = channel.name.substr(0, 28)
-            let deuxiemePartie = channel.name.substr(28, 55)
-            let deuxiemeIdPossible = deuxiemePartie + premierePartie
-
-            console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
-            if (channel.name === currentIdUserId) {
-              console.log("PREMIERE IDDDDDDDD")
-              resolve([true, currentIdUserId]
-                //verificationChannelExiste = true
-                //idReel = currentIdUserId
-              )
-            }
-            if (channel.name === deuxiemeIdPossible) {
-              console.log("DEXIEME IDDDDDDD")
-              resolve([true, deuxiemeIdPossible])
-              //verificationChannelExiste = true
-              //idReel = deuxiemeIdPossible
-            }
-            if (index === channels.length - 1) {
-              console.log("rien trouvé")
-              resolve([false, ""])
-            }
-
-          }
-        })
-        //console.log("finis")
-        //resolve([false,""])
-      })
-    }).then((data) => {
-      console.log(data[0])
-      console.log(data[1])
-
-      if (data[0] === false) {
-        return new Promise(() => {
-          this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-          this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-          this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-          this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-        }).then(() => {
-          this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-            console.log(data.data())
-            this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+        this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then( () => {
+          this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
+            this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
+              this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
+                this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+              })
+            })
           })
         })
-
-      } else {
-        this.navigateTo(`app/tabs/textMessage/${data[1]}`)
+        
       }
-      //console.log(idReel)
-      //console.log(verificationChannelExiste)
-      //if (verificationChannelExiste === false) {
-      //  return new Promise(resolve => {
-      //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-      //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-      //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-      //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-      //  }).then(() => {
-      //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-      //      console.log(data.data())
-      //      this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
-      //    })
-      //  })
-      //}
-      //else {
-      //  this.navigateTo(`app/tabs/textMessage/${idReel}`)
-      //}
+      else{
+
+        let longeurData = data.length - 1
+      data.map( (aa, index) => {
+        if(aa.payload.doc.id === currentIdUserId){
+          console.log("channel déja créé")
+          valeurBoolean = true
+          this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserId}`);
+          //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+          
+          index = longeurData + 1
+        } if(aa.payload.doc.id === currentIdUserIdInverse){
+          valeurBoolean = true
+          this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserIdInverse}`)
+          
+          index = longeurData + 1
+          console.log("channel déja créé")
+        }
+        console.log(index)
+        console.log(longeurData)
+        if(index === longeurData && valeurBoolean === false){
+          console.log("FINITO")
+          let isAdmin = {
+            isAdmin : true,
+            name : ""
+          }
+
+          this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(isAdmin).then( () => {
+            this.usersCollection.doc(currentuserId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
+              this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(()=> {
+                this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
+                  this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+                })
+              })
+            })
+          })
+
+          
+        }
+        
+      })
+      }
+      
     })
-
-
-
-
-
-
-    //this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-    //  if (!data.exists) {
-    //    return new Promise(resolve => {
-    //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-    //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-    //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-    //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-    //    }).then(()=> {
+    
+    //if(this.channelCollection.doc(currentIdUserId).get().subscribe(data => {
+    //  if(data.data() !== undefined){
+    //    
+    //  }
+    //}))
+    console.log(currentIdUserId)
+    //let verificationChannelExiste = false
+    //let idReel: string
+    ////console.log(currentIdUserId)
+    //let setData = {
+    //  isAdmin: true,
+    //  name: currentIdUserId
+    //}
+    //return new Promise(resolve => {
+    //  this.returnListChannelOfCurrentUser(currentuserId).subscribe(channels => {
+    //    if (channels.length === 0) {
+    //      resolve([false, ""])
+    //    }
+    //    channels.map((channel, index) => {
+    //      //console.log(channel.name)
+    //      //console.log(channel.name.length)
+    //      if (channel.name.length > 30) {
+    //        let premierePartie = channel.name.substr(0, 28)
+    //        let deuxiemePartie = channel.name.substr(28, 55)
+    //        let deuxiemeIdPossible = deuxiemePartie + premierePartie
+//
+    //        console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
+    //        if (channel.name === currentIdUserId) {
+    //          console.log("PREMIERE IDDDDDDDD")
+    //          resolve([true, currentIdUserId]
+    //            //verificationChannelExiste = true
+    //            //idReel = currentIdUserId
+    //          )
+    //        }
+    //        if (channel.name === deuxiemeIdPossible) {
+    //          console.log("DEXIEME IDDDDDDD")
+    //          resolve([true, deuxiemeIdPossible])
+    //          //verificationChannelExiste = true
+    //          //idReel = deuxiemeIdPossible
+    //        }
+    //        if (index === channels.length - 1) {
+    //          console.log("rien trouvé")
+    //          resolve([false, ""])
+    //        }
+//
+    //      }
+    //    })
+    //    //console.log("finis")
+    //    //resolve([false,""])
+    //  })
+    //}).then((data) => {
+    //  console.log(data[0])
+    //  console.log(data[1])
+//
+    //  if (data[0] === false) {
+    //    return new Promise(() => {
+    //      this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+    //      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+    //      this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+    //      this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+    //    }).then(() => {
     //      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
     //        console.log(data.data())
     //        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
     //      })
     //    })
-    //    
+//
+    //  } else {
+    //    this.navigateTo(`app/tabs/textMessage/${data[1]}`)
     //  }
-    //  else{
-    //    
-    //  }
-    //
-    //  
-    //
-    //  //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
-    //
+    //  //console.log(idReel)
+    //  //console.log(verificationChannelExiste)
+    //  //if (verificationChannelExiste === false) {
+    //  //  return new Promise(resolve => {
+    //  //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+    //  //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+    //  //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+    //  //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+    //  //  }).then(() => {
+    //  //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+    //  //      console.log(data.data())
+    //  //      this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+    //  //    })
+    //  //  })
+    //  //}
+    //  //else {
+    //  //  this.navigateTo(`app/tabs/textMessage/${idReel}`)
+    //  //}
     //})
+//
+//
+//
+//
+//
+//
+    ////this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+    ////  if (!data.exists) {
+    ////    return new Promise(resolve => {
+    ////    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
+    ////    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
+    ////    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
+    ////    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
+    ////    }).then(()=> {
+    ////      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
+    ////        console.log(data.data())
+    ////        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
+    ////      })
+    ////    })
+    ////    
+    ////  }
+    ////  else{
+    ////    
+    ////  }
+    ////
+    ////  
+    ////
+    ////  //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+    ////
+    ////})
 
   }
 
@@ -394,6 +465,12 @@ export class UserService {
   }
 
   deniedFriend(idCurrentUser: string, idUserAAjouter: string) {
+    this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
+    this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
+  }
+
+  removeFriend(idCurrentUser: string, idUserAAjouter: string) {
+    
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).delete()
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).delete()
   }
