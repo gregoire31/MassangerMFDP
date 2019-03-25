@@ -8,14 +8,14 @@
 
     <ion-content padding>
 
-        <ion-list *ngIf="!user">
+        <ion-list *ngIf="!user && loginVerification == true">
             <ion-item>
               <ion-label>telephone</ion-label>
               <ion-input type="text" [(ngModel)]="phoneNumber"></ion-input>
               <ion-icon name="phone-portrait"></ion-icon>
             </ion-item>
         
-            <div id="recaptcha-container"> </div>
+            
             <ion-button (click)="sendLoginCode()">SMS Text Login Code</ion-button>
             <div *ngIf="windowRef.confirmationResult">
               <ion-label for="code"> enter your verification code here</ion-label>
@@ -27,9 +27,51 @@
               <ion-label> Vous êtes connecté !</ion-label>
             </div>
     
-            <div text-center><a [routerLink]="['/signup']" >S'enregistrer</a></div>
+            <!-- <div text-center><a [routerLink]="['/signup']" >S'enregistrer</a></div> -->
+            <ion-button (click)="authentification(false)"> S'enregistrer</ion-button>
         
           </ion-list>
+
+          <ion-list *ngIf="!user && loginVerification == false">
+              <ion-item>
+                <ion-label>telephone</ion-label>
+                <ion-input type="text" [(ngModel)]="phoneNumber"></ion-input>
+                <ion-icon name="phone-portrait"></ion-icon>
+              </ion-item>
+              <ion-item>
+                  <ion-label>Pseudo</ion-label>
+                  <ion-input type="text" [(ngModel)]="nomRegister"></ion-input>
+                  <ion-icon name="person"></ion-icon>
+                </ion-item>
+              <ion-item>
+                  <ion-label>Email</ion-label>
+                  <ion-input type="text" [(ngModel)]="email"></ion-input>
+                  <ion-icon name="mail"></ion-icon>
+                </ion-item>
+                <ion-item class="modifAvatarProfil">     
+                    <p>Modifier avatar</p>
+                    <div>
+                      <ion-icon color="dark" (click)="takeImage()" name="camera"></ion-icon>
+                      <ion-icon color="dark" (click)="getImage()" name="photos"></ion-icon>
+                    </div>
+                  </ion-item>
+
+              <ion-button (click)="sendLoginCode()">SMS Text Login Code</ion-button>
+              <div *ngIf="windowRef.confirmationResult">
+                <ion-label for="code"> enter your verification code here</ion-label>
+                <ion-input type="text" [(ngModel)]="verificationCode"></ion-input>
+                <ion-button (click)="verifyLoginCode()"> Verify </ion-button>
+              </div>
+          
+              <div *ngIf="user">
+                <ion-label> Vous êtes connecté !</ion-label>
+              </div>
+      
+              <ion-button (click)="authentification(true)"> Se connecter</ion-button>
+              
+            </ion-list>
+
+            <div id="recaptcha-container"> </div>
     
 
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/service/user.service';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase'
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 
 
@@ -20,7 +20,7 @@ import * as firebase from 'firebase'
 })
 export class LoginPage implements OnInit {
 
-
+  loginVerification : boolean = true
   phoneNumber: string
   email: string
   password: string
@@ -29,16 +29,13 @@ export class LoginPage implements OnInit {
   testVerificationCode : string = "123456"
   verificationCode : string
   appVerifier : any
+  nomRegister : string = ""
+  myPhoto = ""
 
-  constructor(private userService : UserService, private router : Router, private _auth : AngularFireAuth ) { 
-    
-   }
+  constructor(private userService : UserService, private router : Router, private camera: Camera ) { }
 
   ngOnInit() {
-    // let self = this
-    // this._auth.user.subscribe(user => {
-    //   this.user = user
-    // })
+
     let self = this
     this.windowRef = this.userService.windowRef
     setTimeout(function(){ 
@@ -46,34 +43,7 @@ export class LoginPage implements OnInit {
       self.windowRef.recapchaVerifier.render()
      }, 1);
 
-    //console.log(this.windowRef)
-    //this.windowRef.recapchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-    //this.windowRef.recapchaVerifier.render()
   }
-
-  
-
-
-
-// This will render a fake reCAPTCHA as appVerificationDisabledForTesting is true.
-// This will resolve after rendering without app verification.
-
-// signInWithPhoneNumber will call appVerifier.verify() which will resolve with a fake
-// reCAPTCHA response.
-// loginWithPhone(){
-
-//   firebase.auth().signInWithPhoneNumber(this.phoneNumber, this.appVerifier)
-//       .then(function (confirmationResult) {
-//         console.log(confirmationResult)
-//         // confirmationResult can resolve with the whitelisted testVerificationCode above.
-//         return confirmationResult.confirm(this.testVerificationCode)
-//       }).catch(function (error) {
-//         // Error; SMS not sent
-//         // ...
-//       }).then(() => {
-//         this.userService.navigateTo('app')
-//       });
-// }
 
 sendLoginCode() {
   const appVerifier = this.windowRef.recapchaVerifier;
@@ -84,65 +54,80 @@ sendLoginCode() {
   }).catch(error => console.log(error))
 }
 
+veryfyLoginCode(){
 
-verifyLoginCode(){
-  this.windowRef.confirmationResult
-  .confirm(this.verificationCode)
-  .then(user => {
-
-    this.userService.setUserOnLine(user.user.uid)
-  }).then(()=>{
-    
-    this.userService.navigateTo('app')
-  })
-  .catch(error => console.log(error, "incorrect code entered"));
-}
-
-  // verifyLoginCode(){
-
-  //   this.windowRef.confirmationResult
-  //   .confirm(this.verificationCode)
-  //   .then(result => {
-  //     this.user = result.user;
-  //     return result
-  //   }).then(user => {
-  //     this.userService.setUserOnLine(user.user.uid)
-  //   }).then(()=>{
-      
-  //     this.userService.navigateTo('app')
-  //   })
-  //   .catch(error => console.log(error, "incorrect code entered"));
-  // }
-
-
+  if(this.loginVerification === true){
+    this.windowRef.confirmationResult
+    .confirm(this.verificationCode)
+    .then(user => {
   
-  // loginPhone(){
-  //   const num = `+33${this.phoneNumber}`
-  //   const appVerifier = this.windowRef.recapchaVerifier;
-  //   firebase.auth().signInWithPhoneNumber(num, appVerifier)
-  //   .then(function (confirmationResult) {
-  //     console.log(confirmationResult)
-  //     this.windowRef.confirmationResult = confirmationResult;
-  //     // confirmationResult can resolve with the whitelisted testVerificationCode above.
-  //     //return confirmationResult.confirm(this.testVerificationCode)
-  //   }).catch(function (error) {
-  //     // Error; SMS not sent
-  //     // ...
-  //   });
-  // }
-
-
-
-
-  login() {
-    this.userService.login(this.email,this.password)
+      this.userService.setUserOnLine(user.user.uid)
+    }).then(()=>{
+      
+      this.userService.navigateTo('app')
+    })
+    .catch(error => console.log(error, "incorrect code entered"));
+  }else{
+    let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+    if(this.myPhoto ==""){
+      photoURL = this.myPhoto
+    }
+    this.windowRef.confirmationResult
+    .confirm(this.verificationCode)
+    .then(result => {
+      this.user = result.user;
+      return result
+    }).then(user => {
+      console.log(user)
+      this.userService.addUserDetails(user.user.uid,this.nomRegister,photoURL)
+      user.user.updateProfile({
+        displayName: this.nomRegister,
+        photoURL: photoURL,
+      })
+      this.userService.setUserOnLine(user.user.uid)
+    }).then(()=>{
+      
+      this.userService.navigateTo('app')
+    })
+    .catch(error => console.log(error, "incorrect code entered"));
   }
-  //navigateTo(url: string) {
-  //  this.router.navigateByUrl(url);
-  //}
+  
+}
+  authentification(verif : boolean){
+    this.loginVerification = verif
+  }
 
-  logout() {
-    this.userService.logout()
+  getImage(){
+    const options:CameraOptions = {
+      quality : 70,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      saveToPhotoAlbum : false
+
+    }
+
+    this.camera.getPicture(options).then((imageData)=> {
+      this.myPhoto ='data:image/jpeg;base64,'+ imageData
+    })
+  }
+
+
+  takeImage(){
+    const options:CameraOptions = {
+      quality : 70,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType : this.camera.MediaType.PICTURE,
+      correctOrientation : true
+      //saveToPhotoAlbum : false
+
+    }
+
+    this.camera.getPicture(options).then((imageData)=> {
+      this.myPhoto ='data:image/jpeg;base64,'+ imageData
+    }, (err) => {
+
+    })
   }
 
 }

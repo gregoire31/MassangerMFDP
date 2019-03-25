@@ -44,6 +44,7 @@ export class GestionUsersChannelPage implements OnInit {
           if (role.isAdmin) {
             this.userIdAdmin = true
           }
+          
 
         })
         new Promise(resolve => {

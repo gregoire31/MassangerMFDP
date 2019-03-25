@@ -14,10 +14,7 @@ const routes: Routes = [
   }, { 
     path: 'login', 
     loadChildren: './authentification/login/login.module#LoginPageModule' 
-  }, { 
-    path: 'signup', 
-    loadChildren: './authentification/signup/signup.module#SignupPageModule'
-  }, 
+  },
   // { 
   //   path: 'forgot-password', 
   //   loadChildren: './pages/forgot-password/forgot-password.module#ForgotPasswordPageModule' 
