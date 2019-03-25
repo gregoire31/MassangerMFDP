@@ -33,6 +33,7 @@
           <ion-col class="deleteMember">
               
             <ion-icon color="dark" name="trash" *ngIf="user.isRemovable" (click)="removeuserChannel(user)"></ion-icon>
+            <ion-icon color="dark" name="add-circle" *ngIf="user.isRemovable" (click)="setAdmin(user)"></ion-icon>
               
           </ion-col>
           
@@ -40,6 +41,43 @@
       </ion-grid>
       
     </ion-item>
+  </ion-list>
+
+
+  <ion-list *ngIf="userIdAdmin == true">
+      <ion-item>
+          <ion-label> AMIS POUVANT ETRE AJOUTE</ion-label>
+        </ion-item>
+    <ion-item *ngFor="let user of usersFriendsAddable; let i = index">
+      <ion-grid>
+        <ion-row class="memberChannel">
+
+          <ion-col class="userAvatar">
+            <ion-avatar>
+              <img [src]="user.avatar">
+            </ion-avatar>
+          </ion-col>
+
+          <ion-col class="nameMembers">
+            <div class="userNameText">
+              <ion-label (click)="recupId(user)" >{{user.displayName}}</ion-label>
+            </div>
+          </ion-col>
+          
+
+          <ion-col class="deleteMember">
+              
+            <ion-icon color="dark" name="add-circle"  (click)="ajouteFrienddsToChannel(user)"></ion-icon>
+              
+          </ion-col>
+          
+        </ion-row>
+      </ion-grid>
+      
+      
+    </ion-item>
+
+    <ion-button (click)="ajouteFrienddsToChannel()">Ajouter Amis Au Channel</ion-button>
   </ion-list>
 
     

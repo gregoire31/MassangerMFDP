@@ -43,6 +43,7 @@ export class TextMessagePage implements OnInit {
       //self.channelName = channel.name 
       self.channel = channel
       console.log(channel)
+      
     })
     this.userService.getCurrentUser().then(function (user) {
       //console.log(user)
@@ -156,9 +157,10 @@ export class TextMessagePage implements OnInit {
     //}
     //console.log(this.channelId)
     let date = new Date();
-    console.log(this.textMsg)
+    console.log(this.channelId, this.userId, this.textMsg, date, this.avatar)
 
     this.userService.addMessageToChannel(this.channelId, this.userId, this.textMsg, date, this.avatar)
+    this.textMsg = ""
     //this.contentArea.scrollToBottom();
   }
 
