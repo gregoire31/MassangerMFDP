@@ -54,7 +54,7 @@ sendLoginCode() {
   }).catch(error => console.log(error))
 }
 
-veryfyLoginCode(){
+verifyLoginCode(){
 
   if(this.loginVerification === true){
     this.windowRef.confirmationResult
