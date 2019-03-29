@@ -15,7 +15,7 @@ export class Tab3Page {
   userId : string
   displayName: string
   displayNameFige : string
-  myPhoto : any = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+  myPhoto : string = ""
 
   constructor(private userService : UserService, private camera: Camera) {
 
@@ -26,6 +26,14 @@ export class Tab3Page {
     
     this.userService.getCurrentUser().then(function (user) {
       self.userId = user.uid
+      self.userService.getUserById(user.uid).subscribe(user => {
+        if(self.myPhoto === ""){
+
+          self.myPhoto = user.payload.data().avatar
+        }
+      })
+    
+      
     }).then(() => {
       this.userService.getUserById(this.userId).subscribe(user => {
         let userData = user.payload.data()

@@ -117,12 +117,10 @@ export class GestionUsersChannelPage implements OnInit {
     this.userService.navigateTo(`app/tabs/tab2`);
   }
   setAdmin(user: any) {
-    console.log(user)
     this.userService.changeAdminModeUser(this.channelId, user.id)
   }
 
   navigateByUrlTxt() {
     this.userService.navigateTo(`app/tabs/textMessage/${this.channelId}`);
   }
-
 }
