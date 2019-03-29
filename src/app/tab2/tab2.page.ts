@@ -21,7 +21,6 @@ export class Tab2Page {
 
   constructor(private userService : UserService, public activatedRoute: ActivatedRoute) {
     this.userService.getUserList().subscribe( (users) =>{
-      console.log(users)
       this.userList = users
     })
 
@@ -33,11 +32,9 @@ export class Tab2Page {
     let self = this
     
     this.userService.getCurrentUser().then(function (user) {
-      console.log(user)
       self.userId = user.uid
     }).then(() => {
       this.userService.getUserById(this.userId).subscribe(user => {
-        console.log(user.payload.data().displayName)
         this.avatar = user.payload.data().avatar
         this.displayName = user.payload.data().displayName
         self.users = user
@@ -46,7 +43,6 @@ export class Tab2Page {
     ).then(() => {
       let self = this
       this.test = this.userService.returnListChannelOfCurrentUser(this.userId).subscribe(function(channels){
-        console.log(channels)
         self.channels = channels
         //let selfe = self
         //channels.map(channel => {
@@ -79,7 +75,6 @@ export class Tab2Page {
   }
 
   deleteChannel(channel){
-    console.log(channel.id)
     this.userService.removeChannel(channel.id,true)
   }
 

@@ -36,17 +36,14 @@ export class TextMessagePage implements OnInit {
   constructor(public activatedRoute: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit() {
-    //console.log("ON INIT")
     let self = this
     this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
     this.userService.returnDetailsChannel(this.channelId).subscribe((channel) => {
       //self.channelName = channel.name 
       self.channel = channel
-      console.log(channel)
       
     })
     this.userService.getCurrentUser().then(function (user) {
-      //console.log(user)
       self.avatar = user.photoURL
       self.userId = user.uid
     })
@@ -60,8 +57,6 @@ export class TextMessagePage implements OnInit {
         this.userService.getUserById(message.idUser).subscribe(user => {
           //console.log(user.payload.data())
           message.avatar = user.payload.data().avatar
-          console.log(message)
-          
           //message.avatar = user.payload.data().avatar
           //this.messagesFiltre.push(message)
           
@@ -157,8 +152,6 @@ export class TextMessagePage implements OnInit {
     //}
     //console.log(this.channelId)
     let date = new Date();
-    console.log(this.channelId, this.userId, this.textMsg, date, this.avatar)
-
     this.userService.addMessageToChannel(this.channelId, this.userId, this.textMsg, date, this.avatar)
     this.textMsg = ""
     //this.contentArea.scrollToBottom();

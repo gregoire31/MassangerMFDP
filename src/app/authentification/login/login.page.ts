@@ -78,7 +78,6 @@ verifyLoginCode(){
       this.user = result.user;
       return result
     }).then(user => {
-      console.log(user)
       this.userService.addUserDetails(user.user.uid,this.nomRegister,photoURL)
       user.user.updateProfile({
         displayName: this.nomRegister,

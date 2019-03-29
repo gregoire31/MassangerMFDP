@@ -13,7 +13,6 @@ export class Tab3Page {
   userName : string
   avatar : string
   userId : string
-  //userName = "toto"
   displayName: string
   displayNameFige : string
   myPhoto : any = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
@@ -26,7 +25,6 @@ export class Tab3Page {
     let self = this
     
     this.userService.getCurrentUser().then(function (user) {
-      console.log(user)
       self.userId = user.uid
     }).then(() => {
       this.userService.getUserById(this.userId).subscribe(user => {
