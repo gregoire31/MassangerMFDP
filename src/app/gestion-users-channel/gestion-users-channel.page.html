@@ -20,20 +20,20 @@
 
           <ion-col class="userAvatar">
             <ion-avatar>
-              <img [src]="user.dato.avatar">
+              <img [src]="user.avatar">
             </ion-avatar>
           </ion-col>
 
           <ion-col class="nameMembers">
             <div class="userNameText">
-              <ion-label >{{user.dato.displayName}}</ion-label>
+              <ion-label >{{user.displayName}}</ion-label>
             </div>
           </ion-col>
 
           <ion-col class="deleteMember">
               
-            <ion-icon color="dark" name="trash" *ngIf="user.isRemovable" (click)="removeuserChannel(user)"></ion-icon>
-            <ion-icon color="dark" name="add-circle" *ngIf="user.isRemovable" (click)="setAdmin(user)"></ion-icon>
+            <ion-icon color="dark" name="trash" *ngIf="userIdAdmin" (click)="removeuserChannel(user)"></ion-icon>
+            <ion-icon color="dark" name="add-circle" *ngIf="userIdAdmin" (click)="setAdmin(user)"></ion-icon>
               
           </ion-col>
           
@@ -79,6 +79,8 @@
 
     <ion-button (click)="ajouteFrienddsToChannel()">Ajouter Amis Au Channel</ion-button>
   </ion-list>
+
+  <ion-button (click)="test()">testData</ion-button>
 
     
 </ion-content>

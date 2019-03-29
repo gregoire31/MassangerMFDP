@@ -447,7 +447,9 @@ export class UserService {
   }
 
   getUserById(id) {
+
     return this.usersCollection.doc<UserList>(id).snapshotChanges();
+
   }
 
 

@@ -68,7 +68,7 @@ verifyLoginCode(){
     })
     .catch(error => console.log(error, "incorrect code entered"));
   }else{
-    let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
+    let photoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7ynxbF7WkDlJ2FwWIxBfoMWUZ_a1EIIAc9XXxwiSwUua9AcVqzdpAnL0w2Q"
     if(this.myPhoto ==""){
       photoURL = this.myPhoto
     }

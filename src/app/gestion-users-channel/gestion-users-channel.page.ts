@@ -22,6 +22,8 @@ export class GestionUsersChannelPage implements OnInit {
   idTries: any[] = []
   idAAjouter: any[] = []
   tableauFinal: any[] = []
+  tableauId : any[] = []
+  tableauIdAddable : any[] = []
   constructor(private userService: UserService, public activatedRoute: ActivatedRoute) {
 
   }
@@ -52,6 +54,7 @@ export class GestionUsersChannelPage implements OnInit {
 
         })
         this.userService.friendList(this.userId).subscribe(friends => {
+          console.log("j'apelle friends : " + friends)
           let i = 0
           friends.map(friend => {
             if (friend.isFriend === "true") {
@@ -60,9 +63,11 @@ export class GestionUsersChannelPage implements OnInit {
             }
           })
           this.userService.listeAllUsersOfChannels(this.channelId).subscribe(users => {
+            console.log("j'apelle liste user channel  : " + users)
             users.map((user, index) => {
               //console.log(users)
               this.idUtilisateurChannel[index] = user.id
+              //console.log(index)
             })
             let i = 0
             let u = 0
@@ -82,33 +87,123 @@ export class GestionUsersChannelPage implements OnInit {
                 u++
               }
             })
+            
             //console.log(this.idTries)
             //console.log(this.idAAjouter)
             this.tableauFinal = this.idTries.concat(this.idAAjouter)
+            //console.log(this.idTries)
+            //console.log(this.idAAjouter)
             //console.log(this.tableauFinal)
             //console.log(i)
             let v = 0
             let x = 0
-            this.tableauFinal.map((idUserFinal, index) => {
-              if (index < i) {
-                this.userService.getUserById(idUserFinal).subscribe(data => {
-                  console.log(data.payload.data())
-                  this.usersFriends[v] = data.payload.data()
-                  v++
+            //console.log("toto")
+            this.idTries.map(friends => {
+
+              this.userService.getUserById(friends).subscribe(friend => {
+                this.usersFriends.map(user => {
+                  if(!this.tableauId.includes(user.id)){
+                    this.tableauId.push(user.id)
+                  }
                 })
-              }
-              else {
-                this.userService.getUserById(idUserFinal).subscribe(data => {
-                  this.usersFriendsAddable[x] = data.payload.data()
-                  x++
+                if(this.tableauId.includes(friend.payload.data().id)){
+
+                }else{
+                  this.usersFriends.push(friend.payload.data())
+                }
+                //console.log(friend.payload.data().id)
+                //console.log(this.usersFriends)
+                ////if(this.idTries.indexOf())
+                //if (this.usersFriends.indexOf(friend.payload.data().id) > -1){
+                //  
+                //}
+                //else{
+                //  this.usersFriends[v] = friend.payload.data()
+                //  v++
+                //}
+                //console.log(friend.payload.data())
+                //console.log(this.idTries)
+                //
+                //console.log(this.usersFriends)
+              })
+            })
+
+            this.idAAjouter.map(friends => {
+
+              this.userService.getUserById(friends).subscribe(friend => {
+                this.usersFriendsAddable.map(user => {
+                  if(!this.tableauIdAddable.includes(user.id)){
+                    this.tableauIdAddable.push(user.id)
+                  }
                 })
-              }
+                if(this.tableauIdAddable.includes(friend.payload.data().id)){
+                  
+                }else{
+                  this.usersFriendsAddable.push(friend.payload.data())
+                }
+                //console.log(friend.payload.data().id)
+                //console.log(this.usersFriends)
+                ////if(this.idTries.indexOf())
+                //if (this.usersFriends.indexOf(friend.payload.data().id) > -1){
+                //  
+                //}
+                //else{
+                //  this.usersFriends[v] = friend.payload.data()
+                //  v++
+                //}
+                //console.log(friend.payload.data())
+                //console.log(this.idTries)
+                //
+                //console.log(this.usersFriends)
+              })
+            })
+
+            //this.idAAjouter.map(friends => {
+            //  this.userService.getUserById(friends).subscribe(friend => {
+            //    this.usersFriendsAddable[v] = friend
+            //    v++
+            //  })
+            //})
+            //this.usersFriends = []
+            //this.usersFriendsAddable = []
+            //this.tableauFinal.map((idUserFinal, index) => {
+            //  if (index < i) {
+            //    this.userService.getUserById(idUserFinal).subscribe(data => {
+//
+            //      console.log(data.payload.data())
+            //      this.usersFriends[v] = data.payload.data()
+            //      v++
+            //    })
+            //  }
+            //  else {
+            //    this.userService.getUserById(idUserFinal).subscribe(data => {
+            //      this.usersFriendsAddable[x] = data.payload.data()
+            //      x++
+            //    })
+            //  }
+            //  this.usersFriends.map(user => {
+            //    console.log(user)
+            //  })
+            //})
+            //let toto = new Promise [""]
+            //this.tableauFinal.map(async (idUserFinal, index) => {
+            //  // await this.userService.getUserById1(idUserFinal,(err,res)=>{
+            //  //   console.log(res)
+            //  //   this.usersFriends[index]= res;
+            //  // })
+            //    this.userService.getUserById(idUserFinal).subscribe(data => {
+            //     console.log(data.payload.data())
+            //     this.usersFriends[index] = data.payload.data()
+            //     v++
+            //    })
+ //
+            //  })
+            
               //this.usersFriends.map(user => {
               //  console.log(user)
-              //})
-            })
-            console.log(this.usersFriends)
-            console.log(this.usersFriendsAddable)
+              //
+            
+
 
 
 
@@ -231,7 +326,10 @@ export class GestionUsersChannelPage implements OnInit {
 
 
 
-
+  test(){
+    console.log(this.usersFriends)
+    console.log(this.usersFriendsAddable)
+  }
   recupId(user: any) {
     console.log(user.id)
   }
@@ -244,13 +342,11 @@ export class GestionUsersChannelPage implements OnInit {
     this.userService.addUserToChannel(this.channelId, user.id, this.channelName)
     this.userService.addChannelToUser(user.id, this.channelId, this.channelName)
 
-
   }
-
 
   removeuserChannel(user: any) {
     this.usersFriends.splice(this.usersFriends.indexOf(user), 1)
-    this.userService.removeUserFromChannel(user.dato.id, this.channelId)
+    this.userService.removeUserFromChannel(user.id, this.channelId)
   }
   deleteChannel() {
     this.userService.deleteChannel(this.channelId)
@@ -258,7 +354,7 @@ export class GestionUsersChannelPage implements OnInit {
   }
   setAdmin(user: any) {
     console.log(user)
-    this.userService.changeAdminModeUser(this.channelId, user.dato.id)
+    this.userService.changeAdminModeUser(this.channelId, user.id)
   }
 
   navigateByUrlTxt() {
