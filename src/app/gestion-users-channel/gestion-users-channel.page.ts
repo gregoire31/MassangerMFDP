@@ -53,12 +53,27 @@ export class GestionUsersChannelPage implements OnInit {
 
 
         })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         this.userService.friendList(this.userId).subscribe(friends => {
           console.log("j'apelle friends : " + friends)
           let i = 0
           friends.map(friend => {
             if (friend.isFriend === "true") {
-              this.idUserAStocke[i] = friend.id
+              this.idUserAStocke[i] = friend.id               // Liste amis de l'user
               i++
             }
           })
@@ -67,7 +82,7 @@ export class GestionUsersChannelPage implements OnInit {
             console.log("j'apelle liste user channel  : " + users)
             users.map((user, index) => {
               //console.log(users)
-              this.idUtilisateurChannel[index] = user.id
+              this.idUtilisateurChannel[index] = user.id       // liste des gens présent sur l'id
               //console.log(index)
             })
             let i = 0
@@ -87,7 +102,11 @@ export class GestionUsersChannelPage implements OnInit {
                 this.idAAjouter[u] = friend
                 u++
               }
+              
             })
+            //this.idUtilisateurChannel.map(userInChannel => {
+            //  if(this.idTries.indexOf(userInChannel))
+            //})
             
             //console.log(this.idTries)
             //console.log(this.idAAjouter)
