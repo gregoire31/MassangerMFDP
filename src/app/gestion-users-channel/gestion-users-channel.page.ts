@@ -63,6 +63,7 @@ export class GestionUsersChannelPage implements OnInit {
             }
           })
           this.userService.listeAllUsersOfChannels(this.channelId).subscribe(users => {
+            console.log(users)
             console.log("j'apelle liste user channel  : " + users)
             users.map((user, index) => {
               //console.log(users)
@@ -111,6 +112,7 @@ export class GestionUsersChannelPage implements OnInit {
                 }else{
                   this.usersFriends.push(friend.payload.data())
                 }
+                console.log(this.usersFriends)
                 //console.log(friend.payload.data().id)
                 //console.log(this.usersFriends)
                 ////if(this.idTries.indexOf())
@@ -141,6 +143,7 @@ export class GestionUsersChannelPage implements OnInit {
                 }else{
                   this.usersFriendsAddable.push(friend.payload.data())
                 }
+                  console.log(this.usersFriendsAddable)
                 //console.log(friend.payload.data().id)
                 //console.log(this.usersFriends)
                 ////if(this.idTries.indexOf())
@@ -335,17 +338,28 @@ export class GestionUsersChannelPage implements OnInit {
   }
 
   ajouteFrienddsToChannel(user) {
-    this.usersFriendsAddable.map(userAAjouter => {
-
-      this.usersFriendsAddable.splice(this.usersFriendsAddable.indexOf(userAAjouter), 1)
-    })
+    this.idAAjouter.splice(this.idAAjouter.indexOf(user.id),1)
+    this.idTries.push(user.id)
+    this.usersFriendsAddable.splice(user)
+    this.usersFriends.push(user)
+    //this.usersFriendsAddable.map(userAAjouter => {
+//
+    //  this.usersFriendsAddable.splice(this.usersFriendsAddable.indexOf(userAAjouter), 1)
+    //})
     this.userService.addUserToChannel(this.channelId, user.id, this.channelName)
     this.userService.addChannelToUser(user.id, this.channelId, this.channelName)
 
   }
 
   removeuserChannel(user: any) {
+    this.idTries.splice(this.idAAjouter.indexOf(user.id),1)
+
+    this.idAAjouter.push(user.id)
+    
     this.usersFriends.splice(this.usersFriends.indexOf(user), 1)
+
+    this.usersFriendsAddable.push(user)
+
     this.userService.removeUserFromChannel(user.id, this.channelId)
   }
   deleteChannel() {
