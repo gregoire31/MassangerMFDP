@@ -15,61 +15,30 @@ Dans l'onglet profil, nous pouvons modifier le pseudo ainsi que la photo de prof
 ## Préparation
 
 - Avoir installé NodeJS et NPM 
+- Récupérer le fichier .zip représentant le projet : https://github.com/gregoire31/MessageriePropre.git
 
 
 ## Installation
 
-A step by step series of examples that tell you how to get a development env running
+Lancer un terminal dans le dossier contenant le projet et écrire la commande :
 
-Say what the step will be
+```
+npm install
+```
+Lancer ensuite le serveur de développement local depuis la commande :
+```
+ionic serve
+```
+L'application s'executera alors sur navigateur.
 
-Give the example
 
-And repeat
+Dans le cas d'une implémentation de l'application sur un téléphone, brancher celui-ci à la machine.
+Vérifier que le mode développeur et le débogage USB soient bien activés.
+Lancer la commande : 
+```
+ionic cordova run android
+```
 
-until finished
+Auteurs
 
-End with an example of getting some data out of the system or using it for a little demo
-Running the tests
-
-Explain how to run the automated tests for this system
-Break down into end to end tests
-
-Explain what these tests test and why
-
-Give an example
-
-And coding style tests
-
-Explain what these tests test and why
-
-Give an example
-
-Deployment
-
-Add additional notes about how to deploy this on a live system
-Built With
-
-    Dropwizard - The web framework used
-    Maven - Dependency Management
-    ROME - Used to generate RSS Feeds
-
-Contributing
-
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
-Versioning
-
-We use SemVer for versioning. For the versions available, see the tags on this repository.
-Authors
-
-    Billie Thompson - Initial work - PurpleBooth
-
-See also the list of contributors who participated in this project.
-License
-
-This project is licensed under the MIT License - see the LICENSE.md file for details
-Acknowledgments
-
-    Hat tip to anyone whose code was used
-    Inspiration
-    etc
+    Grégoire Maria - Maxime Poulet - Nicolas Ferrer - Cédric Dethoit
