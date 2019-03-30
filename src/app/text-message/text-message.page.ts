@@ -32,6 +32,8 @@ export class TextMessagePage implements OnInit {
   numberResult: number = 100
   page = 0;
   msgSub : Subscription;
+  verificationProvenance : boolean = false
+
 
   constructor(public activatedRoute: ActivatedRoute, private userService: UserService) { }
 
@@ -39,14 +41,32 @@ export class TextMessagePage implements OnInit {
     let self = this
     this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
     this.userService.returnDetailsChannel(this.channelId).subscribe((channel) => {
-      //self.channelName = channel.name 
+      console.log(channel)
+      self.channelName = channel.name
       self.channel = channel
-      
+      this.userService.getCurrentUser().then(function (user) {
+        self.avatar = user.photoURL
+        self.userId = user.uid
+        console.log(self.channel)
+        if(channel.id.length === 56){
+          self.userService.listeAllUsersOfChannels(self.channelId).subscribe(users => {
+            console.log(users)
+            users.map(user => {
+              console.log(user)
+              if(user.id !== self.userId){
+                self.userService.getUserById(user.id).subscribe(ami => {
+                  self.channelName = ami.payload.data().displayName
+                  console.log(ami.payload.data().displayName)
+                  self.verificationProvenance = true
+                })
+              }
+            })
+          })
+        }
+      })
+
     })
-    this.userService.getCurrentUser().then(function (user) {
-      self.avatar = user.photoURL
-      self.userId = user.uid
-    })
+
 
      this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId).subscribe((messages) => {
       //this.messagesFiltre = []
@@ -146,6 +166,8 @@ export class TextMessagePage implements OnInit {
   }
 
 
+
+
   TextSubmit() {
     //if(this.numberResult === this.messages.length){
     //  
@@ -159,6 +181,12 @@ export class TextMessagePage implements OnInit {
 
   navigateByUrlTxt() {
     this.userService.navigateTo(`app/tabs/textMessage/${this.channelId}/gestionChannel`);
+  }
+  navigationVersAmis(){
+    this.userService.navigateTo(`app/tabs/tab1`);
+  }
+  navigationVersChannels(){
+    this.userService.navigateTo(`app/tabs/tab2`);
   }
 
 }

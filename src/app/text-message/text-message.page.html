@@ -1,12 +1,17 @@
 <ion-header>
   <ion-toolbar color="medium">
       <ion-row>
-          <ion-col class="toolbarIcon">
-              <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
+          <ion-col *ngIf="!verificationProvenance" class="toolbarIcon">
+              <ion-button (click)="navigationVersChannels()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
+          </ion-col>
+          <ion-col *ngIf="verificationProvenance" class="toolbarIcon">
+              <ion-button (click)="navigationVersAmis()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
           </ion-col>
           <ion-col class="toolbarText">
             <!--<ion-title>{{channel.name}}</ion-title>-->
-            <ion-title>Nom conversation</ion-title>
+            <ion-title *ngIf="channel.name!=''">{{channelName}}</ion-title>
+            <ion-title *ngIf="channel.name==''">{{channelName}}</ion-title>
+            
           </ion-col>
           <ion-col *ngIf="channel.name!=''" class="toolbarIcon">
               <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="cog"></ion-icon></ion-button>
@@ -62,4 +67,5 @@
         </ion-row>
       </ion-grid>
     </ion-item>
+
 </ion-content>
