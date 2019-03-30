@@ -69,13 +69,13 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'ListUsers',
+        path: 'listUsers',
         children: [
           {
             path: '',
-            resolve : {
-              userLists : UserListService
-            },
+            //resolve : {
+            //  userLists : UserListService
+            //},
             loadChildren: '../list-users/list-users.module#ListUsersPageModule'
           }
         ]

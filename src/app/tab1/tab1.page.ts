@@ -115,29 +115,6 @@ export class Tab1Page {
   ngOnInit() {
 
 
-    //this.userService.getUserList().subscribe(users => {
-    //  //
-    //  console.log(users)
-    //  users.map(user => {
-    //
-    //    //console.log(user.id)
-    //    //console.log(self.usersFriends)
-    //    if (this.idFriendsStocke.indexOf(user.id) > -1) {
-    //      let index = this.idFriendsStocke.indexOf(user.id)
-    //      user.details = this.usersFriends[index].isFriend
-    //      //user.details = false
-    //
-    //    }
-    //    else {
-    //      user.details = "false"
-    //    }
-    //  })
-    //  console.log(users)
-    //  this.userNameListFilter = users
-    //  //this.zone.run(() => {
-    //  //  this.userNameListFilter = users
-    //  // });
-    //})
 
   }
 
@@ -281,6 +258,10 @@ export class Tab1Page {
   addUserToChannel(id: string) {
 
     console.log(id)
+  }
+
+  navigateToUSerList(){
+    this.userService.navigateTo(`app/tabs/listUsers`)
   }
 
   acceptFriend(user: any) {

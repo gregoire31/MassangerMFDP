@@ -1,9 +1,95 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>ListUsers</ion-title>
+  <ion-toolbar color="medium">
+    <ion-row>
+        <ion-col size="2">
+            <ion-button (click)="navigateToFriendList()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
+          </ion-col>
+      <ion-col class="toolbarTitle" size="10">
+        <ion-title>
+          {{userName}}
+        </ion-title>
+      </ion-col>
+
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-button (click)="onClick()">voir channel</ion-button> 
+<ion-content>
+
+<ion-searchbar (ionChange)="onSearchInput($event)" debounce="500"></ion-searchbar>
+
+<ion-list>
+    <ion-grid>
+      <ion-row><p>Liste des utilisateurs :</p></ion-row>
+    </ion-grid>
+  </ion-list>
+
+<ion-list *ngFor="let user of userNameListFilter; let i = index">
+  <ion-item *ngIf="user.id !== userId && user.isFriend=='pending'">
+    <ion-grid>
+      <ion-row class="member">
+
+        <ion-col class="userAvatar">
+          <ion-avatar>
+            <img [src]="user.avatar">
+          </ion-avatar>
+        </ion-col>
+
+        <ion-col class="nameMember">
+          <div>
+            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+          </div>
+        </ion-col>
+
+        <ion-col class="parameterMember">
+          <div>
+            <div>
+              <ion-button (click)="acceptFriend(user)" color="success" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-button>
+              <ion-button (click)="refuseInvitation(user)" color="danger" fill="clear"><ion-icon name="close"></ion-icon></ion-button>
+              <!--
+              <ion-button shape="round" color="primary" (click)="acceptFriend(user)"> Accepter</ion-button>
+              <ion-button shape="round" color="primary" (click)="refuseInvitation(user)"> Refuser</ion-button>
+              -->
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+
+
+  <ion-item *ngIf="user.id !== userId && user.isFriend!='pending'">
+    <ion-grid>
+      <ion-row class="member">
+
+        <ion-col class="userAvatar">
+          <ion-avatar>
+            <img [src]="user.avatar">
+          </ion-avatar>
+        </ion-col>
+
+        <ion-col class="nameMember">
+          <div>
+            <ion-label (click)="addUserToChannel(user.id)">{{user.displayName}}</ion-label>
+          </div>
+        </ion-col>
+
+        <ion-col class="parameterMember">
+            <div>
+              <div>
+                  <ion-icon name="person-add" (click)="addfriend(user)" *ngIf="user.isFriend=='false'"></ion-icon>
+                  <ion-icon name="undo" (click)="refuseInvitation(user)" *ngIf="user.isFriend=='wantAdd'"></ion-icon>
+              </div>
+            </div>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+
+
+
+  </ion-item>
+</ion-list>
+
+
 </ion-content>

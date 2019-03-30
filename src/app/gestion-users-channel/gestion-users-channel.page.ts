@@ -118,6 +118,7 @@ export class GestionUsersChannelPage implements OnInit {
   }
   setAdmin(user: any) {
     this.userService.changeAdminModeUser(this.channelId, user.id)
+    user.isAdmin = true
   }
 
   navigateByUrlTxt() {
