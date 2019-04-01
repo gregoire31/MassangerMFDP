@@ -78,12 +78,16 @@ ion-header ion-icon{
 .list.list-md.hydrated:last-of-type {
   padding-bottom: 60px;
 }
+.positionFixed {
+  position :fixed
+  
+}
 
 .createMessage{
   position: fixed;
   width: 100%;
   left: 0;
-  top: 0px;
+  bottom: 0px;
 }
 .createMessage ion-col{
   padding: 0;
