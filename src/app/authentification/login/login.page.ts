@@ -31,6 +31,7 @@ export class LoginPage implements OnInit {
   myPhoto = ""
   refreshPage : boolean = false
   logosrc: string = ""
+  photoUser : string = ""
 
   constructor(private userService : UserService, private camera: Camera, private storage : AngularFireStorage ) { }
 
@@ -41,6 +42,10 @@ export class LoginPage implements OnInit {
 
     this.storage.ref('icon.png').getDownloadURL().subscribe(link=> {
       this.logosrc = link
+    })
+
+    this.storage.ref('user.png').getDownloadURL().subscribe(link=> {
+      this.photoUser = link
     })
 
     setTimeout(function(){ 
@@ -82,20 +87,16 @@ verifyLoginCode(){
     })
     .catch(error => this.userService.presentToastWithOptionsWithMessage("Code incorrect","danger"));
   }else{
-    let photoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7ynxbF7WkDlJ2FwWIxBfoMWUZ_a1EIIAc9XXxwiSwUua9AcVqzdpAnL0w2Q"
-    if(this.myPhoto ==""){
-      photoURL = this.myPhoto
-    }
     this.windowRef.confirmationResult
     .confirm(this.verificationCode)
     .then(result => {
       this.user = result.user;
       return result
     }).then(user => {
-      this.userService.addUserDetails(user.user.uid,this.nomRegister,photoURL)
+      this.userService.addUserDetails(user.user.uid,this.nomRegister,this.photoUser)
       user.user.updateProfile({
         displayName: this.nomRegister,
-        photoURL: photoURL,
+        photoURL: this.photoUser,
       })
       this.userService.setUserOnLine(user.user.uid)
     }).then(()=>{
