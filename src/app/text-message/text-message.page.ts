@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../service/user.service';
 import { Content } from 'ionic-angular';
@@ -6,9 +6,7 @@ import { Subject, Subscription } from 'rxjs';
 //import {take} from 'rxjs/operators'
 //import { IonInfiniteScroll } from '@ionic/angular';
 //import { ThrowStmt } from '@angular/compiler';
-
-
-
+//import Peer from 'simple-peer';
 
 @Component({
   selector: 'app-text-message',
@@ -16,10 +14,14 @@ import { Subject, Subscription } from 'rxjs';
   styleUrls: ['./text-message.page.scss'],
 })
 
-
 export class TextMessagePage implements OnInit {
   //@ViewChild(IonInfiniteScroll) infiniteScroll : IonInfiniteScroll;
   //@ViewChild(Content) contentArea: Content;
+  recVideo: ElementRef
+  peer : any
+  srcObject: string
+  isVideoChatting : Boolean = false
+  
   time: number
   channelId: string
   channelName: string
@@ -33,6 +35,7 @@ export class TextMessagePage implements OnInit {
   page = 0;
   msgSub : Subscription;
   verificationProvenance : boolean = false
+  
 
 
   constructor(public activatedRoute: ActivatedRoute, private userService: UserService) { }
@@ -152,21 +155,10 @@ export class TextMessagePage implements OnInit {
 //
   //    
   //  })
-    
-
-
-  
-
-
-
-
-
+   
   compareDate() {
     //console.log(this.messages[0].date.compareTo(this.messages[1].date))
   }
-
-
-
 
   TextSubmit() {
     //if(this.numberResult === this.messages.length){
@@ -179,8 +171,13 @@ export class TextMessagePage implements OnInit {
     //this.contentArea.scrollToBottom();
   }
 
+  switchToVideoChat(){
+    this.isVideoChatting = !this.isVideoChatting;
+    this.startPeer(TextTrackCueList);
+
+  }
   navigateByUrlTxt() {
-    this.userService.navigateTo(`app/tabs/textMessage/${this.channelId}/gestionChannel`);
+    this.userService.navigateTo(`textMessage/${this.channelId}/gestionChannel`);
   }
   navigationVersAmis(){
     this.userService.navigateTo(`app/tabs/tab1`);
@@ -188,5 +185,37 @@ export class TextMessagePage implements OnInit {
   navigationVersChannels(){
     this.userService.navigateTo(`app/tabs/tab2`);
   }
+  
+  startPeer(initiator){
+    navigator.getUserMedia({
+      video:true,
+      audio:true
+    },stream=>{
+      /*this.peer = new Peer ({ //THIS SHIT BUGGIN' YOU KNOW
+        initiator:initiator,
+        stream:stream,
+        trickle:false
+      })*/
+      this.bindEvents();
+      //let emiVideo = document.querySelector("#emiVideo");
+      //emiVideo.srcObject=stream;
+      //emiVideo.play();
+    },err=>{
+      console.log("err : " + err);
+    })
+  }
 
+  bindEvents(){
+    this.peer.on("error",err=>{
+      console.log("err on signal : " + err)
+    });
+    this.peer.on('signal',data=>{
+      //get user offer
+    })
+    this.peer.on('stream',stream=>{
+      //this.recVideo = document.querySelector("#recVideo")
+      this.srcObject = stream;
+      //this.recVideo.nativeElement.play();
+    })
+  }
 }

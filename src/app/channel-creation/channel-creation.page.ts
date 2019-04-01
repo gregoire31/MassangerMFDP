@@ -72,8 +72,8 @@ export class ChannelCreationPage implements OnInit {
     })
   }
 
-  teste() {
-    console.log(this.userFriends)
+  navigateToTab2() {
+    this.userService.navigateTo("app/tabs/tab2")
   }
 
   crerNewChannel(){
@@ -90,7 +90,7 @@ export class ChannelCreationPage implements OnInit {
           this.userService.addChannelToUser(user.id,channelIdString,this.nameChannel)
         }
       })
-      this.userService.navigateTo(`app/tabs/textMessage/${channelId}`)
+      this.userService.navigateTo(`textMessage/${channelId}`)
     })
   }
 

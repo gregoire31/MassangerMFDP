@@ -31,18 +31,34 @@ export class LoginPage implements OnInit {
   appVerifier : any
   nomRegister : string = ""
   myPhoto = ""
+  refreshPage : boolean = false
 
-  constructor(private userService : UserService, private router : Router, private camera: Camera ) { }
+  constructor(private userService : UserService, private camera: Camera ) { }
 
   ngOnInit() {
+    
 
+    
     let self = this
-    this.windowRef = this.userService.windowRef
+    this.windowRef = window
+
     setTimeout(function(){ 
       self.windowRef.recapchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
       self.windowRef.recapchaVerifier.render()
      }, 1);
 
+
+  }
+
+  //ionViewDidEnter() {
+  //  if(this.refreshPage  === false){
+  //    this.refreshPage = true
+  //    //location.reload();
+  //  }
+  //  
+  //}
+  goBack() {
+    location.reload();
   }
 
 sendLoginCode() {
@@ -57,13 +73,13 @@ sendLoginCode() {
 verifyLoginCode(){
 
   if(this.loginVerification === true){
+    
     this.windowRef.confirmationResult
     .confirm(this.verificationCode)
     .then(user => {
   
       this.userService.setUserOnLine(user.user.uid)
     }).then(()=>{
-      
       this.userService.navigateTo('app')
     })
     .catch(error => console.log(error, "incorrect code entered"));
@@ -85,7 +101,6 @@ verifyLoginCode(){
       })
       this.userService.setUserOnLine(user.user.uid)
     }).then(()=>{
-      
       this.userService.navigateTo('app')
     })
     .catch(error => console.log(error, "incorrect code entered"));

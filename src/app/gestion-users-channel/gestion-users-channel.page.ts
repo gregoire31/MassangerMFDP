@@ -122,6 +122,6 @@ export class GestionUsersChannelPage implements OnInit {
   }
 
   navigateByUrlTxt() {
-    this.userService.navigateTo(`app/tabs/textMessage/${this.channelId}`);
+    this.userService.navigateTo(`textMessage/${this.channelId}`);
   }
 }

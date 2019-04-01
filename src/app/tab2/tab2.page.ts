@@ -68,10 +68,10 @@ export class Tab2Page {
   //}
 
   navigateByUrl(){
-    this.userService.navigateTo(`app/tabs/newChannelCreate`);
+    this.userService.navigateTo(`newChannelCreate`);
   }
   navigateByUrlTxt(id : string){
-    this.userService.navigateTo(`app/tabs/textMessage/${id}`);
+    this.userService.navigateTo(`textMessage/${id}`);
   }
 
   deleteChannel(channel){

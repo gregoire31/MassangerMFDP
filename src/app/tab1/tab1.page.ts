@@ -261,13 +261,14 @@ export class Tab1Page {
   }
 
   navigateToUSerList(){
-    this.userService.navigateTo(`app/tabs/listUsers`)
+    this.userService.navigateTo(`listUsers`)
   }
 
   acceptFriend(user: any) {
     user.isFriend = "true"
     let id = user.id
     this.userService.acceptFriend(this.userId, id)
+    this.callNotification()
 
   }
   callNotification() {
@@ -288,7 +289,7 @@ export class Tab1Page {
     user.isFriend = "wantAdd"
     let idUserAAjouter = user.id
     this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-    this.callNotification()
+    
   }
 
   removeFriend(user: any) {

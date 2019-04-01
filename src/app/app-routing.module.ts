@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '../guards/auth.guard'
-import { UserListService } from './resolver/user-list.service';
+import { AuthGuard } from '../guards/auth.guard';
 
 
 const routes: Routes = [
@@ -25,11 +24,54 @@ const routes: Routes = [
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canActivate: [AuthGuard]
   },
+
+  {
+    path: 'newChannelCreate',
+    children: [
+      {
+        path: '',
+        loadChildren: './channel-creation/channel-creation.module#ChannelCreationPageModule'
+      }
+    ]
+  },
+
+
+  {
+    path: 'textMessage/:channelId',
+    children: [
+      {
+        path: '',
+        loadChildren: './text-message/text-message.module#TextMessagePageModule'
+      }
+    ]
+  },
+
+  {
+    path: 'textMessage/:channelId/gestionChannel',
+    children: [
+      {
+        path: '',
+        loadChildren: './gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule'
+      }
+    ]
+  },
+  {
+    path: 'listUsers',
+    children: [
+      {
+        path: '',
+        //resolve : {
+        //  userLists : UserListService
+        //},
+        loadChildren: './list-users/list-users.module#ListUsersPageModule'
+      }
+    ]
+  },
+  
   //{ path: 'list-users', loadChildren: './list-users/list-users.module#ListUsersPageModule' },
 
 
   //{ path: 'gestion-users-channel', loadChildren: './gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule' },
-  //{ path: 'utilisateurs', loadChildren: './utilisateurs/utilisateurs.module#UtilisateursPageModule' },
 
   //{ path: 'channel-creation', loadChildren: './channel-creation/channel-creation.module#ChannelCreationPageModule' }
 

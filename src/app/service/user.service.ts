@@ -65,9 +65,7 @@ export class UserService {
 
   }
 
-  get windowRef() {
-    return window
-  }
+
 
   setUserStatusOnLine() {
     this.getCurrentUser().then(user => {
@@ -229,7 +227,7 @@ export class UserService {
                 this.usersCollection.doc(userId).collection("amis").doc(currentuserId).set(dataAdd).then(() => { // A modifier
                   this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
                     this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
-                      this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+                      this.navigateTo(`textMessage/${currentIdUserId}`)
                     })
                   })
                 })
@@ -246,13 +244,13 @@ export class UserService {
           if (aa.payload.doc.id === currentIdUserId) {
             console.log("channel déja créé")
             valeurBoolean = true
-            this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserId}`);
+            this.router.navigateByUrl(`textMessage/${currentIdUserId}`);
             //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
 
             index = longeurData + 1
           } if (aa.payload.doc.id === currentIdUserIdInverse) {
             valeurBoolean = true
-            this.router.navigateByUrl(`app/tabs/textMessage/${currentIdUserIdInverse}`)
+            this.router.navigateByUrl(`textMessage/${currentIdUserIdInverse}`)
 
             index = longeurData + 1
             console.log("channel déja créé")
@@ -283,7 +281,7 @@ export class UserService {
                     this.usersCollection.doc(userId).collection("amis").doc(currentuserId).set(dataAdd).then(() => { // A modifier
                       this.usersCollection.doc(userId).collection("channels").doc(currentIdUserId).set(isAdmin).then(() => {
                         this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(isAdmin).then(() => {
-                          this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
+                          this.navigateTo(`textMessage/${currentIdUserId}`)
                         })
                       })
                     })
@@ -300,125 +298,6 @@ export class UserService {
 
     })
 
-    //if(this.channelCollection.doc(currentIdUserId).get().subscribe(data => {
-    //  if(data.data() !== undefined){
-    //    
-    //  }
-    //}))
-    console.log(currentIdUserId)
-    //let verificationChannelExiste = false
-    //let idReel: string
-    ////console.log(currentIdUserId)
-    //let setData = {
-    //  isAdmin: true,
-    //  name: currentIdUserId
-    //}
-    //return new Promise(resolve => {
-    //  this.returnListChannelOfCurrentUser(currentuserId).subscribe(channels => {
-    //    if (channels.length === 0) {
-    //      resolve([false, ""])
-    //    }
-    //    channels.map((channel, index) => {
-    //      //console.log(channel.name)
-    //      //console.log(channel.name.length)
-    //      if (channel.name.length > 30) {
-    //        let premierePartie = channel.name.substr(0, 28)
-    //        let deuxiemePartie = channel.name.substr(28, 55)
-    //        let deuxiemeIdPossible = deuxiemePartie + premierePartie
-    //
-    //        console.log(`channel entrant :  ${currentIdUserId} channel sortant ${deuxiemeIdPossible} channel name : ${channel.name}`)
-    //        if (channel.name === currentIdUserId) {
-    //          console.log("PREMIERE IDDDDDDDD")
-    //          resolve([true, currentIdUserId]
-    //            //verificationChannelExiste = true
-    //            //idReel = currentIdUserId
-    //          )
-    //        }
-    //        if (channel.name === deuxiemeIdPossible) {
-    //          console.log("DEXIEME IDDDDDDD")
-    //          resolve([true, deuxiemeIdPossible])
-    //          //verificationChannelExiste = true
-    //          //idReel = deuxiemeIdPossible
-    //        }
-    //        if (index === channels.length - 1) {
-    //          console.log("rien trouvé")
-    //          resolve([false, ""])
-    //        }
-    //
-    //      }
-    //    })
-    //    //console.log("finis")
-    //    //resolve([false,""])
-    //  })
-    //}).then((data) => {
-    //  console.log(data[0])
-    //  console.log(data[1])
-    //
-    //  if (data[0] === false) {
-    //    return new Promise(() => {
-    //      this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-    //      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-    //      this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-    //      this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-    //    }).then(() => {
-    //      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-    //        console.log(data.data())
-    //        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
-    //      })
-    //    })
-    //
-    //  } else {
-    //    this.navigateTo(`app/tabs/textMessage/${data[1]}`)
-    //  }
-    //  //console.log(idReel)
-    //  //console.log(verificationChannelExiste)
-    //  //if (verificationChannelExiste === false) {
-    //  //  return new Promise(resolve => {
-    //  //    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-    //  //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-    //  //    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-    //  //    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-    //  //  }).then(() => {
-    //  //    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-    //  //      console.log(data.data())
-    //  //      this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
-    //  //    })
-    //  //  })
-    //  //}
-    //  //else {
-    //  //  this.navigateTo(`app/tabs/textMessage/${idReel}`)
-    //  //}
-    //})
-    //
-    //
-    //
-    //
-    //
-    //
-    ////this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-    ////  if (!data.exists) {
-    ////    return new Promise(resolve => {
-    ////    this.usersCollection.doc(userId).collection("channels").doc(currentuserId).set(setData)
-    ////    this.usersCollection.doc(currentuserId).collection("channels").doc(userId).set(setData)
-    ////    this.channelCollection.doc(currentIdUserId).collection("users").doc(userId).set(setData)
-    ////    this.channelCollection.doc(currentIdUserId).collection("users").doc(currentuserId).set(setData)
-    ////    }).then(()=> {
-    ////      this.usersCollection.doc(currentuserId).collection("channels").doc(userId).get().subscribe(data => {
-    ////        console.log(data.data())
-    ////        this.navigateTo(`app/tabs/textMessage/${data.data().name}`)
-    ////      })
-    ////    })
-    ////    
-    ////  }
-    ////  else{
-    ////    
-    ////  }
-    ////
-    ////  
-    ////
-    ////  //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
-    ////
-    ////})
 
   }
 
@@ -488,46 +367,9 @@ export class UserService {
 
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
-    //this.db.collection<UserList>('users', ref => ref.where("id", "==", idCurrentUser)).valueChanges().subscribe( data =>{
-    //  let dataAstocke = `${idUserAAjouter}/isPending`
-    //  var dataFinal = data[0].friends;
-    //  dataFinal.push(dataAstocke)
-    //  console.log(typeof(data))
-    //  console.log(dataFinal)
-    //  this.usersCollection.doc(idCurrentUser).update({
-    //    "friends" : dataFinal
-    //  })
-    //})
 
-    //
-    ////this.getUserList()
-    //console.log("complete")
     let data = []
 
-    // this.usersCollection.doc(idUserAAjouter).update(map => {
-    //   console.log(map)
-    //   //"friends" : {
-    //   //  [idCurrentUser] : "pending"
-    //   //}
-    // })
-    // this.usersCollection.doc(idCurrentUser).update(map => {
-    //   console.log(map)
-    //   //"friends" : {
-    //   //  [idCurrentUser] : "pending"
-    //   //}
-    // })
-    //console.log(friends)
-    //this.db.collection("users").doc(idCurrentUser).get().subscribe()
-    //this.usersCollection.doc(idCurrentUser).update({
-    //  
-    //  [idUserAAjouter]: "pending"
-    //
-    //})
-    //this.usersCollection.doc(idUserAAjouter).update({
-    //
-    //  [idCurrentUser]: "pending"
-    //
-    //})
   }
 
 
@@ -758,33 +600,6 @@ export class UserService {
     return this.user
   }
 
-
-
-
-  //signup(emailRegister, passwordRegister, nomRegister) {
-  //  let self = this
-  //  let photoURL = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg"
-  //  this._auth
-  //    .auth
-  //    .createUserWithEmailAndPassword(emailRegister, passwordRegister)
-  //    .then(
-  //      (newUser) => {
-  //        self.addUserDetails(newUser.user.uid, nomRegister, photoURL)
-  //        this.presentToastWithOptionsWithMessage(nomRegister, "tertiary")
-  //        console.log(newUser)
-  //        newUser.user.updateProfile({
-  //          displayName: nomRegister,
-  //          photoURL: photoURL,
-  //        })
-  //      })
-  //
-  //    .then(function () {
-  //      self.navigateTo('app')
-  //    })
-  //    .catch(err => {
-  //      this.presentToastWithOptionsWithMessage(err.message, "warning")
-  //    });
-  //}
 
   navigateTo(url: string) {
     this.router.navigateByUrl(url);

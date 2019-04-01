@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
-import { UserListService } from '../resolver/user-list.service'
 
 const routes: Routes = [
   {
@@ -38,48 +37,7 @@ const routes: Routes = [
         ]
       },
 
-      {
-        path: 'newChannelCreate',
-        children: [
-          {
-            path: '',
-            loadChildren: '../channel-creation/channel-creation.module#ChannelCreationPageModule'
-          }
-        ]
-      },
 
-
-      {
-        path: 'textMessage/:channelId',
-        children: [
-          {
-            path: '',
-            loadChildren: '../text-message/text-message.module#TextMessagePageModule'
-          }
-        ]
-      },
-
-      {
-        path: 'textMessage/:channelId/gestionChannel',
-        children: [
-          {
-            path: '',
-            loadChildren: '../gestion-users-channel/gestion-users-channel.module#GestionUsersChannelPageModule'
-          }
-        ]
-      },
-      {
-        path: 'listUsers',
-        children: [
-          {
-            path: '',
-            //resolve : {
-            //  userLists : UserListService
-            //},
-            loadChildren: '../list-users/list-users.module#ListUsersPageModule'
-          }
-        ]
-      },
 
 
 
