@@ -121,13 +121,14 @@ export class ListUsersPage {
     user.isFriend = "true"
     let id = user.id
     this.userService.acceptFriend(this.userId, id)
+    this.callNotification()
 
   }
   callNotification() {
     this.localNotifications.schedule({
       id: 1,
       title: 'Messenger Ionic',
-      text: "You've added a friend",
+      text: "Vous avez un nouvel ami",
       sound: this.plt.is('android') ? 'file://sound.mp3' : 'file://beep.caf',
       vibrate: true
       //data: { secret: key }
@@ -141,7 +142,7 @@ export class ListUsersPage {
     user.isFriend = "wantAdd"
     let idUserAAjouter = user.id
     this.userService.addFriendsToUsers(this.userId, idUserAAjouter)
-    this.callNotification()
+    
   }
 
   removeFriend(user: any) {
