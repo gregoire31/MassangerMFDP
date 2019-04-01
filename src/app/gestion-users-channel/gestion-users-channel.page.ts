@@ -93,11 +93,8 @@ export class GestionUsersChannelPage implements OnInit {
   }
 
   test(){
-    console.log(this.usersFriends)
-    console.log(this.usersFriendsAddable)
   }
   recupId(user: any) {
-    console.log(user.id)
   }
 
   ajouteFrienddsToChannel(user) {

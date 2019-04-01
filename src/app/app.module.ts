@@ -16,6 +16,7 @@ import { AuthGuard } from '../guards/auth.guard'
 import { Platform } from 'ionic-angular';
 import { AngularFireStorage } from '@angular/fire/storage'
 
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -27,14 +28,14 @@ import { AngularFireStorage } from '@angular/fire/storage'
     AngularFireAuthModule
   ],
   providers: [
+    AngularFireStorage,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: FirestoreSettingsToken, useValue: { }},
     AngularFirestore,
     AuthGuard,
-    Platform,
-    AngularFireStorage
+    Platform
   ],
   bootstrap: [AppComponent]
 })

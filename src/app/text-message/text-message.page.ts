@@ -46,22 +46,17 @@ export class TextMessagePage implements OnInit {
     let self = this
     this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
     this.userService.returnDetailsChannel(this.channelId).subscribe((channel) => {
-      console.log(channel)
       self.channelName = channel.name
       self.channel = channel
       this.userService.getCurrentUser().then(function (user) {
         self.avatar = user.photoURL
         self.userId = user.uid
-        console.log(self.channel)
         if(channel.id.length === 56){
           self.userService.listeAllUsersOfChannels(self.channelId).subscribe(users => {
-            console.log(users)
             users.map(user => {
-              console.log(user)
               if(user.id !== self.userId){
                 self.userService.getUserById(user.id).subscribe(ami => {
                   self.channelName = ami.payload.data().displayName
-                  console.log(ami.payload.data().displayName)
                   self.verificationProvenance = true
                 })
               }
@@ -80,14 +75,11 @@ export class TextMessagePage implements OnInit {
           message.avatar = user.payload.data().avatar
           if(index === sizeMessage-1){
             this.contentArea.scrollToBottom();
-            //console.log(this.contentArea)
           }
         })
         
        })
        this.messagesFiltre = messages
-       
-       console.log(this.messagesFiltre)
        
 
      })
@@ -108,12 +100,6 @@ export class TextMessagePage implements OnInit {
     this.textMsg = ""
     this.contentArea.scrollToBottom();
   }
-
-  //switchToVideoChat(){
-  //  this.isVideoChatting = !this.isVideoChatting;
-  //  this.startPeer(TextTrackCueList);
-//
-  //}
   navigateByUrlTxt() {
     this.userService.navigateTo(`textMessage/${this.channelId}/gestionChannel`);
   }

@@ -44,28 +44,11 @@ export class Tab2Page {
       let self = this
       this.test = this.userService.returnListChannelOfCurrentUser(this.userId).subscribe(function(channels){
         self.channels = channels
-        //let selfe = self
-        //channels.map(channel => {
-        //  let selfi = selfe
-        //  console.log(channel.id)
-        //  let stringifyIDChannel = channel.id.length
-        //  if (stringifyIDChannel < 21){
-        //    console.log(channel)
-        //    selfi.channels.push(channel)
-        //  }
-        //})
-        //self.channels = channels
+
       })
     })
 
   }
-
-  //createChannel() {
-  //  this.userService.createChannel(this.userId, this.channelName)
-  //}
-  //navigateByUrl(id : string){
-  //  this.userService.navigateTo(`app/tabs/channelCreate/${id}`);
-  //}
 
   navigateByUrl(){
     this.userService.navigateTo(`newChannelCreate`);
@@ -77,8 +60,5 @@ export class Tab2Page {
   deleteChannel(channel){
     this.userService.removeChannel(channel.id,true)
   }
-
-
-  //<ion-button href="/app/tabs/channelCreate/{{channel.id}}">ouvre nouveau channel</ion-button>
 
 }

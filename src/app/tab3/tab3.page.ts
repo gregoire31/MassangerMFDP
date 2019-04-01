@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -23,6 +24,7 @@ export class Tab3Page {
 
    ngOnInit() {
     let self = this
+
     
     this.userService.getCurrentUser().then(function (user) {
       self.userId = user.uid

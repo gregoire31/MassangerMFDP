@@ -18,18 +18,10 @@ export class ChannelCreationPage implements OnInit {
   userFriends : any[]=[]
   constructor(public activatedRoute: ActivatedRoute, private userService : UserService) {
   }
-
-  //returnDetailsChannel(id : string){
-  //  return this.channelCollection.doc(id).valueChanges()
-  //}
-
   
 
   ngOnInit() {
     let self = this
-
-    //this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
-    //console.log(this.channelId)
     this.userService.getCurrentUser().then(function(user)  {
       self.userId = user.uid
       return user.uid
@@ -37,13 +29,11 @@ export class ChannelCreationPage implements OnInit {
       this.userService.getUserById(userId).subscribe((user)=> {
         this.userDisplayName = user.payload.data().displayName
       })
-      //console.log(userId)
     }).then(() => {
 
       this.userService.friendList(this.userId).subscribe( (users) =>{
         let i = 0
         users.map((user) => {
-          console.log(user)
           if(user.isFriend ==="true" && user.id !== this.userId){
             this.userService.getUserById(user.id).subscribe(user => {
 
@@ -53,22 +43,7 @@ export class ChannelCreationPage implements OnInit {
             })
           }
         })
-
-          
-        //self.users = users
-        //users.map(user => {
-        //  console.log(user)
-        //})
       })
-
-
-      //this.userService.getUserList().subscribe( (users) =>{
-      //  console.log(users)
-      //  self.users = users
-      //  users.map(user => {
-      //    console.log(user)
-      //  })
-      //})
     })
   }
 
@@ -82,14 +57,10 @@ export class ChannelCreationPage implements OnInit {
     }else{
 
       this.userService.createChannel(this.userId,this.nameChannel).then((channelId) => {
-        //let channelIdString = stringify(channelId)
-        //console.log(channelIdString)
         let channelIdString = String(channelId)
         this.userFriends.map(user => {
-          console.log(user)
           
           if(user.isChecked === true){
-            console.log(user)
             this.userService.addUserToChannel(channelIdString,user.id,this.nameChannel)
             this.userService.addChannelToUser(user.id,channelIdString,this.nameChannel)
           }

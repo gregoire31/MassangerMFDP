@@ -116,7 +116,6 @@ export class UserService {
   getUserList() {
     return this.usersCollection.snapshotChanges().pipe(
       map(actions => {
-        //console.log(actions)
         return actions.map(a => {
           const data = a.payload.doc.data() as UserList;
           const id = a.payload.doc.id;
@@ -131,7 +130,6 @@ export class UserService {
     let waitBeforeDeleteChannel = false
     let usersId = []
     this.channelCollection.doc(idChannel).collection("messages").snapshotChanges().subscribe(data => {
-      console.log(data.length)
       data.map((idADelete, index) => {
         this.channelCollection.doc(idChannel).collection("messages").doc(idADelete.payload.doc.id).delete()
         if (index === data.length - 1 && waitBeforeDeleteChannel) {
@@ -152,7 +150,6 @@ export class UserService {
         if (index === data.length - 1 && waitBeforeDeleteChannel === false) {
           waitBeforeDeleteChannel = true
         }
-        console.log(usersId)
 
       })
     })
@@ -165,9 +162,6 @@ export class UserService {
         
       })
     })
-    //usersId.map(user => {
-    //  this.usersCollection.doc(user).collection("channels").doc(idChannel).delete()
-    //})
   }
 
   entrerChatPrive(currentuserId: string, userId: string) {
@@ -175,7 +169,6 @@ export class UserService {
     let currentIdUserId = `${currentuserId}${userId}`
     let currentIdUserIdInverse = `${userId}${currentuserId}`
     this.usersCollection.doc(currentuserId).collection("channels").snapshotChanges().subscribe(data => {
-      console.log("ça rentre")
       if (data.length === 0) {
         let isAdmin = {
           isAdmin: true,
@@ -213,10 +206,8 @@ export class UserService {
         let longeurData = data.length - 1
         data.map((aa, index) => {
           if (aa.payload.doc.id === currentIdUserId) {
-            console.log("channel déja créé")
             valeurBoolean = true
             this.router.navigateByUrl(`textMessage/${currentIdUserId}`);
-            //this.navigateTo(`app/tabs/textMessage/${currentIdUserId}`)
 
             index = longeurData + 1
           } if (aa.payload.doc.id === currentIdUserIdInverse) {
@@ -224,12 +215,8 @@ export class UserService {
             this.router.navigateByUrl(`textMessage/${currentIdUserIdInverse}`)
 
             index = longeurData + 1
-            console.log("channel déja créé")
           }
-          console.log(index)
-          console.log(longeurData)
           if (index === longeurData && valeurBoolean === false) {
-            console.log("FINITO")
             let isAdmin = {
               isAdmin: true,
               name: "",
@@ -289,10 +276,8 @@ export class UserService {
       }
 
       self.channelCollection.doc(docRef.id).collection('users').doc(id).set(isAdmin)
-      console.log(docRef)
       return docRef.id
     }).catch(function (error) {
-      console.error("Error adding document: ", error);
     });
   }
 
@@ -304,7 +289,6 @@ export class UserService {
 
 
   updateUserDetail(id: string, displayName: string, avatar: string) {
-    console.log("Enregistré")
     this.navigateTo('app')
     return this.usersCollection.doc(id).update({
       id: id,
@@ -316,8 +300,6 @@ export class UserService {
 
 
   addChannelToAdminUser(id: string, idChannel: string, nom: string) {
-
-    console.log(id)
     let isNotAdmin = {
       name: nom,
       isAdmin: true
@@ -339,8 +321,6 @@ export class UserService {
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriendPending)
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriendwantAdd)
 
-    let data = []
-
   }
 
 
@@ -350,7 +330,6 @@ export class UserService {
     }
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).set(isFriend)
     this.usersCollection.doc(idUserAAjouter).collection('amis').doc(idCurrentUser).set(isFriend)
-    //return this.friendList(idCurrentUser)
 
   }
 
@@ -361,11 +340,8 @@ export class UserService {
 
 
   removeFriend(idCurrentUser: string, idUserAAjouter: string) {
-    console.log("merde")
     this.usersCollection.doc(idCurrentUser).collection('amis').doc(idUserAAjouter).valueChanges().subscribe(data => {
       let dataConverti = data as Channel
-      
-      console.log(data)
       if(dataConverti.idPrivate !== undefined){
         this.removeChannel(dataConverti.idPrivate,false)
         this.navigateTo('app/tabs/tab1')
@@ -388,7 +364,6 @@ export class UserService {
     );
   }
   addChannelToUser(id: string, idChannel: string, nom: string) {
-    console.log(id)
 
     let isNotAdmin = {
       name: nom,
@@ -411,52 +386,12 @@ export class UserService {
   deleteChannel(idChannel: string) {
     this.listeAllUsersOfChannels(idChannel).subscribe(users => {
       users.map(user => {
-        console.log(user)
         this.usersCollection.doc(user.id).collection("channels").doc(idChannel).delete()
       })
     })
-    //this.channelCollection.doc(idChannel).delete()
   }
 
 
-
-  returnListChannelOfCurrentUser(id: string) {
-    //console.log(id)
-    return this.usersCollection.doc(id).collection("channels").snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Channel;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
-    );
-  }
-
-  removeUser(id) {
-    this.friendList(id).subscribe(friends => {
-      console.log(friends)
-      friends.map(friend => {
-        console.log(friend.id)
-        //this.getUserById(friend.id).subscribe(friend => {
-        //  this.usersCollection.id
-        //})
-      })
-    })
-    //return this.usersCollection.doc(id).delete();
-  }
-  removeUserFromChannel(idUser: string, idChannel: string) {
-    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
-    this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
-  }
-
-  getRoleofUser(id: string, idChannel: string) {
-    return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
-      map(actions => {
-        return actions.payload.data() as isAdminType
-      })
-    )
-  }
 
   addUserDetails(id: string, displayName: string, avatar: string) {
     return this.usersCollection.doc(id).set({
@@ -472,24 +407,14 @@ export class UserService {
         const data = actions.payload.data() as Channel;
         const id = actions.payload.id;
         return { id, ...data };
-        //return actions.payload.data() as isAdminType
       })
     )}
 
 
-  changeAdminModeUser(idChannel: string, idUser: string) {
 
-    this.channelCollection.doc(idChannel).collection('users').doc(idUser).update({
-      isAdmin : true
-    })
-    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).update({
-      isAdmin : true
-    })
-  }
 
 
   addMessageToChannel(idChannel: string, idUser: string, message: string, date: Date, avatar: string) {
-    //console.log("ID CHANNEL : " + idChannel + "ID User : " + idUser + "message : " + message + "date : " + date + "avatar : "+ avatar)
     let messageAEntrer = {
       idUser: idUser,
       message: message,
@@ -497,6 +422,32 @@ export class UserService {
       avatar: avatar
     }
     return this.channelCollection.doc(idChannel).collection("messages").add(messageAEntrer)
+  }
+
+
+  returnListChannelOfCurrentUser(id: string) {
+    return this.usersCollection.doc(id).collection("channels").snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Channel;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
+  removeUserFromChannel(idUser: string, idChannel: string) {
+    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).delete()
+    this.channelCollection.doc(idChannel).collection('users').doc(idUser).delete()
+  }
+
+  getRoleofUser(id: string, idChannel: string) {
+    return this.usersCollection.doc(id).collection("channels").doc(idChannel).snapshotChanges().pipe(
+      map(actions => {
+        return actions.payload.data() as isAdminType
+      })
+    )
   }
 
   listeAllUsersOfChannels(idChannel: string) {
@@ -510,6 +461,32 @@ export class UserService {
       })
     )
   }
+
+  listeAllMessageOfAChannel(idChannel: string) {
+    let date = new Date().getTime()
+    return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').startAt(0)).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Message;
+          data.dateNumber = this.convertSecond(data.date.seconds, date)
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
+  changeAdminModeUser(idChannel: string, idUser: string) {
+
+    this.channelCollection.doc(idChannel).collection('users').doc(idUser).update({
+      isAdmin : true
+    })
+    this.usersCollection.doc(idUser).collection('channels').doc(idChannel).update({
+      isAdmin : true
+    })
+  }
+
+
 
   convertSecond(datedernierMessage: number, dateActuel: number) {
     let secondeEntreLesDeux = dateActuel / 1000 - datedernierMessage
@@ -531,34 +508,9 @@ export class UserService {
       return `${Math.floor(secondeEntreLesDeux / 3600)} heures`
     }
     else {
-      //console.log(secondeEntreLesDeux)
       return `${Math.floor(secondeEntreLesDeux / 86400)} jours`
     }
   }
-
-
-  listeAllMessageOfAChannel(idChannel: string) {
-    let date = new Date().getTime()
-    //console.log(date)
-//
-    //console.log("service in")
-    return this.channelCollection.doc(idChannel).collection("messages", ref => ref.orderBy('date').startAt(0)).snapshotChanges().pipe(
-      map(actions => {
-        //console.log(actions)
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Message;
-          //console.log(data)
-          data.dateNumber = this.convertSecond(data.date.seconds, date)
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
-    );
-  }
-
-
-
-
 
 
   getCurrentUser() {
@@ -586,20 +538,16 @@ export class UserService {
       .auth
       .signInWithEmailAndPassword(email, password)
       .then(value => {
-        //console.log(value);
-        //console.log(value.user.displayName)
         this.setUserOnLine(value.user.uid)
         this.navigateTo('app')
       })
       .catch(err => {
-        //this.presentToastWithOptions()
       });
   }
 
   logout() {
     let self = this
     this.getCurrentUser().then(user => {
-      console.log(user)
       this.setUserOffLine(user.uid)
     }).then(() => {
       setTimeout(function () {
@@ -611,8 +559,5 @@ export class UserService {
     })
 
   }
-
-
-
 
 }

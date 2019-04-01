@@ -87,6 +87,9 @@ verifyLoginCode(){
     })
     .catch(error => this.userService.presentToastWithOptionsWithMessage("Code incorrect","danger"));
   }else{
+    if(this.myPhoto !== ""){
+      this.photoUser = this.myPhoto
+    }
     this.windowRef.confirmationResult
     .confirm(this.verificationCode)
     .then(result => {

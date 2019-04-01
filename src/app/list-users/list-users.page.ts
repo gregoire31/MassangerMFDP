@@ -35,14 +35,11 @@ export class ListUsersPage {
 
   constructor(private userService: UserService, private localNotifications: LocalNotifications, public plt: Platform, private zone: NgZone) {
 
-    console.log("HELLO FROM TAB1")
     let self = this
     this.userService.getCurrentUser().then(function (user) {
-      //console.log(user)
       self.userId = user.uid
     })
       .then(() => {
-        //console.log(this.userId)
         this.userService.getUserById(this.userId).subscribe(user => {
 
           this.userName = user.payload.data().displayName
@@ -50,14 +47,9 @@ export class ListUsersPage {
       }).then(() => {
 
         this.userService.getUserList().subscribe(users => {
-            //console.log(this)
-            console.log(this.friends)
-          //if (this.booleanUser === false) {
            this.users = users
            if (this.friends.length !== 0) {
               this.mapfriends(this.users, this.friends)
-          //    this.booleanUser = true
-          //  }
           }
         })
 
@@ -65,13 +57,8 @@ export class ListUsersPage {
         this.userService.friendList(this.userId).subscribe(friends => {
 
           this.friends = friends
-          //console.log("send from friendList")
-          //if (this.booleanFriend === false) {
            if (this.users.length !== 0) {
               this.mapfriends(this.users, this.friends);
-          //    this.booleanFriend = true
-          //    this.booleanUser = false
-          //  }
           }
         })
 
@@ -80,15 +67,11 @@ export class ListUsersPage {
   }
 
   private mapfriends(users, friends) {
-    console.log(friends)
-    console.log(users)
     this.idFriendsStocke = []
     this.isFriendsStocke = []
     
     if(friends.length !== 0){
       friends.map((friend, index) => {
-  
-        console.log(friend)
         this.idFriendsStocke[index] = friend.id
         this.isFriendsStocke[index] = friend.isFriend
       })
@@ -96,7 +79,6 @@ export class ListUsersPage {
 
 
     this.users = users.map((user) => {
-      //console.log(this.idFriendsStocke)
       if (this.idFriendsStocke.indexOf(user.id) > -1) {
         user.isFriend = this.isFriendsStocke[this.idFriendsStocke.indexOf(user.id)]
 
@@ -108,7 +90,6 @@ export class ListUsersPage {
 
 
     })
-    console.log(users)
     this.users = users
     this.userNameListFilter = users
   }
@@ -164,7 +145,6 @@ export class ListUsersPage {
   }
 
   removeFriend(user: any) {
-    console.log(user)
     user.isFriend = "false"
 
     this.userService.removeFriend(this.userId, user.id)
