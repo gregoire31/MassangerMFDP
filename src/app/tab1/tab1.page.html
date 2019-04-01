@@ -20,7 +20,7 @@
 <ion-searchbar (ionChange)="onSearchInput($event)" debounce="500"></ion-searchbar>
 
 
-<ion-list *ngFor="let user of users">
+<ion-list *ngFor="let user of userNameListFilter">
 <ion-item *ngIf="user.isFriend=='true'">
   <ion-grid>
     <ion-row class="member">

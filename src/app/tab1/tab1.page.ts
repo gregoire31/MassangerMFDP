@@ -110,6 +110,7 @@ export class Tab1Page {
     })
     console.log(users)
     this.users = users
+    this.userNameListFilter = users
   }
 
   ngOnInit() {
@@ -246,6 +247,7 @@ export class Tab1Page {
       this.event = $event
       this.userNameListFilter = []
       let valueInput = $event.detail.value
+      valueInput = valueInput.toLowerCase()
       this.userNameListFilter = this.users.filter(c => c.displayName.toLowerCase().indexOf(valueInput) > -1)
     }
 

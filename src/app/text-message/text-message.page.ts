@@ -16,12 +16,12 @@ import { Subject, Subscription } from 'rxjs';
 
 export class TextMessagePage implements OnInit {
   //@ViewChild(IonInfiniteScroll) infiniteScroll : IonInfiniteScroll;
-  @ViewChild(Content) contentArea: Content;
+  @ViewChild('myContent') contentArea: Content;
   recVideo: ElementRef
   peer : any
   srcObject: string
   isVideoChatting : Boolean = false
-  
+
   time: number
   channelId: string
   channelName: string
@@ -41,6 +41,8 @@ export class TextMessagePage implements OnInit {
   constructor(public activatedRoute: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit() {
+    
+    
     let self = this
     this.channelId = this.activatedRoute.snapshot.paramMap.get('channelId');
     this.userService.returnDetailsChannel(this.channelId).subscribe((channel) => {
@@ -72,15 +74,21 @@ export class TextMessagePage implements OnInit {
 
 
      this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId).subscribe((messages) => {
-
-       messages.map(message => {
+      let sizeMessage = messages.length
+       messages.map((message,index) => {
         this.userService.getUserById(message.idUser).subscribe(user => {
           message.avatar = user.payload.data().avatar
+          if(index === sizeMessage-1){
+            this.contentArea.scrollToBottom();
+            //console.log(this.contentArea)
+          }
         })
         
        })
        this.messagesFiltre = messages
+       
        console.log(this.messagesFiltre)
+       
 
      })
     

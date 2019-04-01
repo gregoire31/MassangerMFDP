@@ -115,8 +115,6 @@ export class ListUsersPage {
 
   ngOnInit() {
 
-
-
   }
 
 
@@ -131,13 +129,11 @@ export class ListUsersPage {
       this.event = $event
       this.userNameListFilter = []
       let valueInput = $event.detail.value
+      valueInput = valueInput.toLowerCase()
       this.userNameListFilter = this.users.filter(c => c.displayName.toLowerCase().indexOf(valueInput) > -1)
     }
 
   }
-
-
-
 
 
   acceptFriend(user: any) {

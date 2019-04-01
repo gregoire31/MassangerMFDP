@@ -27,7 +27,7 @@
     </ion-row>
   </ion-toolbar>
 </ion-header>
-<ion-content padding scrollDownOnLoad="true">
+<ion-content padding #myContent>
   <ion-list *ngFor="let message of messagesFiltre;">
     <ion-grid class="myMessage" *ngIf="message.idUser === userId">
       <ion-row class="messageDateNumber">
