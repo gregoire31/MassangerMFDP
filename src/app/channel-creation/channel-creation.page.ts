@@ -13,7 +13,7 @@ export class ChannelCreationPage implements OnInit {
   user : any
   userId : string
   userDisplayName : string
-  nameChannel : string
+  nameChannel : string = ""
   users : any
   userFriends : any[]=[]
   constructor(public activatedRoute: ActivatedRoute, private userService : UserService) {
@@ -77,21 +77,26 @@ export class ChannelCreationPage implements OnInit {
   }
 
   crerNewChannel(){
-    this.userService.createChannel(this.userId,this.nameChannel).then((channelId) => {
-      //let channelIdString = stringify(channelId)
-      //console.log(channelIdString)
-      let channelIdString = String(channelId)
-      this.userFriends.map(user => {
-        console.log(user)
-        
-        if(user.isChecked === true){
+    if(this.nameChannel === ""){
+      this.userService.presentToastWithOptionsWithMessage("Nommez votre channel", "danger")
+    }else{
+
+      this.userService.createChannel(this.userId,this.nameChannel).then((channelId) => {
+        //let channelIdString = stringify(channelId)
+        //console.log(channelIdString)
+        let channelIdString = String(channelId)
+        this.userFriends.map(user => {
           console.log(user)
-          this.userService.addUserToChannel(channelIdString,user.id,this.nameChannel)
-          this.userService.addChannelToUser(user.id,channelIdString,this.nameChannel)
-        }
+          
+          if(user.isChecked === true){
+            console.log(user)
+            this.userService.addUserToChannel(channelIdString,user.id,this.nameChannel)
+            this.userService.addChannelToUser(user.id,channelIdString,this.nameChannel)
+          }
+        })
+        this.userService.navigateTo(`textMessage/${channelId}`)
       })
-      this.userService.navigateTo(`textMessage/${channelId}`)
-    })
+    }
   }
 
 }
