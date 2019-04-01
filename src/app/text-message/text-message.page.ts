@@ -80,6 +80,7 @@ export class TextMessagePage implements OnInit {
         
        })
        this.messagesFiltre = messages
+       console.log(this.messagesFiltre)
 
      })
     
