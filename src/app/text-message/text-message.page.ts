@@ -16,7 +16,7 @@ import { Subject, Subscription } from 'rxjs';
 
 export class TextMessagePage implements OnInit {
   //@ViewChild(IonInfiniteScroll) infiniteScroll : IonInfiniteScroll;
-  //@ViewChild(Content) contentArea: Content;
+  @ViewChild(Content) contentArea: Content;
   recVideo: ElementRef
   peer : any
   srcObject: string
@@ -98,6 +98,7 @@ export class TextMessagePage implements OnInit {
     }
     
     this.textMsg = ""
+    this.contentArea.scrollToBottom();
   }
 
   //switchToVideoChat(){

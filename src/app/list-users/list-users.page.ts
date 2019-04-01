@@ -120,10 +120,6 @@ export class ListUsersPage {
   }
 
 
-  getItems() {
-    console.log(this.users)
-    //console.log(this.userNameListFilter)
-  }
 
 
   navigateToFriendList() {
@@ -139,15 +135,10 @@ export class ListUsersPage {
     }
 
   }
-  entrerChatPrive(Id: string) {
-    this.userService.entrerChatPrive(this.userId, Id)
-  }
 
 
-  addUserToChannel(id: string) {
 
-    console.log(id)
-  }
+
 
   acceptFriend(user: any) {
     user.isFriend = "true"
