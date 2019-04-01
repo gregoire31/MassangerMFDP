@@ -72,110 +72,38 @@ export class TextMessagePage implements OnInit {
 
 
      this.msgSub = this.userService.listeAllMessageOfAChannel(this.channelId).subscribe((messages) => {
-      //this.messagesFiltre = []
-       //console.log(messages)
-       //this.messagesFiltre = messages
+
        messages.map(message => {
-         //console.log(message)
         this.userService.getUserById(message.idUser).subscribe(user => {
-          //console.log(user.payload.data())
           message.avatar = user.payload.data().avatar
-          //message.avatar = user.payload.data().avatar
-          //this.messagesFiltre.push(message)
-          
         })
         
        })
        this.messagesFiltre = messages
-       //this.messages = messages
 
      })
     
-    // this.userService.listeAllMessageOfAChannel(this.channelId, this.numberResult).pipe(
-
-    //   take(1)
-    // ).subscribe((msg) =>{
-    //   console.log("load data on init")
-    //   let date = new Date()
-
-    //   this.time = (date.getTime())
-
-    //   this.messages = []
-
-    //   msg.map(message => {
-
-    //     message.time = this.convertSecond(message.date.seconds, this.time)
-
-    //     this.messages.push(message)
-    //   })
-
-    // })
-    //this.loadData();
   }
 
 
-  //loadData(infiniteScroll?) {
-  //  let test = true
-  //  if(this.numberResult === 0){
-  //    this.init = true
-  //  }
-  //  else{
-  //    this.init = false
-  //  }
-//
-  //  this.numberResult = this.numberResult + 5
-//
-  //  this.userService.listeAllMessageOfAChannel(this.channelId, this.numberResult).subscribe((data) => {
-  //    console.log(`boolean test = ${test}` )
-  //    console.log(`boolean init = ${this.init}` )
-  //    if(test === false && this.init === false){
-  //      console.log("load data scroll")
-  //      this.messages = data
-  //      console.log(`data length : ${data.length}`)
-  //      console.log(`this.numberResult : ${this.numberResult}`)
-  //
-  //      if (infiniteScroll)
-  //      {
-  //        infiniteScroll.target.complete()
-  //      }
-  //        
-  //    }
-  //    if(test === true && this.init === true){
-  //      console.log("load data scroll")
-  //      this.messages = data
-  //      console.log(`data length : ${data.length}`)
-  //      console.log(`this.numberResult : ${this.numberResult}`)
-  //
-  //      if (infiniteScroll)
-  //        infiniteScroll.target.complete()
-//
-  //    }
-  //    test = false
-//
-//
-  //    
-  //  })
    
   compareDate() {
-    //console.log(this.messages[0].date.compareTo(this.messages[1].date))
   }
 
   TextSubmit() {
-    //if(this.numberResult === this.messages.length){
-    //  
-    //}
-    //console.log(this.channelId)
-    let date = new Date();
+    if(this.textMsg !== ""){
+      let date = new Date();
     this.userService.addMessageToChannel(this.channelId, this.userId, this.textMsg, date, this.avatar)
+    }
+    
     this.textMsg = ""
-    //this.contentArea.scrollToBottom();
   }
 
-  switchToVideoChat(){
-    this.isVideoChatting = !this.isVideoChatting;
-    this.startPeer(TextTrackCueList);
-
-  }
+  //switchToVideoChat(){
+  //  this.isVideoChatting = !this.isVideoChatting;
+  //  this.startPeer(TextTrackCueList);
+//
+  //}
   navigateByUrlTxt() {
     this.userService.navigateTo(`textMessage/${this.channelId}/gestionChannel`);
   }
@@ -186,36 +114,36 @@ export class TextMessagePage implements OnInit {
     this.userService.navigateTo(`app/tabs/tab2`);
   }
   
-  startPeer(initiator){
-    navigator.getUserMedia({
-      video:true,
-      audio:true
-    },stream=>{
-      /*this.peer = new Peer ({ //THIS SHIT BUGGIN' YOU KNOW
-        initiator:initiator,
-        stream:stream,
-        trickle:false
-      })*/
-      this.bindEvents();
-      //let emiVideo = document.querySelector("#emiVideo");
-      //emiVideo.srcObject=stream;
-      //emiVideo.play();
-    },err=>{
-      console.log("err : " + err);
-    })
-  }
-
-  bindEvents(){
-    this.peer.on("error",err=>{
-      console.log("err on signal : " + err)
-    });
-    this.peer.on('signal',data=>{
-      //get user offer
-    })
-    this.peer.on('stream',stream=>{
-      //this.recVideo = document.querySelector("#recVideo")
-      this.srcObject = stream;
-      //this.recVideo.nativeElement.play();
-    })
-  }
+  //startPeer(initiator){
+  //  navigator.getUserMedia({
+  //    video:true,
+  //    audio:true
+  //  },stream=>{
+  //    /*this.peer = new Peer ({ //THIS SHIT BUGGIN' YOU KNOW
+  //      initiator:initiator,
+  //      stream:stream,
+  //      trickle:false
+  //    })*/
+  //    this.bindEvents();
+  //    //let emiVideo = document.querySelector("#emiVideo");
+  //    //emiVideo.srcObject=stream;
+  //    //emiVideo.play();
+  //  },err=>{
+  //    console.log("err : " + err);
+  //  })
+  //}
+//
+  //bindEvents(){
+  //  this.peer.on("error",err=>{
+  //    console.log("err on signal : " + err)
+  //  });
+  //  this.peer.on('signal',data=>{
+  //    //get user offer
+  //  })
+  //  this.peer.on('stream',stream=>{
+  //    //this.recVideo = document.querySelector("#recVideo")
+  //    this.srcObject = stream;
+  //    //this.recVideo.nativeElement.play();
+  //  })
+  //}
 }

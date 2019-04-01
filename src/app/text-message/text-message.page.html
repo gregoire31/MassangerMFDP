@@ -1,86 +1,94 @@
 <ion-header>
   <ion-toolbar color="medium">
-      <ion-row>
-          <ion-col *ngIf="!verificationProvenance" class="toolbarIcon">
-              <ion-button (click)="navigationVersChannels()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
-          </ion-col>
-          <ion-col *ngIf="verificationProvenance" class="toolbarIcon">
-              <ion-button (click)="navigationVersAmis()" color="light" fill="clear"><ion-icon name="arrow-back"></ion-icon></ion-button> 
-          </ion-col>
-          <ion-col class="toolbarText">
-            <!--<ion-title>{{channel.name}}</ion-title>-->
-            <ion-title>{{channelName}}</ion-title>
-            
-          </ion-col>
-          <ion-col *ngIf="!verificationProvenance" class="toolbarIcon">
-              <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear"><ion-icon name="cog"></ion-icon></ion-button>
-          </ion-col>
-          <ion-col *ngIf="verificationProvenance" class="toolbarIcon">
+    <ion-row>
+      <ion-col *ngIf="!verificationProvenance" class="toolbarIcon">
+        <ion-button (click)="navigationVersChannels()" color="light" fill="clear">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col *ngIf="verificationProvenance" class="toolbarIcon">
+        <ion-button (click)="navigationVersAmis()" color="light" fill="clear">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col class="toolbarText">
+        <!--<ion-title>{{channel.name}}</ion-title>-->
+        <ion-title>{{channelName}}</ion-title>
+
+      </ion-col>
+      <ion-col *ngIf="!verificationProvenance" class="toolbarIcon">
+        <ion-button (click)="navigateByUrlTxt()" color="light" fill="clear">
+          <ion-icon name="cog"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <!-- <ion-col *ngIf="verificationProvenance" class="toolbarIcon">
               <ion-button (click)="switchToVideoChat()" color="light" fill="clear"><ion-icon name="videocam" ></ion-icon></ion-button>
-          </ion-col>
-      </ion-row>
+          </ion-col> -->
+    </ion-row>
   </ion-toolbar>
 </ion-header>
-<ion-content *ngIf="!isVideoChatting" padding scrollDownOnLoad="true">
+<ion-content padding scrollDownOnLoad="true">
   <ion-list *ngFor="let message of messagesFiltre;">
-      <ion-grid class="myMessage" *ngIf="message.idUser === userId">
-        <ion-row class="messageDateNumber">        
-            <div>
-              <ion-label>{{message.dateNumber}}</ion-label>
-            </div>
-        </ion-row>
-        <ion-row class="rowText">
-          <ion-col class="colUserNameText">
-            <div class="userNameText">
-              <ion-text>{{message.message}}</ion-text>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <ion-grid class="yourMessage" *ngIf="message.idUser !== userId"> 
-          <ion-row class="messageDateNumber">        
-              <div>
-                <ion-label>{{message.dateNumber}}</ion-label>
-              </div>
-          </ion-row>
-          <ion-row class="rowText">
-              <ion-col class="messageAvatar">
-                  <ion-avatar>
-                    <img [src]="message.avatar">
-                  </ion-avatar>
-              </ion-col>
-            <ion-col class="colUserNameText">
-              <div class="userNameText">
-                <ion-text>{{message.message}}</ion-text>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+    <ion-grid class="myMessage" *ngIf="message.idUser === userId">
+      <ion-row class="messageDateNumber">
+        <div>
+          <ion-label>{{message.dateNumber}}</ion-label>
+        </div>
+      </ion-row>
+      <ion-row class="rowText">
+        <ion-col class="colUserNameText">
+          <div class="userNameText">
+            <ion-text>{{message.message}}</ion-text>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid class="yourMessage" *ngIf="message.idUser !== userId">
+      <ion-row class="messageDateNumber">
+        <div>
+          <ion-label>{{message.dateNumber}}</ion-label>
+        </div>
+      </ion-row>
+      <ion-row class="rowText">
+        <ion-col class="messageAvatar">
+          <ion-avatar>
+            <img [src]="message.avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col class="colUserNameText">
+          <div class="userNameText">
+            <ion-text>{{message.message}}</ion-text>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-list>
+  <ion-list>
+  <ion-item color="medium" class="createMessage">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="inputMessage">
+          <ion-input placeholder="Message..." type="text" [(ngModel)]="textMsg"></ion-input>
+        </ion-col>
+        <ion-col class="sendMessage">
+          <ion-button (click)="TextSubmit()" color="light" fill="clear">
+            <ion-icon name="send"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+</ion-list>
+
 
 </ion-content>
 
 
-<ion-tabs>
-
-    <ion-tab-bar color="medium" slot="bottom">
-        <ion-item color="medium" class="createMessage">
-            <ion-grid>
-              <ion-row>
-                <ion-col class="inputMessage">         
-                    <ion-input placeholder="Message..." type="text" [(ngModel)]="textMsg"></ion-input>
-                </ion-col>
-                <ion-col class="sendMessage">
-                  <ion-button (click)="TextSubmit()" color="light" fill="clear"><ion-icon name="send"></ion-icon></ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-    </ion-tab-bar>
-  
-  </ion-tabs>
 
 
-<ion-content *ngIf="isVideoChatting">
+
+
+
+<!-- <ion-content *ngIf="isVideoChatting">
   <video id="recVideo" srcObject={{srcObject}} height="100%" width="100%" ng-src="" class="centerme" controls="controls" autoplay></video>
-</ion-content>
+</ion-content> -->

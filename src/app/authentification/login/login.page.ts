@@ -49,20 +49,12 @@ export class LoginPage implements OnInit {
 
   }
 
-  //ionViewDidEnter() {
-  //  if(this.refreshPage  === false){
-  //    this.refreshPage = true
-  //    //location.reload();
-  //  }
-  //  
-  //}
   goBack() {
     location.reload();
   }
 
 sendLoginCode() {
   const appVerifier = this.windowRef.recapchaVerifier;
-  console.log(appVerifier)
   if(this.phoneNumber.length !== 10){
     this.userService.presentToastWithOptionsWithMessage("Numéro incorrect","danger")
   }else{
@@ -87,7 +79,7 @@ verifyLoginCode(){
     }).then(()=>{
       this.userService.navigateTo('app')
     })
-    .catch(error => console.log(error, "incorrect code entered"));
+    .catch(error => this.userService.presentToastWithOptionsWithMessage("Code incorrect","danger"));
   }else{
     let photoURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7ynxbF7WkDlJ2FwWIxBfoMWUZ_a1EIIAc9XXxwiSwUua9AcVqzdpAnL0w2Q"
     if(this.myPhoto ==""){
@@ -108,7 +100,7 @@ verifyLoginCode(){
     }).then(()=>{
       this.userService.navigateTo('app')
     })
-    .catch(error => console.log(error, "incorrect code entered"));
+    .catch(error => this.userService.presentToastWithOptionsWithMessage("Code incorrect","danger"));
   }
   
 }

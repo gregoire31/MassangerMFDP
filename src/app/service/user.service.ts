@@ -86,12 +86,6 @@ export class UserService {
 
   }
 
-  //statusConnection(idUser: string) {
-  //  this.usersCollection.doc(idUser).snapshotChanges().subscribe(user => {
-  //    let userSend = user.payload.data() as UserList
-  //    return userSend.isOnline
-  //  })
-  //}
 
   setUserOnLine(idUser: string) {
     this.usersCollection.doc(idUser).update({
@@ -100,19 +94,6 @@ export class UserService {
   }
 
 
-
-  //userLeaveApp(idUser: string) {
-  //  this.usersCollection.doc(idUser).update({
-  //    "isOnline": "pending"
-  //  })
-  //  setTimeout(function () {
-  //    if(this.statusConnection(idUser) === "pending"){
-  //      this.usersCollection.doc(idUser).update({
-  //        "isOnline": "false"
-  //      })
-  //    }
-  //  }, 10000);
-  //}
   setUserOffLine(idUser: string) {
     this.usersCollection.doc(idUser).update({
       "isOnline": false
