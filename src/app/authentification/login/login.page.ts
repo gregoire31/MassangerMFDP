@@ -47,7 +47,6 @@ export class LoginPage implements OnInit {
       self.windowRef.recapchaVerifier.render()
      }, 1);
 
-
   }
 
   //ionViewDidEnter() {
@@ -63,11 +62,17 @@ export class LoginPage implements OnInit {
 
 sendLoginCode() {
   const appVerifier = this.windowRef.recapchaVerifier;
-  const num = `+33${this.phoneNumber}`
-  firebase.auth().signInWithPhoneNumber(num,appVerifier)
-  .then(result => {
-    this.windowRef.confirmationResult = result;
-  }).catch(error => console.log(error))
+  console.log(appVerifier)
+  if(this.phoneNumber.length !== 10){
+    this.userService.presentToastWithOptionsWithMessage("Numéro incorrect","danger")
+  }else{
+    const num = `+33${this.phoneNumber}`
+    firebase.auth().signInWithPhoneNumber(num,appVerifier)
+    .then(result => {
+      this.windowRef.confirmationResult = result;
+    }).catch(error => this.userService.presentToastWithOptionsWithMessage("Veuillez faire le Captcha","danger"))
+  }
+
 }
 
 verifyLoginCode(){

@@ -119,25 +119,15 @@ export class UserService {
     })
   }
 
-  async presentToastWithOptions() {
-    const toast = await this.toastController.create({
-      message: 'Email ou Mot de passe incorect',
-      showCloseButton: true,
-      position: 'top',
-      closeButtonText: 'Ok',
-      color: 'danger'
-    });
-    toast.present();
-
-  }
 
   async presentToastWithOptionsWithMessage(message: string, color: string) {
     const toast = await this.toastController.create({
-      message: `Bienvenue ${message}`,
+      message: `${message}`,
       showCloseButton: true,
       position: 'top',
       closeButtonText: 'Ok',
-      color: color
+      color: color,
+      duration: 2000,
     });
     toast.present();
   }
@@ -621,7 +611,7 @@ export class UserService {
         this.navigateTo('app')
       })
       .catch(err => {
-        this.presentToastWithOptions()
+        //this.presentToastWithOptions()
       });
   }
 
