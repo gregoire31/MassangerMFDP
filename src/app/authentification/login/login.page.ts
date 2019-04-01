@@ -3,9 +3,7 @@ import { UserService } from 'src/app/service/user.service';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase'
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-
-
-
+import {AngularFireStorage} from '@angular/fire/storage'
 
 //get e164() {
 //  const num = this.country + this.area + this.prefix + this.line
@@ -32,15 +30,18 @@ export class LoginPage implements OnInit {
   nomRegister : string = ""
   myPhoto = ""
   refreshPage : boolean = false
+  logosrc: string = ""
 
-  constructor(private userService : UserService, private camera: Camera ) { }
+  constructor(private userService : UserService, private camera: Camera, private storage : AngularFireStorage ) { }
 
   ngOnInit() {
     
-
-    
     let self = this
     this.windowRef = window
+
+    this.storage.ref('icon.png').getDownloadURL().subscribe(link=> {
+      this.logosrc = link
+    })
 
     setTimeout(function(){ 
       self.windowRef.recapchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')

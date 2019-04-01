@@ -14,7 +14,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment'
 import { AuthGuard } from '../guards/auth.guard'
 import { Platform } from 'ionic-angular';
-
+import { AngularFireStorage } from '@angular/fire/storage'
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +33,8 @@ import { Platform } from 'ionic-angular';
     { provide: FirestoreSettingsToken, useValue: { }},
     AngularFirestore,
     AuthGuard,
-    Platform
+    Platform,
+    AngularFireStorage
   ],
   bootstrap: [AppComponent]
 })

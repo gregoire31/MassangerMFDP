@@ -12,8 +12,8 @@
   <ion-content padding>
     
     <ion-list class="logoLogin">
-        <ion-icon name="bonfire"></ion-icon>
-        <h1>Massanger M.F.D.P.</h1>
+      <ion-img class="logo" [src]="logosrc"></ion-img>
+      <h1>Massanger M.F.D.P.</h1>
     </ion-list>
 
     <ion-list *ngIf="!user && loginVerification == true">
