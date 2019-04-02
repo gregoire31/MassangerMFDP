@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import {AngularFireAuthModule } from '@angular/fire/auth'
 import { AngularFirestore, FirestoreSettingsToken } from 'angularfire2/firestore';
 import { AngularFireModule } from '@angular/fire';
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment.prod'
 import { AuthGuard } from '../guards/auth.guard'
 import { Platform } from 'ionic-angular';
 import { AngularFireStorage } from '@angular/fire/storage'
